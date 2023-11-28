@@ -34,7 +34,7 @@ public class AlterarPromocaoJD extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        valPercent = new javax.swing.JTextField();
+        valPercentTF = new javax.swing.JTextField();
         alterarPromocaoBTN = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
@@ -42,7 +42,7 @@ public class AlterarPromocaoJD extends javax.swing.JDialog {
         sair = new javax.swing.JButton();
         jLabel6 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
-        valFixo = new javax.swing.JTextField();
+        valFixoTF = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
         dataTF = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
@@ -97,9 +97,9 @@ public class AlterarPromocaoJD extends javax.swing.JDialog {
                             .addComponent(jLabel5)
                             .addComponent(idTF)
                             .addComponent(jLabel1)
-                            .addComponent(valPercent)
+                            .addComponent(valPercentTF)
                             .addComponent(jLabel2)
-                            .addComponent(valFixo)
+                            .addComponent(valFixoTF)
                             .addComponent(dataTF)
                             .addComponent(horaTF))))
                 .addContainerGap(70, Short.MAX_VALUE))
@@ -116,11 +116,11 @@ public class AlterarPromocaoJD extends javax.swing.JDialog {
                 .addGap(18, 18, 18)
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(valPercent, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(valPercentTF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(valFixo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(valFixoTF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jLabel3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -144,13 +144,18 @@ public class AlterarPromocaoJD extends javax.swing.JDialog {
         LocalDate data = LocalDate.parse(dataTF.getText(), formatterDT);
         LocalTime hora = LocalTime.parse(horaTF.getText());
 
-        System.out.println("teste1");
-        Object[] args = new Object[]{valFixo.getText(), valPercent.getText(), data, hora};
-        System.out.println("teste2");
+        Object[] args = new Object[]{valFixoTF.getText(), valPercentTF.getText(), data, hora};
         if (!pc.altera(Integer.valueOf(idTF.getText()), args)) {
             JOptionPane.showMessageDialog(null, String.format("Promoção %s não alterada", idTF.getText()));
+        } else {
+            JOptionPane.showMessageDialog(null, "Promoção alterada");
         }
-        System.out.println("teste3");
+
+        idTF.setText(null);
+        valFixoTF.setText(null);
+        valPercentTF.setText(null);
+        dataTF.setText(null);
+        horaTF.setText(null);
     }//GEN-LAST:event_alterarPromocaoBTNActionPerformed
 
     private void sairActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sairActionPerformed
@@ -169,7 +174,7 @@ public class AlterarPromocaoJD extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JButton sair;
-    private javax.swing.JTextField valFixo;
-    private javax.swing.JTextField valPercent;
+    private javax.swing.JTextField valFixoTF;
+    private javax.swing.JTextField valPercentTF;
     // End of variables declaration//GEN-END:variables
 }

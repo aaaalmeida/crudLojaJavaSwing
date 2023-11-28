@@ -231,9 +231,18 @@ public class AdicionarServicoJD extends javax.swing.JDialog {
             JOptionPane.showMessageDialog(null, "Serviço não cadastrado");
             resposta.setText(null);
         } else {
+            JOptionPane.showMessageDialog(null, "Serviço cadastrado");
             resposta.setText(String.format("Serviço cadastrado com ID: %d", s.getIdServico()));
             cliente.addServico(s);
         }
+
+        nomeServicoTF.setText(null);
+        precoTF.setText(null);
+        dataTF.setText(null);
+        horaTF.setText(null);
+        clienteJL.setSelectedIndex(-1);
+        promocoesJL.setSelectedIndex(-1);
+        animalJL.setSelectedIndex(-1);
     }//GEN-LAST:event_adicionarServicoBTNActionPerformed
 
     private void sairActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sairActionPerformed
@@ -242,13 +251,7 @@ public class AdicionarServicoJD extends javax.swing.JDialog {
 
     private void clienteJLValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_clienteJLValueChanged
         Cliente c = clientec.consulta(Integer.parseInt(clienteJL.getSelectedValue()));
-
-        String[] animaisKeys = new String[c.getlAnimais().size()];
-        for (int i = 0; i < animaisKeys.length; i++) {
-            animaisKeys[i] = String.valueOf(c.getlAnimais().get(i).getIdAnimal());
-        }
-
-        animalJL.setListData(animaisKeys);
+        animalJL.setListData(c.infoAnimal());
     }//GEN-LAST:event_clienteJLValueChanged
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

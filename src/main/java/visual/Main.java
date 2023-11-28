@@ -54,7 +54,6 @@ public class Main extends javax.swing.JFrame {
     private void initComponents() {
 
         jMenu1 = new javax.swing.JMenu();
-        jLabel2 = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         usuarioTF = new javax.swing.JTextField();
@@ -108,8 +107,6 @@ public class Main extends javax.swing.JFrame {
         jMenu1.setText("jMenu1");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-
-        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sisifo.jpg"))); // NOI18N
 
         jLabel1.setText("Usuário");
 
@@ -451,9 +448,7 @@ public class Main extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(39, 39, 39)
-                .addComponent(jLabel2)
-                .addGap(63, 63, 63)
+                .addGap(265, 265, 265)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jLabel1)
                     .addComponent(jLabel3)
@@ -469,21 +464,18 @@ public class Main extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(50, 50, 50)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                        .addComponent(jLabel1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(usuarioTF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(jLabel3)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(senhaPF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(acessarBTN)
-                            .addComponent(cadastrarFuncionarioBTN)))
-                    .addComponent(jLabel2))
-                .addContainerGap(67, Short.MAX_VALUE))
+                .addComponent(jLabel1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(usuarioTF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jLabel3)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(senhaPF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(acessarBTN)
+                    .addComponent(cadastrarFuncionarioBTN))
+                .addContainerGap(51, Short.MAX_VALUE))
         );
 
         pack();
@@ -667,19 +659,21 @@ public class Main extends javax.swing.JFrame {
     private void acessarBTNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_acessarBTNActionPerformed
         File arquivo = new File("src/main/java/cadastros/cadastros.txt");
         try {
-            if (arquivo.exists()) {
-                BufferedReader leitura = new BufferedReader(new FileReader(arquivo));
-                String linha;
-                while ((linha = leitura.readLine()) != null) {
-                    String[] partes = linha.split(" ");
-                    if ((new String(Base64.getDecoder().decode(partes[0])).equals(usuarioTF.getText()))
-                            && (new String(Base64.getDecoder().decode(partes[1]))).equals(new String(senhaPF.getPassword()))) {
-                        liberaMenu();
-                        usuarioTF.setEnabled(false);
-                        senhaPF.setEnabled(false);
-                        acessarBTN.setEnabled(false);
-                        cadastrarFuncionarioBTN.setEnabled(false);
-                    }
+            if (!arquivo.exists()) {
+                arquivo.createNewFile();
+            }
+            BufferedReader leitura = new BufferedReader(new FileReader(arquivo));
+            String linha;
+            while ((linha = leitura.readLine()) != null) {
+                String[] partes = linha.split(" ");
+
+                if (partes[0].equals(Base64.getEncoder().encodeToString(usuarioTF.getText().getBytes()))
+                        && partes[1].equals(Base64.getEncoder().encodeToString(new String(senhaPF.getPassword()).getBytes()))) {
+                    liberaMenu();
+                    usuarioTF.setEnabled(false);
+                    senhaPF.setEnabled(false);
+                    acessarBTN.setEnabled(false);
+                    cadastrarFuncionarioBTN.setEnabled(false);
                 }
             }
         } catch (IOException e) {
@@ -766,7 +760,6 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JMenuItem consultarServico;
     private javax.swing.JMenu funcionarioMenu;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenuBar menuPrincipal;

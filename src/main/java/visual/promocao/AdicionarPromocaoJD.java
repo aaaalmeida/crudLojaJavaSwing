@@ -144,8 +144,15 @@ public class AdicionarPromocaoJD extends javax.swing.JDialog {
         if (!pc.adicionar(p)) {
             JOptionPane.showMessageDialog(null, "Promoção não cadastrada");
             resposta.setText(null);
-        } else
+        } else {
+            JOptionPane.showMessageDialog(null, "Promoção cadastrada");
             resposta.setText(String.format("Promoção criada com ID: %d", p.getIdPromocao()));
+        }
+
+        valFixoTF.setText(null);
+        valPercentTF.setText(null);
+        dataTF.setText(null);
+        horaTF.setText(null);
     }//GEN-LAST:event_adicionarPromocaoBTNActionPerformed
 
     private void sairActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sairActionPerformed

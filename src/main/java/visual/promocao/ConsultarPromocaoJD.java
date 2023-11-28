@@ -155,7 +155,9 @@ public class ConsultarPromocaoJD extends javax.swing.JDialog {
             porcentTF.setText(p.getPorcDesconto() + "");
             dataTF.setText(p.getData().toString());
             horaTF.setText(p.getHora().toString());
+            JOptionPane.showMessageDialog(null, "Promoção encontrada");
         } else {
+            idTF.setText(null);
             fixoTF.setText(null);
             porcentTF.setText(null);
             dataTF.setText(null);

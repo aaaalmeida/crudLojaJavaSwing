@@ -146,6 +146,9 @@ public class RemoverAnimalJD extends javax.swing.JDialog {
             especieTF.setText(a.getEspecie());
             donoTF.setText(a.getDono().getNome());
             resposta.setText(String.format("Animal %s removido", a.getIdAnimal()));
+            
+            a.getDono().removeAnimal(a);
+            JOptionPane.showMessageDialog(null, "Animal removido");
         } else {
             nomeTF.setText(null);
             especieTF.setText(null);

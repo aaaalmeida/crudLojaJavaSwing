@@ -155,6 +155,7 @@ public class ConsultarFuncionarioJD extends javax.swing.JDialog {
             cpfTF.setText(f.getCpf());
             usuarioTF.setText(f.getUsuario());
             senhaTF.setText(f.getSenha());
+            JOptionPane.showMessageDialog(null, "Funcionário não encontrado");
         } else {
             nomeTF.setText(null);
             cpfTF.setText(null);

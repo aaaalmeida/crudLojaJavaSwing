@@ -169,10 +169,14 @@ public class RemoverProdutoJD extends javax.swing.JDialog {
             precoTF.setText(String.valueOf(p.getPreco()));
             descricaoTA.setText(p.getDescricao());
             Promocao promocao = p.getPromocao();
-            String infoPromo = String.format("ID: %s \nDesconto Fixo: R$%.2f\nDesconto Porcentagem: %.2f%%", promocao.getIdPromocao(), promocao.getValorDesconto(), promocao.getPorcDesconto());
+            String infoPromo = String.format("ID: %s \nDesconto Fixo: R$%.2f\nDesconto Porcentagem: %.2f%%", 
+                    promocao.getIdPromocao(), promocao.getValorDesconto(), promocao.getPorcDesconto());
             promocaoTA.setText(infoPromo);
             resposta.setText("Produto removido");
+            JOptionPane.showMessageDialog(null, "Produto removido");
+
         } else {
+            idTF.setText(null);
             nomeTF.setText(null);
             precoTF.setText(null);
             descricaoTA.setText(null);

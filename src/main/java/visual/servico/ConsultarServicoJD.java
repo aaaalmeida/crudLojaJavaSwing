@@ -207,6 +207,7 @@ public class ConsultarServicoJD extends javax.swing.JDialog {
         Servico s = sc.consulta(Integer.valueOf(idTF.getText()));
 
         if (Objects.isNull(s)) {
+            idTF.setText(null);
             nomeServicoTF.setText(null);
             precoTF.setText(null);
             dataTF.setText(null);
@@ -214,8 +215,9 @@ public class ConsultarServicoJD extends javax.swing.JDialog {
             clienteTA.setText(null);
             promocaoTA.setText(null);
             animalTA.setText(null);
-            JOptionPane.showMessageDialog(null, "Serviço %s não encontrado");
+            JOptionPane.showMessageDialog(null, "Serviço não encontrado");
         } else {
+            JOptionPane.showMessageDialog(null, "Serviço encontrado");
             nomeServicoTF.setText(s.getNomeServico());
             precoTF.setText(String.valueOf(s.getPreco()));
             dataTF.setText(s.getData().toString());

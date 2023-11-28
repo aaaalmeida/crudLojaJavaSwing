@@ -179,6 +179,8 @@ public class RemoverCompraJD extends javax.swing.JDialog {
             resposta.setText(null);
             precoTF.setText(null);
         } else {
+            JOptionPane.showMessageDialog(null, "Compra não removida");
+
             resposta.setText("Compra removida");
             clienteTF.setText(String.format("%d %s", compra.getCliente().getIdCliente(), compra.getCliente().getNome()));
             precoTF.setText(String.valueOf(compra.getPrecoTotal()));

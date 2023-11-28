@@ -160,7 +160,9 @@ public class RemoverPromocaoJD extends javax.swing.JDialog {
             dataTF.setText(String.valueOf(p.getData()));
             horaTF.setText(String.valueOf(p.getHora()));
             resposta.setText("Promoção removida");
+            JOptionPane.showMessageDialog(null, "Promoção removida");
         } else {
+            idTF.setText(null);
             valFixoTF.setText(null);
             valPorcTF.setText(null);
             dataTF.setText(null);

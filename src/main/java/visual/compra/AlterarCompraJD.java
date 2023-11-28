@@ -191,7 +191,13 @@ public class AlterarCompraJD extends javax.swing.JDialog {
 
         if (!cc.altera(Integer.valueOf(idTF.getText()), args)) {
             JOptionPane.showMessageDialog(null, "Compra não alterada");
+        } else {
+            JOptionPane.showMessageDialog(null, "Compra alterada");
         }
+        idTF.setText(null);
+        clienteJL.setSelectedIndex(-1);
+        produtosJL.setSelectedIndex(-1);
+        servicosJL.setSelectedIndex(-1);
     }//GEN-LAST:event_alterarCompraBTNActionPerformed
 
     private void sairActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sairActionPerformed

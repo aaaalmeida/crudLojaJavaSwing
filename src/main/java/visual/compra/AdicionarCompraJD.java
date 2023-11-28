@@ -185,8 +185,14 @@ public class AdicionarCompraJD extends javax.swing.JDialog {
         if (!cc.adicionar(compra)) {
             resposta.setText(null);
             JOptionPane.showMessageDialog(null, "Compra não cadastrado");
-        } else
+        } else {
+            JOptionPane.showMessageDialog(null, "Compra cadastrado");
+            clienteJL.setSelectedIndex(-1);
+            produtosJL.setSelectedIndex(-1);
+            servicosJL.setSelectedIndex(-1);
+            
             resposta.setText(String.format("Compra cadastrada com ID: %d", compra.getIdCompra()));
+        }
     }//GEN-LAST:event_adicionarCompraBTNActionPerformed
 
     private void sairActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sairActionPerformed

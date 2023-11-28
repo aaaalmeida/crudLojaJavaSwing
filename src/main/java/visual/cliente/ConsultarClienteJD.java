@@ -179,7 +179,9 @@ public class ConsultarClienteJD extends javax.swing.JDialog {
             animaisJL.setListData(c.infoAnimal());
             comprasJL.setListData(c.infoCompras());
             servicosJL.setListData(c.infoServicos());
+            JOptionPane.showMessageDialog(null, "Cliente encontrado");
         } else {
+            idTF.setText(null);
             nomeTF.setText(null);
             cpfTF.setText(null);
 

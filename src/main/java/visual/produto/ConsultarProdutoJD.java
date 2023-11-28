@@ -163,15 +163,19 @@ public class ConsultarProdutoJD extends javax.swing.JDialog {
         Produto p = pc.consulta(Integer.valueOf(idTF.getText()));
 
         if (!Objects.isNull(p)) {
+            JOptionPane.showMessageDialog(null, "Produto encontrado");
+
             nomeTF.setText(p.getNomeProduto());
             precoTF.setText(String.valueOf(p.getPreco()));
             descricaoTA.setText(p.getDescricao());
             Promocao promocao = p.getPromocao();
             if (!Objects.isNull(promocao)) {
-                String infoPromo = String.format("ID: %s \nDesconto Fixo: R$%.2\nDesconto Porcentagem: %.2f%%", promocao.getIdPromocao(), promocao.getValorDesconto(), promocao.getPorcDesconto());
+                String infoPromo = String.format("ID: %s \nDesconto Fixo: R$%.2\nDesconto Porcentagem: %.2f%%",
+                        promocao.getIdPromocao(), promocao.getValorDesconto(), promocao.getPorcDesconto());
                 promocaoTA.setText(infoPromo);
             }
         } else {
+            idTF.setText(null);
             nomeTF.setText(null);
             precoTF.setText(null);
             descricaoTA.setText(null);

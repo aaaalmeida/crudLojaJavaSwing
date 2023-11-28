@@ -117,8 +117,12 @@ public class AdicionarClienteJD extends javax.swing.JDialog {
         if (!cc.adicionar(c)) {
             JOptionPane.showMessageDialog(null, "Cliente não cadastrado");
             resposta.setText(null);
-        } else
+        } else {
             resposta.setText(String.format("Cliente cadastrado com ID: %d", c.getIdCliente()));
+            nomeTF.setText(null);
+            cpfTF.setText(null);
+            JOptionPane.showMessageDialog(null, "Cliente cadastrado");
+        }
     }//GEN-LAST:event_adicionarClienteBTNActionPerformed
 
     private void sairActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sairActionPerformed

@@ -148,7 +148,10 @@ public class AdicionarAnimalJD extends javax.swing.JDialog {
 
         if (ac.adicionar(animal)) {
             donoJL.setSelectedIndex(-1);
+            nomeTF.setText(null);
+            especieTF.setText(null);
             resposta.setText(String.format("Animal adicionado com ID: %d", animal.getIdAnimal()));
+            JOptionPane.showMessageDialog(null, "Animal cadastrado");
         } else {
             donoJL.setSelectedIndex(-1);
             resposta.setText(null);

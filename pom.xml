@@ -11,14 +11,4 @@
         <maven.compiler.target>11</maven.compiler.target>
         <exec.mainClass>com.mycompany.trabpv.TrabPV</exec.mainClass>
     </properties>
-    <build>
-        <resources>
-            <resource>
-                <directory>src/main/java</directory>
-                <includes>
-                    <include>/sisifo.jpg</include>
-                </includes>
-            </resource>
-        </resources>
-    </build>
 </project>

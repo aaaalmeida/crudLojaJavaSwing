@@ -14,17 +14,17 @@ import models.Promocao;
  * @author arthu
  */
 public class AlterarProdutoJD extends javax.swing.JDialog {
-
+    
     private ProdutoController pc;
     private PromocaoController prom;
-
+    
     public AlterarProdutoJD(java.awt.Frame parent, boolean modal, ProdutoController pc, PromocaoController prom) {
         super(parent, modal);
         this.pc = pc;
         this.prom = prom;
         initComponents();
         setTitle("Alterar Produto");
-
+        
         Integer[] promocoesKeys = prom.relatorio().keySet().toArray(new Integer[0]);
         String[] listData = new String[promocoesKeys.length];
         for (int i = 0; i < promocoesKeys.length; i++) {
@@ -160,10 +160,18 @@ public class AlterarProdutoJD extends javax.swing.JDialog {
             promocao = prom.consulta(Integer.valueOf(promocoesJL.getSelectedValue()));
         }
         Object[] args = new Object[]{nomeTF.getText(), descricaoTA.getText(), promocao, precoTF.getText()};
-
+        
         if (!pc.altera(Integer.valueOf(idTF.getText()), args)) {
             JOptionPane.showMessageDialog(null, "Produto não alterado");
+        } else {
+            JOptionPane.showMessageDialog(null, "Produto alterado");
         }
+        
+        idTF.setText(null);
+        nomeTF.setText(null);
+        precoTF.setText(null);
+        descricaoTA.setText(null);
+        promocoesJL.setSelectedIndex(-1);
     }//GEN-LAST:event_alterarProdutoBTNActionPerformed
 
     private void sairActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sairActionPerformed

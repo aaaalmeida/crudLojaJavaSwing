@@ -159,7 +159,9 @@ public class RemoverFuncionarioJD extends javax.swing.JDialog {
             usuarioTF.setText(f.getUsuario());
             senhaPF.setText(f.getSenha());
             resposta.setText("Funcionário removido");
+            JOptionPane.showMessageDialog(null, "Funcionário não removido");
         } else {
+            idTF.setText(null);
             nomeTF.setText(null);
             cpfTF.setText(null);
             usuarioTF.setText(null);

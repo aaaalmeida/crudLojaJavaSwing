@@ -14,9 +14,9 @@ import models.Compra;
  * @author arthu
  */
 public class ConsultarCompraJD extends javax.swing.JDialog {
-    
+
     private CompraController cc;
-    
+
     public ConsultarCompraJD(java.awt.Frame parent, boolean modal, CompraController cc) {
         super(parent, modal);
         this.cc = cc;
@@ -165,7 +165,7 @@ public class ConsultarCompraJD extends javax.swing.JDialog {
 
     private void consultarCompraBTNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_consultarCompraBTNActionPerformed
         Compra compra = cc.consulta(Integer.valueOf(idTF.getText()));
-        
+
         if (Objects.isNull(compra)) {
             JOptionPane.showMessageDialog(null, "Compra não encontrada");
             clienteTF.setText(null);
@@ -173,15 +173,17 @@ public class ConsultarCompraJD extends javax.swing.JDialog {
             produtosJL.setListData(new String[]{});
             servicosJL.setListData(new String[]{});
         } else {
+            JOptionPane.showMessageDialog(null, "Compra encontrada");
+
             clienteTF.setText(String.format("%d %s", compra.getCliente().getIdCliente(), compra.getCliente().getNome()));
             precoTF.setText(String.valueOf(compra.getPrecoTotal()));
-            
+
             String[] produtosList = new String[compra.getlProdutos().size()];
             for (int i = 0; i < produtosList.length; i++) {
                 produtosList[i] = String.format("%d %s", compra.getlProdutos().get(i).getIdProduto(), compra.getlProdutos().get(i).getNomeProduto());
             }
             produtosJL.setListData(produtosList);
-            
+
             String[] servicosList = new String[compra.getlServicos().size()];
             for (int i = 0; i < servicosList.length; i++) {
                 servicosList[i] = String.format("%d %s", compra.getlServicos().get(i).getIdServico(), compra.getlServicos().get(i).getIdServico());

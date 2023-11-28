@@ -11,6 +11,7 @@ import controllers.ServicoController;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Objects;
 import javax.swing.JOptionPane;
 import models.Animal;
 import models.Cliente;
@@ -233,6 +234,11 @@ public class AlterarServicoJD extends javax.swing.JDialog {
     private void alterarServicoBTNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_alterarServicoBTNActionPerformed
         Animal animal = ac.consulta(Integer.valueOf(animaisJL.getSelectedValue()));
         Cliente cliente = cc.consulta(Integer.valueOf(clientesJL.getSelectedValue()));
+        if(!Objects.isNull(cliente)) {
+            JOptionPane.showMessageDialog(null, "Cliente não pode ser nulo");
+            return;
+        }
+        
         Promocao promocao = null;
         if (!promocoesJL.isSelectionEmpty()) {
             promocao = pc.consulta(Integer.valueOf(promocoesJL.getSelectedValue()));
@@ -251,9 +257,14 @@ public class AlterarServicoJD extends javax.swing.JDialog {
         if (!sc.altera(Integer.valueOf(idTF.getText()), args)) {
             JOptionPane.showMessageDialog(null, String.format("Serviço %s não alterado", idTF.getText()));
         }
+        else JOptionPane.showMessageDialog(null, "Serviço alterado");
 
-        promocoesJL.setSelectedIndex(-1);
+        nomeServicoTF.setText(null);
+        precoTF.setText(null);
+        dataTF.setText(null);
+        horaTF.setText(null);
         clientesJL.setSelectedIndex(-1);
+        promocoesJL.setSelectedIndex(-1);
         animaisJL.setSelectedIndex(-1);
     }//GEN-LAST:event_alterarServicoBTNActionPerformed
 

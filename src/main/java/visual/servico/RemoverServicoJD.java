@@ -235,7 +235,9 @@ public class RemoverServicoJD extends javax.swing.JDialog {
             animalTA.setText(String.format("ID: %d \nNome: %s \nEspécie: %s", a.getIdAnimal(), a.getNome(), a.getEspecie()));
 
             resposta.setText(String.format("Serviço %d removido", s.getIdServico()));
+            JOptionPane.showMessageDialog(null, "Serviço removido");
         } else {
+            idTF.setText(null);
             nomeServicoTF.setText(null);
             precoTF.setText(null);
             dataTF.setText(null);

@@ -16,17 +16,17 @@ import models.Cliente;
  * @author arthu
  */
 public class AlterarAnimalJD extends javax.swing.JDialog {
-
+    
     private AnimalController ac;
     private ClienteController cc;
-
+    
     public AlterarAnimalJD(java.awt.Frame parent, boolean modal, AnimalController ac, ClienteController cc) {
         super(parent, modal);
         this.ac = ac;
         this.cc = cc;
         initComponents();
         setTitle("Alterar Animal");
-
+        
         Integer[] donosKeys = cc.relatorio().keySet().toArray(new Integer[0]);
         String[] listData = new String[donosKeys.length];
         for (int i = 0; i < donosKeys.length; i++) {
@@ -143,22 +143,28 @@ public class AlterarAnimalJD extends javax.swing.JDialog {
     private void alterarAnimalBTNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_alterarAnimalBTNActionPerformed
         Cliente dono = null;
         Animal animal = ac.consulta(Integer.valueOf(idTF.getText()));
-
-        // remove o antigo dono
-        if(!Objects.isNull(animal.getDono()))
-            animal.getDono().removeAnimal(animal);
         
-        // add animal ao novo dono
+        if (!Objects.isNull(animal.getDono())) {
+            animal.getDono().removeAnimal(animal);
+        }
+        
         if (!donoJL.isSelectionEmpty()) {
             dono = cc.consulta(Integer.valueOf(donoJL.getSelectedValue()));
-            if(!Objects.isNull(dono))
+            if (!Objects.isNull(dono)) {
                 dono.addAnimal(animal);
+            }
         }
         
         Object[] args = new Object[]{nomeTF.getText(), especieTF.getText(), dono};
-
+        
         if (!ac.altera(Integer.valueOf(idTF.getText()), args)) {
             JOptionPane.showMessageDialog(null, "Animal não alterado");
+        } else {
+            idTF.setText(null);
+            nomeTF.setText(null);
+            especieTF.setText(null);
+            donoJL.setSelectedIndex(-1);
+            JOptionPane.showMessageDialog(null, "Animal alterado");
         }
     }//GEN-LAST:event_alterarAnimalBTNActionPerformed
 

@@ -134,7 +134,9 @@ public class RemoverClienteJD extends javax.swing.JDialog {
             nomeTF.setText(c.getNome());
             cpfTF.setText(c.getCpf());
             resposta.setText("Cliente removido");
+            JOptionPane.showMessageDialog(null, "Cliente removido");
         } else {
+            idTF.setText(null);
             nomeTF.setText(null);
             cpfTF.setText(null);
             resposta.setText(null);

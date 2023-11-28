@@ -147,10 +147,12 @@ public class AlterarFuncionarioJD extends javax.swing.JDialog {
         if (!fc.altera(Integer.valueOf(idTF.getText()), args)) {
             JOptionPane.showMessageDialog(null, "Funcionário não alterado");
         } else {
+            JOptionPane.showMessageDialog(null, "Funcionário não alterado");
+
             String usuarioCriptografado = Base64.getEncoder().encodeToString(args[0].getBytes());
             String senhaCriptografado = Base64.getEncoder().encodeToString(args[1].getBytes());
 
-            File pasta = new File("../trabPV/src/main/java/cadastros");
+            File pasta = new File("src/main/java/cadastros");
             if (!pasta.exists()) {
                 pasta.mkdirs();
             }
@@ -165,6 +167,12 @@ public class AlterarFuncionarioJD extends javax.swing.JDialog {
                 e.printStackTrace();
             }
         }
+
+        idTF.setText(null);
+        nomeTF.setText(null);
+        cpfTF.setText(null);
+        usuarioTF.setText(null);
+        senhaPF.setText(null);
     }//GEN-LAST:event_alterarFuncionarioBTNActionPerformed
 
     private void sairActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sairActionPerformed

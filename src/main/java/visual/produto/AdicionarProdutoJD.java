@@ -15,17 +15,17 @@ import models.Promocao;
  * @author arthu
  */
 public class AdicionarProdutoJD extends javax.swing.JDialog {
-
+    
     private ProdutoController pc;
     private PromocaoController prom;
-
+    
     public AdicionarProdutoJD(java.awt.Frame parent, boolean modal, ProdutoController pc, PromocaoController prom) {
         super(parent, modal);
         this.pc = pc;
         this.prom = prom;
         initComponents();
         setTitle("Adicionar Produto");
-
+        
         Integer[] promocoesKeys = prom.relatorio().keySet().toArray(new Integer[0]);
         String[] listData = new String[promocoesKeys.length];
         for (int i = 0; i < promocoesKeys.length; i++) {
@@ -167,7 +167,13 @@ public class AdicionarProdutoJD extends javax.swing.JDialog {
             resposta.setText(null);
         } else {
             resposta.setText(String.format("Produto adicionado com ID: %d", p.getIdProduto()));
+            JOptionPane.showMessageDialog(null, "Produtod cadastrado");
         }
+        
+        nomeTF.setText(null);
+        precoTF.setText(null);
+        descricaoTA.setText(null);
+        promocoesJL.setSelectedIndex(-1);
     }//GEN-LAST:event_adicionarProdutoBTNActionPerformed
 
     private void sairActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sairActionPerformed

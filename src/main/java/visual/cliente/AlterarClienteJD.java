@@ -122,6 +122,11 @@ public class AlterarClienteJD extends javax.swing.JDialog {
 
         if (!cc.altera(Integer.valueOf(idTF.getText()), args)) {
             JOptionPane.showMessageDialog(null, "Cliente não alterado");
+        } else {
+            JOptionPane.showMessageDialog(null, "Cliente alterado");
+            nomeTF.setText(null);
+            idTF.setText(null);
+            cpfTF.setText(null);
         }
     }//GEN-LAST:event_alterarClienteBTNActionPerformed
 

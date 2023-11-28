@@ -42,9 +42,9 @@
                           <Component id="jLabel5" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Component id="idTF" alignment="0" max="32767" attributes="0"/>
                           <Component id="jLabel1" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="valPercent" alignment="0" max="32767" attributes="0"/>
+                          <Component id="valPercentTF" alignment="0" max="32767" attributes="0"/>
                           <Component id="jLabel2" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="valFixo" alignment="0" max="32767" attributes="0"/>
+                          <Component id="valFixoTF" alignment="0" max="32767" attributes="0"/>
                           <Component id="dataTF" alignment="0" max="32767" attributes="0"/>
                           <Component id="horaTF" alignment="0" max="32767" attributes="0"/>
                       </Group>
@@ -66,11 +66,11 @@
               <EmptySpace type="separate" max="-2" attributes="0"/>
               <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="valPercent" min="-2" max="-2" attributes="0"/>
+              <Component id="valPercentTF" min="-2" max="-2" attributes="0"/>
               <EmptySpace type="separate" max="-2" attributes="0"/>
               <Component id="jLabel2" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="valFixo" min="-2" max="-2" attributes="0"/>
+              <Component id="valFixoTF" min="-2" max="-2" attributes="0"/>
               <EmptySpace type="separate" max="-2" attributes="0"/>
               <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
@@ -89,7 +89,7 @@
     </DimensionLayout>
   </Layout>
   <SubComponents>
-    <Component class="javax.swing.JTextField" name="valPercent">
+    <Component class="javax.swing.JTextField" name="valPercentTF">
     </Component>
     <Component class="javax.swing.JButton" name="alterarPromocaoBTN">
       <Properties>
@@ -129,7 +129,7 @@
         <Property name="text" type="java.lang.String" value="Valor Fixo"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JTextField" name="valFixo">
+    <Component class="javax.swing.JTextField" name="valFixoTF">
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel3">
       <Properties>
