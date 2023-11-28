@@ -4,13 +4,22 @@
  */
 package visual;
 
-import java.io.IOException;
-
 import controllers.*;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.io.IOException;
+
 import java.util.Base64;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+
 import visual.animal.*;
 import visual.cliente.*;
 import visual.funcionario.*;
@@ -33,6 +42,10 @@ public class Main extends javax.swing.JFrame {
     private PromocaoController promCont;
     private ServicoController servCont;
 
+    private Connection connection;
+
+    private String nomeBanco;
+
     public Main() {
         initComponents();
         this.funcCont = new FuncionarioController();
@@ -42,6 +55,39 @@ public class Main extends javax.swing.JFrame {
         this.prodCont = new ProdutoController();
         this.promCont = new PromocaoController();
         this.servCont = new ServicoController();
+
+        nomeBanco = "teste";
+
+    }
+
+    private boolean checkDatabase(Connection conection) throws SQLException {
+        String query = "SELECT 1 FROM pg_database WHERE datname = ?";
+        try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setString(1, nomeBanco);
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                return resultSet.next();
+            }
+        }
+    }
+
+    private void createDatabase(Connection connection) throws SQLException {
+        try (PreparedStatement preparedStatement = connection.prepareStatement("CREATE DATABASE " + nomeBanco)) {
+            preparedStatement.executeUpdate();
+        }
+    }
+
+    private static void createTables(Connection connection) throws SQLException {
+        Statement statement = connection.createStatement();
+
+        String funcionarioQuery = "CREATE TABLE IF NOT EXISTS funcionarios "
+                + "(idFuncionario SERIAL PRIMARY KEY, nome VARCHAR(50) NOT NULL, "
+                + "cpf VARCHAR(11) NOT NULL, usuario VARCHAR(50) NOT NULL, senha VARCHAR(50) NOT NULL);";
+        String clienteQuery = "CREATE TABLE IF NOT EXISTS clientes "
+                + "(idCliente SERIAL PRIMARY KEY, nome VARCHAR(50) NOT NULL, cpf VARCHAR(11) NOT NULL);";
+        String animalQuery = "CREATE TABLE IF NOT EXISTS animais "
+                + "(idAnimal SERIAL PRIMARY KEY, nome VARCHAR(50) NOT NULL, especie VARCHAR(50), "
+                + "idCliente INT NOT NULL, FOREIGN KEY (idCliente) REFERENCES clientes (idCliente));";
+        // TODO: terminar as tabelas
     }
 
     /**
