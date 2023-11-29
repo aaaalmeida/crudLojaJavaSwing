@@ -87,7 +87,24 @@ public class Main extends javax.swing.JFrame {
         String animalQuery = "CREATE TABLE IF NOT EXISTS animais "
                 + "(idAnimal SERIAL PRIMARY KEY, nome VARCHAR(50) NOT NULL, especie VARCHAR(50), "
                 + "idCliente INT NOT NULL, FOREIGN KEY (idCliente) REFERENCES clientes (idCliente));";
-        // TODO: terminar as tabelas
+        String promocaoQuery = "CREATE TABLE IF NOT EXISTS promocoes "
+                + "(idPromocao SERIAL PRIMARY KEY, data DATE, hora TIME, "
+                + "valorFixo NUMERIC(10,2) NOT NULL, valorPorcentagem NUMERIC(10,2) NOT NULL);";
+        String servicoQuery = "CREATE TABLE servicos "
+                + "(idServico SERIAL PRIMARY KEY, nome VARCHAR(50), "
+                + "data DATE, hora TIME, preco NUMERIC(10,2) NOT NULL,"
+                + "idCliente INT NOT NULL, idAnimal INT NOT NULL, idPromocao INT, "
+                + "FOREIGN KEY (idCliente) REFERENCES clientes (idCliente), "
+                + "FOREIGN KEY (idAnimal) REFERENCES animais (idAnimal), "
+                + "FOREIGN KEY (idPromocao) REFERENCES promocoes (idPromocao));";
+        String produtoQuery = "CREATE TABLE IF NOT EXISTS produtos "
+                + "(idProduto SERIAL PRIMARY KEY, nome VARCHAR(50) NOT NULL, "
+                + "preco NUMERIC(10,2) NOT NULL, descricao VARCHAR(50), idPromocao INT, "
+                + "FOREIGN KEY (idPromocao) REFERENCES promocoes (idPromocao));";
+        String compraQuery = "CREATE TABLE IF NOT EXISTS compra "
+                + "(idCompra SERIAL PRIMARY KEY, precoTotal NUMERIC(10,2) NOT NULL, idCliente INT NOT NULL, "
+                + "FOREIGN KEY (idCliente) REFERENCES clientes (idCliente));";
+        
     }
 
     /**
