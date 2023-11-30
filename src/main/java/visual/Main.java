@@ -45,6 +45,7 @@ public class Main extends javax.swing.JFrame {
     private Connection connection;
 
     private String nomeBanco;
+    private String url;
 
     public Main() {
         initComponents();
@@ -56,12 +57,37 @@ public class Main extends javax.swing.JFrame {
         this.promCont = new PromocaoController();
         this.servCont = new ServicoController();
 
-        nomeBanco = "teste";
+        nomeBanco = "teste1";
+        url = "jdbc:postgresql://localhost:5432/";
 
+        try {
+            connection = DriverManager.getConnection(url, "postgres", "postgres");
+
+            if (!checkDatabase(connection)) {
+                createDatabase(connection);
+                url += nomeBanco;
+                connection = DriverManager.getConnection(url, "postgres", "postgres");
+                createTables(connection);
+            } else {
+                url += nomeBanco;
+                connection = DriverManager.getConnection(url, "postgres", "postgres");
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     private boolean checkDatabase(Connection conection) throws SQLException {
-        String query = "SELECT 1 FROM pg_database WHERE datname = ?";
+        String query = "SELECT 1 FROM pg_database WHERE datname = ?;";
         try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             preparedStatement.setString(1, nomeBanco);
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
@@ -71,8 +97,9 @@ public class Main extends javax.swing.JFrame {
     }
 
     private void createDatabase(Connection connection) throws SQLException {
-        try (PreparedStatement preparedStatement = connection.prepareStatement("CREATE DATABASE " + nomeBanco)) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement("CREATE DATABASE " + nomeBanco + ";")) {
             preparedStatement.executeUpdate();
+            preparedStatement.close();
         }
     }
 
@@ -101,10 +128,29 @@ public class Main extends javax.swing.JFrame {
                 + "(idProduto SERIAL PRIMARY KEY, nome VARCHAR(50) NOT NULL, "
                 + "preco NUMERIC(10,2) NOT NULL, descricao VARCHAR(50), idPromocao INT, "
                 + "FOREIGN KEY (idPromocao) REFERENCES promocoes (idPromocao));";
-        String compraQuery = "CREATE TABLE IF NOT EXISTS compra "
+        String compraQuery = "CREATE TABLE IF NOT EXISTS compras "
                 + "(idCompra SERIAL PRIMARY KEY, precoTotal NUMERIC(10,2) NOT NULL, idCliente INT NOT NULL, "
                 + "FOREIGN KEY (idCliente) REFERENCES clientes (idCliente));";
-        
+        String comprasProdutosQuery = "CREATE TABLE IF NOT EXISTS compras_produtos "
+                + "(idCompraProduto SERIAL PRIMARY KEY, idCompra INT NOT NULL, idProduto INT NOT NULL, "
+                + "FOREIGN KEY (idCompra) REFERENCES compras (idCompra), "
+                + "FOREIGN KEY (idProduto) REFERENCES produtos (idProduto));";
+        String comprasServicosQuery = "CREATE TABLE IF NOT EXISTS compras_servicos "
+                + "(idCompraServico SERIAL PRIMARY KEY, idCompra INT NOT NULL, idServico INT NOT NULL, "
+                + "FOREIGN KEY (idCompra) REFERENCES compras (idCompra), "
+                + "FOREIGN KEY (idServico) REFERENCES servicos (idServico));";
+
+        statement.executeUpdate(funcionarioQuery);
+        statement.executeUpdate(clienteQuery);
+        statement.executeUpdate(animalQuery);
+        statement.executeUpdate(promocaoQuery);
+        statement.executeUpdate(servicoQuery);
+        statement.executeUpdate(produtoQuery);
+        statement.executeUpdate(compraQuery);
+        statement.executeUpdate(comprasProdutosQuery);
+        statement.executeUpdate(comprasServicosQuery);
+
+        statement.close();
     }
 
     /**
