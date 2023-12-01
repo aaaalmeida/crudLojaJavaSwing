@@ -24,7 +24,7 @@ public class NewClass {
 
         try {
             connection = DriverManager.getConnection(url, "postgres", "postgres");
-            fTeste = new FuncionarioDAOImpl(connection);
+            fTeste = new FuncionarioDAOImpl(url);
 
             System.out.println("ta indo");
             fTeste.listarRelatorio();
