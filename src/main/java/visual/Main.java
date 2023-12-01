@@ -6,6 +6,8 @@ package visual;
 
 import controllers.*;
 
+import DAOImplementation.*;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -49,13 +51,6 @@ public class Main extends javax.swing.JFrame {
 
     public Main() {
         initComponents();
-        this.funcCont = new FuncionarioController();
-        this.clieCont = new ClienteController();
-        this.animCont = new AnimalController();
-        this.compCont = new CompraController();
-        this.prodCont = new ProdutoController();
-        this.promCont = new PromocaoController();
-        this.servCont = new ServicoController();
 
         nomeBanco = "teste1";
         url = "jdbc:postgresql://localhost:5432/";
@@ -84,6 +79,14 @@ public class Main extends javax.swing.JFrame {
                 e.printStackTrace();
             }
         }
+
+        this.funcCont = new FuncionarioController();
+        this.clieCont = new ClienteController();
+        this.animCont = new AnimalController();
+        this.compCont = new CompraController();
+        this.prodCont = new ProdutoController();
+        this.promCont = new PromocaoController();
+        this.servCont = new ServicoController();
     }
 
     private boolean checkDatabase(Connection conection) throws SQLException {
