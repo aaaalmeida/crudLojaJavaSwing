@@ -1,10 +1,10 @@
+package DAOImplementation;
+
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package DAOImplementation;
-
-import models.Funcionario;
+import models.Cliente;
 import interfaces.DAOInterface;
 
 import java.sql.Connection;
@@ -21,29 +21,28 @@ import java.util.Objects;
  *
  * @author arthu
  */
-public class FuncionarioDAOImpl implements DAOInterface<Funcionario> {
+public class ClienteDAOImpl implements DAOInterface<Cliente> {
 
-    private HashMap<Integer, Funcionario> funcionarios;
+    private HashMap<Integer, Cliente> clientes;
     private String url;
 
-    public FuncionarioDAOImpl(String url) {
-        this.funcionarios = new HashMap<>();
+    public ClienteDAOImpl(String url) {
+        this.clientes = new HashMap<>();
         this.url = url;
+
         Connection connection = null;
 
         try {
             connection = DriverManager.getConnection(url, "postgres", "postgres");
             Statement statement = connection.createStatement();
-            ResultSet rs = statement.executeQuery("SELECT * FROM funcionarios;");
+            ResultSet rs = statement.executeQuery("SELECT * FROM clientes;");
 
             while (rs.next()) {
-                Funcionario funcionario = new Funcionario(
-                        rs.getInt("idfuncionario"),
-                        rs.getString("usuario"),
-                        rs.getString("senha"),
+                Cliente cliente = new Cliente(
+                        rs.getInt("idcliente"),
                         rs.getString("nome"),
                         rs.getString("cpf"));
-                funcionarios.put(funcionario.getIdFuncionario(), funcionario);
+                clientes.put(cliente.getIdCliente(), cliente);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -58,23 +57,17 @@ public class FuncionarioDAOImpl implements DAOInterface<Funcionario> {
         }
     }
 
-    public void listarRelatorio() {
-        funcionarios.forEach((Integer, Funcionario) -> System.out.println(Funcionario));
-    }
-
     @Override
-    public Boolean adicionar(Funcionario obj) {
-        if (!funcionarios.containsKey(obj.getIdFuncionario())) {
-            funcionarios.put(obj.getIdFuncionario(), obj);
+    public Boolean adicionar(Cliente obj) {
+        if (!clientes.containsKey(obj.getIdCliente())) {
+            clientes.put(obj.getIdCliente(), obj);
 
             Connection connection = null;
             try {
                 connection = DriverManager.getConnection(url, "postgres", "postgres");
-                PreparedStatement ps = connection.prepareStatement("INSERT INTO funcionarios (nome, cpf, usuario, senha) VALUES (?, ?, ?, ?);");
+                PreparedStatement ps = connection.prepareStatement("INSERT INTO clientes (nome, cpf) VALUES (?, ?);");
                 ps.setString(1, obj.getNome());
                 ps.setString(2, obj.getCpf());
-                ps.setString(3, obj.getUsuario());
-                ps.setString(4, obj.getSenha());
                 ps.executeUpdate();
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -91,51 +84,45 @@ public class FuncionarioDAOImpl implements DAOInterface<Funcionario> {
             return true;
         }
 
-        System.err.println("ERRO: CADASTRO DE FUNCIONARIO");
+        System.err.println("ERRO: CADASTRO DE CLIENTE");
         return false;
     }
 
     @Override
-    public Funcionario consultaPorId(Integer id) {
-        if (!Objects.isNull(id)) {
-            if (funcionarios.containsKey(id)) {
-                return (Funcionario) funcionarios.get(id);
-            }
+    public Cliente consultaPorId(Integer id) {
+        if (clientes.containsKey(id)) {
+            return (Cliente) clientes.get(id);
         }
 
-        System.err.println("ERRO: CONSULTA DE FUNCIONARIO VIA ID");
+        System.err.println("ERRO: CONSULTA DE CLIENTE VIA ID");
         return null;
     }
 
-    public Funcionario consultaPorCpf(String cpf) {
-        for (Integer i : funcionarios.keySet()) {
-            if (funcionarios.get(i).getCpf().equals(cpf)) {
-                return funcionarios.get(i);
+    public Cliente consultaPorCpf(String cpf) {
+        for (Integer i : clientes.keySet()) {
+            if (clientes.get(i).getCpf().equals(cpf)) {
+                return clientes.get(i);
             }
         }
-        System.err.println("ERRO: CONSULTA DE FUNCIONARIO VIA CPF");
+        System.err.println("ERRO: CONSULTA DE CLIENTE VIA CPF");
         return null;
     }
 
     @Override
     public Boolean altera(Integer id, Object[] args) {
         if (!Objects.isNull(id)) {
-            if (funcionarios.containsKey(id)) {
-                Funcionario f = (Funcionario) funcionarios.get(id);
-                f.setUsuario(String.valueOf(args[0]));
-                f.setSenha(String.valueOf(args[1]));
-                f.setNome(String.valueOf(args[2]));
-                f.setCpf(String.valueOf(args[3]));
+            if (clientes.containsKey(id)) {
+                Cliente c = (Cliente) clientes.get(id);
+                c.setNome(String.valueOf(args[0]));
+                c.setCpf(String.valueOf(args[1]));
 
                 Connection connection = null;
                 try {
                     connection = DriverManager.getConnection(url, "postgres", "postgres");
-                    PreparedStatement ps = connection.prepareStatement("UPDATE funcionarios SET nome = ?, cpf = ?, usuario = ?, senha = ? WHERE idfuncionario = ?;");
-                    ps.setString(1, f.getNome());
-                    ps.setString(2, f.getCpf());
-                    ps.setString(3, f.getUsuario());
-                    ps.setString(4, f.getSenha());
-                    ps.setInt(5, f.getIdFuncionario());
+                    PreparedStatement ps = connection.prepareStatement("UPDATE clientes SET nome = ?, cpf = ? WHERE idcliente = ?;");
+                    ps.setString(1, c.getNome());
+                    ps.setString(2, c.getCpf());
+                    ps.setInt(3, c.getIdCliente());
                     ps.executeUpdate();
                 } catch (SQLException e) {
                     e.printStackTrace();
@@ -152,19 +139,19 @@ public class FuncionarioDAOImpl implements DAOInterface<Funcionario> {
             }
         }
 
-        System.err.println("ERRO: ALTERACAO DE FUNCIONARIO");
+        System.err.println("ERRO: ALTERAÇÃO DE CLIENTE");
         return false;
     }
 
     @Override
-    public Funcionario remove(Integer id) {
-        Funcionario f = (Funcionario) funcionarios.remove(id);
+    public Cliente remove(Integer id) {
+        Cliente c = (Cliente) clientes.remove(id);
 
         Connection connection = null;
         try {
             connection = DriverManager.getConnection(url, "postgres", "postgres");
-            PreparedStatement ps = connection.prepareStatement("DELETE FROM funcionarios WHERE idfuncionario = ?;");
-            ps.setInt(1, f.getIdFuncionario());
+            PreparedStatement ps = connection.prepareStatement("DELETE FROM clientes WHERE idcliente = ?;");
+            ps.setInt(1, c.getIdCliente());
             ps.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -178,11 +165,11 @@ public class FuncionarioDAOImpl implements DAOInterface<Funcionario> {
             }
         }
 
-        return f;
+        return c;
     }
 
     @Override
-    public HashMap<Integer, Funcionario> relatorio() {
-        return this.funcionarios;
+    public HashMap<Integer, Cliente> relatorio() {
+        return this.clientes;
     }
 }

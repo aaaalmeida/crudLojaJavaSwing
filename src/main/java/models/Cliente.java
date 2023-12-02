@@ -13,15 +13,13 @@ import java.util.ArrayList;
 public class Cliente extends Pessoa {
 
     private Integer idCliente;
-    private static Integer cont = 0;
     private ArrayList<Animal> lAnimais;
     private ArrayList<Compra> lCompra;
     private ArrayList<Servico> lServico;
 
-    public Cliente(String nome, String cpf) {
+    public Cliente(Integer idCliente, String nome, String cpf) {
         super(nome, cpf);
-        this.idCliente = cont;
-        cont++;
+        this.idCliente = idCliente;
         this.lAnimais = new ArrayList();
         this.lCompra = new ArrayList();
         this.lServico = new ArrayList();
@@ -78,7 +76,7 @@ public class Cliente extends Pessoa {
     public void removeCompra(Compra compra) {
         lCompra.remove(compra);
     }
-    
+
     public void addServico(Servico servico) {
         if (!lServico.contains(servico)) {
             lServico.add(servico);

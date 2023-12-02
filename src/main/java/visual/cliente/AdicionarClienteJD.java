@@ -112,7 +112,8 @@ public class AdicionarClienteJD extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void adicionarClienteBTNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_adicionarClienteBTNActionPerformed
-        Cliente c = new Cliente(nomeTF.getText(), cpfTF.getText());
+        /*
+Cliente c = new Cliente(nomeTF.getText(), cpfTF.getText());
 
         if (!cc.adicionar(c)) {
             JOptionPane.showMessageDialog(null, "Cliente não cadastrado");
@@ -123,6 +124,7 @@ public class AdicionarClienteJD extends javax.swing.JDialog {
             cpfTF.setText(null);
             JOptionPane.showMessageDialog(null, "Cliente cadastrado");
         }
+*/
     }//GEN-LAST:event_adicionarClienteBTNActionPerformed
 
     private void sairActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sairActionPerformed

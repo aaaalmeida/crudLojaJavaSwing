@@ -10,7 +10,7 @@ import java.util.HashMap;
  *
  * @author arthu
  */
-public interface DAOInteface<T> {
+public interface DAOInterface<T> {
 
     public Boolean adicionar(T obj);
 

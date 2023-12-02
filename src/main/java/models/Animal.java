@@ -13,15 +13,14 @@ import java.util.Objects;
 public class Animal {
 
     private Integer idAnimal;
-    private static Integer cont = 0;
     private Cliente dono;
+    private Integer idDono;
     private String nome;
     private String especie;
 
-    public Animal(Cliente dono, String nome, String especie) {
-        this.idAnimal = cont;
-        cont++;
-        this.dono = dono;
+    public Animal(Integer idAnimal, Integer idDono, String nome, String especie) {
+        this.idAnimal = idAnimal;
+        this.idDono = idDono;
         this.nome = nome;
         this.especie = especie;
     }
@@ -32,6 +31,14 @@ public class Animal {
 
     public Cliente getDono() {
         return dono;
+    }
+
+    public Integer getIdDono() {
+        return idDono;
+    }
+
+    public void setIdDono(Integer idDono) {
+        this.idDono = idDono;
     }
 
     public void setDono(Cliente dono) {

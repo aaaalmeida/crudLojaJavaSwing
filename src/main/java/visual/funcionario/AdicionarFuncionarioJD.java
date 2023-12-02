@@ -137,6 +137,7 @@ public class AdicionarFuncionarioJD extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void adicionarFuncionarioBTNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_adicionarFuncionarioBTNActionPerformed
+        /*
         Funcionario f = new Funcionario(usuarioTF.getText(), new String(senhaPF.getPassword()), nomeTF.getText(), cpfTF.getText());
         
         if (!fc.adicionar(f)) {
@@ -171,6 +172,7 @@ public class AdicionarFuncionarioJD extends javax.swing.JDialog {
         cpfTF.setText(null);
         usuarioTF.setText(null);
         senhaPF.setText(null);
+*/
     }//GEN-LAST:event_adicionarFuncionarioBTNActionPerformed
 
     private void sairActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sairActionPerformed

@@ -13,12 +13,10 @@ public class Funcionario extends Pessoa {
     private String usuario;
     private String senha;
     private Integer idFuncionario;
-    private static Integer cont = 0;
 
     public Funcionario(Integer idFuncionario, String usuario, String senha, String nome, String cpf) {
         super(nome, cpf);
         this.idFuncionario = idFuncionario;
-        // cont++;
         this.usuario = usuario;
         this.senha = senha;
     }
@@ -48,6 +46,6 @@ public class Funcionario extends Pessoa {
     }
 
     public String toString() {
-        return String.format("id %d, usuario %s, senha %s \n", idFuncionario, usuario, senha);
+        return String.format("id %d, nome %s, cpf %s, usuario %s, senha %s \n", idFuncionario, getNome(), getCpf(), usuario, senha);
     }
 }

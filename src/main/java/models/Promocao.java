@@ -14,15 +14,13 @@ import java.time.LocalTime;
 public class Promocao {
 
     private Integer idPromocao;
-    private static Integer cont = 0;
     private Double porcDesconto;
     private Double valorDesconto;
     private LocalDate data;
     private LocalTime hora;
 
-    public Promocao(Double porcDesconto, Double valorDesconto, LocalDate data, LocalTime hora) {
-        this.idPromocao = cont;
-        cont++;
+    public Promocao(Integer idPromocao, Double porcDesconto, Double valorDesconto, LocalDate data, LocalTime hora) {
+        this.idPromocao = idPromocao;
         this.porcDesconto = porcDesconto;
         this.valorDesconto = valorDesconto;
         this.data = data;

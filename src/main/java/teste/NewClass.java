@@ -5,9 +5,8 @@
 package teste;
 
 import DAOImplementation.FuncionarioDAOImpl;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+
+import models.Funcionario;
 
 /**
  *
@@ -17,14 +16,13 @@ public class NewClass {
 
     public static void main(String[] args) {
 
-        FuncionarioDAOImpl fTeste;
         String nomeBanco = "teste1";
         String url = "jdbc:postgresql://localhost:5432/" + nomeBanco;
+        /*
         Connection connection;
 
         try {
             connection = DriverManager.getConnection(url, "postgres", "postgres");
-            fTeste = new FuncionarioDAOImpl(url);
 
             System.out.println("ta indo");
             fTeste.listarRelatorio();
@@ -32,6 +30,12 @@ public class NewClass {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
+         */
+        FuncionarioDAOImpl fTeste = new FuncionarioDAOImpl(url);
+        fTeste.listarRelatorio();
+        System.out.println("--------------------");
+        System.out.println(fTeste.remove(Integer.valueOf(4)));
+        System.out.println("--------------------");
+        fTeste.listarRelatorio();
     }
 }
