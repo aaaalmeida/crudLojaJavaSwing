@@ -12,70 +12,25 @@ import java.util.Objects;
  *
  * @author arthu
  */
-public class Servico {
+public class Servico extends Item {
 
     private Integer idServico;
-    private static Integer cont = 0;
-    private String nomeServico;
-    private Double preco;
     private LocalDate data;
     private LocalTime hora;
-    private Animal animal;
-    private Cliente cliente;
-    private Promocao promocao;
+    private Integer idAnimal;
+    private Integer idCliente;
 
-    public Servico(String nomeServico, Double _preco, LocalDate data, LocalTime hora, Animal animal, Cliente cliente, Promocao promocao) {
-        this.idServico = cont;
-        cont++;
-        this.nomeServico = nomeServico;
+    public Servico(Integer idServico, LocalDate data, LocalTime hora, Integer idAnimal, Integer idCliente, String nome, Double preco, Integer idPromocao) {
+        super(nome, preco, idPromocao);
+        this.idServico = idServico;
         this.data = data;
         this.hora = hora;
-        this.animal = animal;
-        this.cliente = cliente;
-        this.promocao = promocao;
-
-        this.preco = _preco;
-        descontoPreco();
-    }
-
-    private void descontoPreco() {
-        if (!Objects.isNull(promocao)) {
-            if (!Objects.isNull(promocao.getValorDesconto())) {
-                if (promocao.getValorDesconto() > preco) {
-                    System.err.println("DESCONTO FIXO INVALIDO");
-                } else {
-                    preco -= promocao.getValorDesconto();
-                }
-            }
-            if (!Objects.isNull(promocao.getPorcDesconto())) {
-                if (promocao.getPorcDesconto() > 100 || promocao.getPorcDesconto() < 0) {
-                    System.err.println("DESCONTO PORCENTAGEM INVALIDO");
-                } else {
-                    preco = preco - (preco * promocao.getPorcDesconto()/100);
-                }
-            }
-        }
+        this.idAnimal = idAnimal;
+        this.idCliente = idCliente;
     }
 
     public Integer getIdServico() {
         return idServico;
-    }
-
-    public String getNomeServico() {
-        return nomeServico;
-    }
-
-    public void setNomeServico(String nomeServico) {
-        this.nomeServico = nomeServico;
-    }
-
-    public Double getPreco() {
-        return preco;
-    }
-
-    public void setPreco(Double preco) {
-        this.preco = preco;
-        descontoPreco();
     }
 
     public LocalDate getData() {
@@ -94,30 +49,22 @@ public class Servico {
         this.hora = hora;
     }
 
-    public Animal getAnimal() {
-        return animal;
+    public Integer getIdAnimal() {
+        return idAnimal;
     }
 
-    public void setAnimal(Animal animal) {
-        this.animal = animal;
+    public void setIdAnimal(Integer idAnimal) {
+        this.idAnimal = idAnimal;
     }
 
-    public Cliente getCliente() {
-        return cliente;
+    public Integer getIdCliente() {
+        return idCliente;
     }
 
-    public void setCliente(Cliente cliente) {
-        this.cliente = cliente;
+    public void setIdCliente(Integer idCliente) {
+        this.idCliente = idCliente;
     }
-
-    public Promocao getPromocao() {
-        return promocao;
-    }
-
-    public void setPromocao(Promocao promocao) {
-        this.promocao = promocao;
-    }
-
+    /*
     public Object[] dadosTabela() {
         String cId = "", cNome = "";
         if (!Objects.isNull(cliente)) {
@@ -139,4 +86,5 @@ public class Servico {
         return new Object[]{idServico, nomeServico, preco, cId, cNome, data.toString(),
             hora.toString(), pId, aId, aNome};
     }
+     */
 }

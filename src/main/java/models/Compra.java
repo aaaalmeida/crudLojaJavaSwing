@@ -13,16 +13,15 @@ import java.util.ArrayList;
 public class Compra {
 
     private Integer idCompra;
-    private static Integer cont = 0;
     private Double precoTotal;
+    private Integer idCliente;
     private Cliente cliente;
     private ArrayList<Produto> lProdutos;
     private ArrayList<Servico> lServicos;
 
-    public Compra(Cliente cliente, ArrayList<Produto> lProdutos, ArrayList<Servico> lServicos) {
-        this.idCompra = cont;
-        cont++;
-        this.cliente = cliente;
+    public Compra(Integer idCompra, Integer idCliente, ArrayList<Produto> lProdutos, ArrayList<Servico> lServicos) {
+        this.idCompra = idCompra;
+        this.idCliente = idCliente;
         this.lProdutos = lProdutos;
         this.lServicos = lServicos;
         

@@ -4,20 +4,15 @@
  */
 package DAOImplementation;
 
-import models.Promocao;
+import models.Produto;
 import interfaces.DAOInterface;
 
-import java.sql.Date;
-import java.sql.Time;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-
-import java.time.LocalDate;
-import java.time.LocalTime;
 
 import java.util.HashMap;
 import java.util.Objects;
@@ -26,13 +21,13 @@ import java.util.Objects;
  *
  * @author arthu
  */
-public class PromocaoDAOImpl implements DAOInterface<Promocao> {
+public class ProdutoDAOImpl implements DAOInterface<Produto> {
 
-    private HashMap<Integer, Promocao> promocoes;
+    private HashMap<Integer, Produto> produtos;
     private String url;
 
-    public PromocaoDAOImpl(String url) {
-        this.promocoes = new HashMap<>();
+    public ProdutoDAOImpl(String url) {
+        this.produtos = new HashMap<>();
         this.url = url;
 
         Connection connection = null;
@@ -40,16 +35,16 @@ public class PromocaoDAOImpl implements DAOInterface<Promocao> {
         try {
             connection = DriverManager.getConnection(url, "postgres", "postgres");
             Statement statement = connection.createStatement();
-            ResultSet rs = statement.executeQuery("SELECT * FROM promocoes;");
+            ResultSet rs = statement.executeQuery("SELECT * FROM produtos;");
 
             while (rs.next()) {
-                Promocao promocao = new Promocao(
+                Produto produto = new Produto(
+                        rs.getInt("idproduto"),
+                        rs.getString("nome"),
+                        rs.getDouble("preco"),
                         rs.getInt("idpromocao"),
-                        rs.getDouble("valorporcentagem"),
-                        rs.getDouble("valorfixo"),
-                        rs.getDate("data").toLocalDate(),
-                        rs.getTime("hora").toLocalTime());
-                promocoes.put(promocao.getIdPromocao(), promocao);
+                        rs.getString("descricao"));
+                produtos.put(produto.getIdProduto(), produto);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -65,18 +60,18 @@ public class PromocaoDAOImpl implements DAOInterface<Promocao> {
     }
 
     @Override
-    public Boolean adicionar(Promocao obj) {
-        if (!promocoes.containsKey(obj.getIdPromocao())) {
-            promocoes.put(obj.getIdPromocao(), obj);
+    public Boolean adicionar(Produto obj) {
+        if (!produtos.containsKey(obj.getIdProduto())) {
+            produtos.put(obj.getIdProduto(), obj);
 
             Connection connection = null;
             try {
                 connection = DriverManager.getConnection(url, "postgres", "postgres");
-                PreparedStatement ps = connection.prepareStatement("INSERT INTO promocoes(data, hora, valorfixo, valorporcentagem) VALUES (?, ?, ?, ?);");
-                ps.setDate(1, Date.valueOf(obj.getData()));
-                ps.setTime(2, Time.valueOf(obj.getHora()));
-                ps.setDouble(3, obj.getValorDesconto());
-                ps.setDouble(4, obj.getPorcDesconto());
+                PreparedStatement ps = connection.prepareStatement("INSERT INTO produtos(nome, preco, descricao, idpromocao) VALUES (?, ?, ?, ?);");
+                ps.setString(1, obj.getNome());
+                ps.setDouble(2, obj.getPreco());
+                ps.setString(3, obj.getDescricao());
+                ps.setInt(4, obj.getIdPromocao());
                 ps.executeUpdate();
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -93,39 +88,39 @@ public class PromocaoDAOImpl implements DAOInterface<Promocao> {
             return true;
         }
 
-        System.err.println("ERRO: CADASTRO DE PROMOCAO");
+        System.err.println("ERRO: CADASTRO DE PRODUTO");
         return false;
     }
 
     @Override
-    public Promocao consultaPorId(Integer id) {
-        if (promocoes.containsKey(id)) {
-            return (Promocao) promocoes.get(id);
+    public Produto consultaPorId(Integer id) {
+        if (produtos.containsKey(id)) {
+            return (Produto) produtos.get(id);
         }
 
-        System.err.println("ERRO: CONSULTA DE PROMOCAO");
+        System.err.println("ERRO: CONSULTA DE PRODUTO");
         return null;
     }
 
     @Override
     public Boolean altera(Integer id, Object[] args) {
         if (!Objects.isNull(id)) {
-            if (promocoes.containsKey(id)) {
-                Promocao p = (Promocao) promocoes.get(id);
-                p.setValorDesconto(Double.valueOf((String) args[0]));
-                p.setPorcDesconto(Double.valueOf((String) args[1]));
-                p.setData((LocalDate) args[2]);
-                p.setHora((LocalTime) args[3]);
+            if (produtos.containsKey(id)) {
+                Produto p = (Produto) produtos.get(id);
+                p.setNome(String.valueOf(args[0]));
+                p.setDescricao(String.valueOf(args[1]));
+                p.setIdPromocao((Integer) args[2]);
+                p.setPreco(Double.valueOf((String) args[3]));
 
                 Connection connection = null;
                 try {
                     connection = DriverManager.getConnection(url, "postgres", "postgres");
-                    PreparedStatement ps = connection.prepareStatement("UPDATE promocoes SET data = ?, hora = ?, valorfixo = ?, valorporcentagem = ? WHERE idpromocao= ?;");
-                    ps.setDate(1, Date.valueOf(p.getData()));
-                    ps.setTime(2, Time.valueOf(p.getHora()));
-                    ps.setDouble(3, p.getValorDesconto());
-                    ps.setDouble(4, p.getPorcDesconto());
-                    ps.setInt(5, p.getIdPromocao());
+                    PreparedStatement ps = connection.prepareStatement("UPDATE produtos SET nome = ?, preco = ?, descricao = ?, idpromocao = ? WHERE idproduto= ?;");
+                    ps.setString(1, p.getNome());
+                    ps.setDouble(2, p.getPreco());
+                    ps.setString(3, p.getDescricao());
+                    ps.setInt(4, p.getIdPromocao());
+                    ps.setInt(5, p.getIdProduto());
                     ps.executeUpdate();
                 } catch (SQLException e) {
                     e.printStackTrace();
@@ -138,23 +133,23 @@ public class PromocaoDAOImpl implements DAOInterface<Promocao> {
                         e.printStackTrace();
                     }
                 }
-
                 return true;
             }
         }
-        System.err.println("ERRO: ALTERACAO DE PROMOCAO");
+
+        System.err.println("ERRO: ALTERACAO DE PRODUTO");
         return false;
     }
 
     @Override
-    public Promocao remove(Integer id) {
-        Promocao p = (Promocao) promocoes.remove(id);
+    public Produto remove(Integer id) {
+        Produto p = (Produto) produtos.remove(id);
 
         Connection connection = null;
         try {
             connection = DriverManager.getConnection(url, "postgres", "postgres");
-            PreparedStatement ps = connection.prepareStatement("DELETE FROM promocoes WHERE idpromocao = ?;");
-            ps.setInt(1, p.getIdPromocao());
+            PreparedStatement ps = connection.prepareStatement("DELETE FROM produtos WHERE idproduto = ?;");
+            ps.setInt(1, p.getIdProduto());
             ps.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -172,7 +167,7 @@ public class PromocaoDAOImpl implements DAOInterface<Promocao> {
     }
 
     @Override
-    public HashMap<Integer, Promocao> relatorio() {
-        return this.promocoes;
+    public HashMap<Integer, Produto> relatorio() {
+        return this.produtos;
     }
 }
