@@ -6,6 +6,7 @@ package DAOImplementation;
 
 import models.Produto;
 import interfaces.DAOInterface;
+import controllers.PromocaoConnection;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -112,6 +113,9 @@ public class ProdutoDAOImpl implements DAOInterface<Produto> {
                 p.setIdPromocao((Integer) args[2]);
                 p.setPreco(Double.valueOf((String) args[3]));
 
+                
+                
+                
                 Connection connection = null;
                 try {
                     connection = DriverManager.getConnection(url, "postgres", "postgres");

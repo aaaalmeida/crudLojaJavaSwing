@@ -16,14 +16,17 @@ public class Compra {
     private Double precoTotal;
     private Integer idCliente;
     private Cliente cliente;
+    private ArrayList<Integer> keysProdutos;
+    private ArrayList<Integer> keysServicos;
     private ArrayList<Produto> lProdutos;
     private ArrayList<Servico> lServicos;
 
-    public Compra(Integer idCompra, Integer idCliente, ArrayList<Produto> lProdutos, ArrayList<Servico> lServicos) {
+    public Compra(Integer idCompra, Integer idCliente) {
         this.idCompra = idCompra;
         this.idCliente = idCliente;
-        this.lProdutos = lProdutos;
-        this.lServicos = lServicos;
+
+        this.keysProdutos = new ArrayList<>();
+        this.keysServicos = new ArrayList<>();
         
         alteraPreco();
     }
@@ -38,16 +41,24 @@ public class Compra {
         }
     }
 
-    public Cliente getCliente() {
-        return cliente;
+    public Integer getIdCompra() {
+        return idCompra;
     }
 
     public Double getPrecoTotal() {
         return precoTotal;
     }
 
-    public Integer getIdCompra() {
-        return idCompra;
+    public Integer getIdCliente() {
+        return idCliente;
+    }
+
+    public ArrayList<Integer> getKeysProdutos() {
+        return keysProdutos;
+    }
+
+    public ArrayList<Integer> getKeysServicos() {
+        return keysServicos;
     }
 
     public ArrayList<Produto> getlProdutos() {
@@ -58,18 +69,34 @@ public class Compra {
         return lServicos;
     }
 
-    public void setCliente(Cliente cliente) {
-        this.cliente = cliente;
+    public void setIdCliente(Integer idCliente) {
+        this.idCliente = idCliente;
     }
 
-    public void setlProdutos(ArrayList<Produto> lProdutos) {
-        this.lProdutos = lProdutos;
+    public void setKeysProdutos(ArrayList<Integer> keysProdutos) {
+        this.keysProdutos = keysProdutos;
     }
 
-    public void setlServicos(ArrayList<Servico> lServicos) {
-        this.lServicos = lServicos;
+    public void setKeysServicos(ArrayList<Integer> keysServicos) {
+        this.keysServicos = keysServicos;
     }
 
+    public void addProduto(Produto produto) {
+        lProdutos.add(produto);
+    }
+    
+    public void addServico(Servico servico) {
+        lServicos.add(servico);
+    }
+    
+    public void limparProdutos() {
+        lProdutos = new ArrayList();
+    }
+    
+    public void limparServicos() {
+        lServicos = new ArrayList();
+    }
+    
     public Object[] dadosTabela() {
         String idProdutos, idServicos;
 
