@@ -25,16 +25,23 @@ public class FuncionarioDAOImpl implements DAOInterface<Funcionario> {
 
     private HashMap<Integer, Funcionario> funcionarios;
     private String url;
-
-    public FuncionarioDAOImpl(String url) {
-        this.funcionarios = new HashMap<>();
+    private Integer codUltimoFuncionario;
+    
+    public FuncionarioDAOImpl(String url, HashMap<Integer, Funcionario> funcionarios) {
+        this.funcionarios = funcionarios;
         this.url = url;
         Connection connection = null;
 
         try {
             connection = DriverManager.getConnection(url, "postgres", "postgres");
             Statement statement = connection.createStatement();
-            ResultSet rs = statement.executeQuery("SELECT * FROM funcionarios;");
+            
+            ResultSet rs = statement.executeQuery("SELECT nextval('funcionarios_idfuncionario_seq'), currval('funcionarios_idfuncionario_seq') AS valor;");
+            while(rs.next()) {
+                codUltimoFuncionario = rs.getInt("valor");
+            }
+            
+            rs = statement.executeQuery("SELECT * FROM funcionarios;");
 
             while (rs.next()) {
                 Funcionario funcionario = new Funcionario(
@@ -58,23 +65,20 @@ public class FuncionarioDAOImpl implements DAOInterface<Funcionario> {
         }
     }
 
-    public void listarRelatorio() {
-        funcionarios.forEach((Integer, Funcionario) -> System.out.println(Funcionario));
-    }
-
     @Override
     public Boolean adicionar(Funcionario obj) {
-        if (!funcionarios.containsKey(obj.getIdFuncionario())) {
+            obj.setIdFuncionario(codUltimoFuncionario);
             funcionarios.put(obj.getIdFuncionario(), obj);
 
             Connection connection = null;
             try {
                 connection = DriverManager.getConnection(url, "postgres", "postgres");
-                PreparedStatement ps = connection.prepareStatement("INSERT INTO funcionarios (nome, cpf, usuario, senha) VALUES (?, ?, ?, ?);");
-                ps.setString(1, obj.getNome());
-                ps.setString(2, obj.getCpf());
-                ps.setString(3, obj.getUsuario());
-                ps.setString(4, obj.getSenha());
+                PreparedStatement ps = connection.prepareStatement("INSERT INTO funcionarios (idfuncionario, nome, cpf, usuario, senha) VALUES (?, ?, ?, ?);");
+                ps.setInt(1, obj.getIdFuncionario());
+                ps.setString(2, obj.getNome());
+                ps.setString(3, obj.getCpf());
+                ps.setString(4, obj.getUsuario());
+                ps.setString(5, obj.getSenha());
                 ps.executeUpdate();
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -89,10 +93,6 @@ public class FuncionarioDAOImpl implements DAOInterface<Funcionario> {
             }
 
             return true;
-        }
-
-        System.err.println("ERRO: CADASTRO DE FUNCIONARIO");
-        return false;
     }
 
     @Override

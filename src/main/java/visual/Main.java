@@ -7,6 +7,7 @@ package visual;
 import controllers.*;
 
 import DAOImplementation.*;
+import models.*;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -14,6 +15,7 @@ import java.io.FileReader;
 import java.io.IOException;
 
 import java.util.Base64;
+import java.util.HashMap;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -44,6 +46,10 @@ public class Main extends javax.swing.JFrame {
     private PromocaoController promCont;
     private ServicoController servCont;
 
+    private FuncionarioDAOImpl funcionarioDao;
+
+    private HashMap<Integer, Funcionario> lFuncionarios;
+
     private Connection connection;
 
     private String nomeBanco;
@@ -54,6 +60,10 @@ public class Main extends javax.swing.JFrame {
 
         nomeBanco = "teste1";
         url = "jdbc:postgresql://localhost:5432/";
+
+        lFuncionarios = new HashMap();
+
+        funcionarioDao = new FuncionarioDAOImpl(url, lFuncionarios);
 
         try {
             connection = DriverManager.getConnection(url, "postgres", "postgres");
@@ -594,7 +604,7 @@ public class Main extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void adicionarFuncionarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_adicionarFuncionarioActionPerformed
-        AdicionarFuncionarioJD dialog = new AdicionarFuncionarioJD(this, true, funcCont);
+        AdicionarFuncionarioJD dialog = new AdicionarFuncionarioJD(this, true, funcionarioDao);
         dialog.setVisible(true);
     }//GEN-LAST:event_adicionarFuncionarioActionPerformed
 
@@ -794,7 +804,7 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_acessarBTNActionPerformed
 
     private void cadastrarFuncionarioBTNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cadastrarFuncionarioBTNActionPerformed
-        AdicionarFuncionarioJD dialog = new AdicionarFuncionarioJD(this, true, funcCont);
+        AdicionarFuncionarioJD dialog = new AdicionarFuncionarioJD(this, true, funcionarioDao);
         dialog.setVisible(true);
     }//GEN-LAST:event_cadastrarFuncionarioBTNActionPerformed
 

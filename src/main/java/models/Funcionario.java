@@ -41,6 +41,10 @@ public class Funcionario extends Pessoa {
         return idFuncionario;
     }
 
+    public void setIdFuncionario(Integer idFuncionario) {
+        this.idFuncionario = idFuncionario;
+    }
+
     public Object[] dadosTabela() {
         return new Object[]{idFuncionario, getNome(), getCpf(), usuario, senha};
     }

@@ -29,6 +29,10 @@ public class Servico extends Item {
         this.idCliente = idCliente;
     }
 
+    public void setIdServico(Integer idServico) {
+        this.idServico = idServico;
+    }
+
     public Integer getIdServico() {
         return idServico;
     }

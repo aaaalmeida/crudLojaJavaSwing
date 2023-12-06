@@ -65,16 +65,14 @@ public abstract class Item {
         return idPromocao;
     }
 
-    public void setIdPromocao(Integer idPromocao) {
-        this.idPromocao = idPromocao;
-    }
-
     public Promocao getPromocao() {
         return promocao;
     }
 
-    public void setPromocao(Promocao promocao) {
+    public void setPromocao(Integer idPromocao, Promocao promocao) {
+        this.idPromocao = idPromocao;
         this.promocao = promocao;
+        descontoPreco();
     }
 
 }

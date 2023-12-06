@@ -4,6 +4,7 @@
  */
 package visual.funcionario;
 
+import DAOImplementation.FuncionarioDAOImpl;
 import controllers.FuncionarioController;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -18,12 +19,13 @@ import models.Funcionario;
  * @author arthu
  */
 public class AdicionarFuncionarioJD extends javax.swing.JDialog {
-    
+
     private FuncionarioController fc;
-    
-    public AdicionarFuncionarioJD(java.awt.Frame parent, boolean modal, FuncionarioController fc) {
+    private FuncionarioDAOImpl funcionarioDao;
+
+    public AdicionarFuncionarioJD(java.awt.Frame parent, boolean modal, FuncionarioDAOImpl funcionarioDao) {
         super(parent, modal);
-        this.fc = fc;
+        this.funcionarioDao = funcionarioDao;
         initComponents();
         setTitle("Adicionar Funcionário");
     }
@@ -137,42 +139,40 @@ public class AdicionarFuncionarioJD extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void adicionarFuncionarioBTNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_adicionarFuncionarioBTNActionPerformed
-        /*
-        Funcionario f = new Funcionario(usuarioTF.getText(), new String(senhaPF.getPassword()), nomeTF.getText(), cpfTF.getText());
-        
-        if (!fc.adicionar(f)) {
-            JOptionPane.showMessageDialog(null, "Funcionário não cadastrado");
-            resposta.setText(null);
-        } else {
+        Funcionario f = new Funcionario(null, usuarioTF.getText(), new String(senhaPF.getPassword()), nomeTF.getText(), cpfTF.getText());
+
+        if (funcionarioDao.adicionar(f)) {
             JOptionPane.showMessageDialog(null, "Funcionário cadastrado");
-            
+
             String usuarioCriptografado = Base64.getEncoder().encodeToString(f.getUsuario().getBytes());
             String senhaCriptografado = Base64.getEncoder().encodeToString(f.getSenha().getBytes());
-            
+
             File pasta = new File("src/main/java/cadastros");
             if (!pasta.exists()) {
                 pasta.mkdirs();
             }
-            
+
             File arquivo = new File(pasta, "cadastros.txt");
-            
+
             try (BufferedWriter escrita = new BufferedWriter(new FileWriter(arquivo, true))) {
                 escrita.write(usuarioCriptografado + " ");
                 escrita.write(senhaCriptografado + "\n");
                 escrita.close();
-                
+
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            
+
             resposta.setText(String.format("Funcionário cadastrado com ID: %d", f.getIdFuncionario()));
+        } else {
+            JOptionPane.showMessageDialog(null, "Funcionário não cadastrado");
+            resposta.setText(null);
         }
-        
+
         nomeTF.setText(null);
         cpfTF.setText(null);
         usuarioTF.setText(null);
         senhaPF.setText(null);
-*/
     }//GEN-LAST:event_adicionarFuncionarioBTNActionPerformed
 
     private void sairActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sairActionPerformed

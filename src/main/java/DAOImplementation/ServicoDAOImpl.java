@@ -20,6 +20,7 @@ import java.time.LocalTime;
 
 import java.util.HashMap;
 import java.util.Objects;
+import models.Promocao;
 
 /**
  *
@@ -28,10 +29,13 @@ import java.util.Objects;
 public class ServicoDAOImpl implements DAOInterface<Servico> {
 
     private HashMap<Integer, Servico> servicos;
+    private HashMap<Integer, Promocao> lPromocoes;
     private String url;
+    private Integer codUltimoServico;
 
-    public ServicoDAOImpl(String url) {
-        this.servicos = new HashMap<>();
+    public ServicoDAOImpl(String url, HashMap<Integer, Servico> servicos, HashMap<Integer, Promocao> lPromocoes) {
+        this.servicos = servicos;
+        this.lPromocoes = lPromocoes;
         this.url = url;
 
         Connection connection = null;
@@ -39,7 +43,13 @@ public class ServicoDAOImpl implements DAOInterface<Servico> {
         try {
             connection = DriverManager.getConnection(url, "postgres", "postgres");
             Statement statement = connection.createStatement();
-            ResultSet rs = statement.executeQuery("SELECT * FROM servicos;");
+
+            ResultSet rs = statement.executeQuery("SELECT nextval('servicos_idservico_seq'), currval('servicos_idservico_seq') AS valor;");
+            while (rs.next()) {
+                codUltimoServico = rs.getInt("valor");
+            }
+
+            rs = statement.executeQuery("SELECT * FROM servicos;");
 
             while (rs.next()) {
                 Servico servico = new Servico(
@@ -51,6 +61,8 @@ public class ServicoDAOImpl implements DAOInterface<Servico> {
                         rs.getString("nome"),
                         rs.getDouble("preco"),
                         rs.getInt("idpromocao"));
+                Integer idPromocao = servico.getIdPromocao();
+                servico.setPromocao(idPromocao, lPromocoes.get(idPromocao));
                 servicos.put(servico.getIdServico(), servico);
             }
         } catch (SQLException e) {
@@ -68,37 +80,33 @@ public class ServicoDAOImpl implements DAOInterface<Servico> {
 
     @Override
     public Boolean adicionar(Servico obj) {
-        if (!servicos.containsKey(obj.getIdServico())) {
-            servicos.put(obj.getIdServico(), obj);
+        obj.setIdServico(codUltimoServico);
+        servicos.put(obj.getIdServico(), obj);
 
-            Connection connection = null;
+        Connection connection = null;
+        try {
+            connection = DriverManager.getConnection(url, "postgres", "postgres");
+            PreparedStatement ps = connection.prepareStatement("INSERT INTO servico(nome, data, hora, preco, idcliente, idanimal, idpromocao) VALUES (?, ?, ?, ?, ?, ?, ?);");
+            ps.setString(1, obj.getNome());
+            ps.setDate(2, Date.valueOf(obj.getData()));
+            ps.setDouble(3, obj.getPreco());
+            ps.setInt(4, obj.getIdCliente());
+            ps.setInt(5, obj.getIdAnimal());
+            ps.setInt(6, obj.getIdPromocao());
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
             try {
-                connection = DriverManager.getConnection(url, "postgres", "postgres");
-                PreparedStatement ps = connection.prepareStatement("INSERT INTO servico(nome, data, hora, preco, idcliente, idanimal, idpromocao) VALUES (?, ?, ?, ?, ?, ?, ?);");
-                ps.setString(1, obj.getNome());
-                ps.setDate(2, Date.valueOf(obj.getData()));
-                ps.setDouble(3, obj.getPreco());
-                ps.setInt(4, obj.getIdCliente());
-                ps.setInt(5, obj.getIdAnimal());
-                ps.setInt(6, obj.getIdPromocao());
-                ps.executeUpdate();
+                if (connection != null) {
+                    connection.close();
+                }
             } catch (SQLException e) {
                 e.printStackTrace();
-            } finally {
-                try {
-                    if (connection != null) {
-                        connection.close();
-                    }
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
             }
-
-            return true;
         }
 
-        System.err.println("ERRO: CADASTRO DE SERVICO");
-        return false;
+        return true;
     }
 
     @Override
@@ -118,7 +126,7 @@ public class ServicoDAOImpl implements DAOInterface<Servico> {
                 Servico s = (Servico) servicos.get(id);
                 s.setNome((String) args[0]);
                 s.setPreco(Double.valueOf((String) args[1]));
-                s.setIdPromocao((Integer) args[2]);
+                s.setPromocao((Integer) args[2], lPromocoes.get((Integer) args[2]));
                 s.setData((LocalDate) args[3]);
                 s.setHora((LocalTime) args[4]);
                 s.setIdAnimal((Integer) args[5]);

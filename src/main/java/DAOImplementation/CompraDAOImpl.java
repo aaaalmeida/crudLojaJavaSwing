@@ -17,6 +17,9 @@ import java.util.ArrayList;
 
 import java.util.HashMap;
 import java.util.Objects;
+import models.Cliente;
+import models.Produto;
+import models.Servico;
 
 /**
  *
@@ -25,10 +28,17 @@ import java.util.Objects;
 public class CompraDAOImpl implements DAOInterface<Compra> {
 
     private HashMap<Integer, Compra> compras;
+    private HashMap<Integer, Servico> lServicos;
+    private HashMap<Integer, Produto> lProdutos;
+    private HashMap<Integer, Cliente> lClientes;
+    private Integer codUltimaCompra;
     private String url;
 
-    public CompraDAOImpl(String url) {
-        this.compras = new HashMap<>();
+    public CompraDAOImpl(String url, HashMap<Integer, Compra> compras, HashMap<Integer, Produto> lProdutos, HashMap<Integer, Servico> lServicos, HashMap<Integer, Cliente> lClientes) {
+        this.compras = compras;
+        this.lServicos = lServicos;
+        this.lProdutos = lProdutos;
+        this.lClientes = lClientes;
         this.url = url;
 
         Connection connection = null;
@@ -36,35 +46,40 @@ public class CompraDAOImpl implements DAOInterface<Compra> {
         try {
             connection = DriverManager.getConnection(url, "postgres", "postgres");
             Statement statement = connection.createStatement();
-            ResultSet rs = statement.executeQuery("SELECT * FROM compras;");
+            
+            ResultSet rs = statement.executeQuery("SELECT nextval('compras_idcompras_seq'), currval('compras_idcompras_seq') AS valor;");
+            while (rs.next()) {
+                codUltimaCompra = rs.getInt("valor");
+            }
+            rs = statement.executeQuery("SELECT * FROM compras;");
 
             while (rs.next()) {
                 Compra compra = new Compra(
                         rs.getInt("idCompra"),
                         rs.getInt("idCliente"));
+                Integer idCliente = compra.getIdCliente();
+                compra.setCliente(idCliente, lClientes.get(idCliente));
                 compras.put(compra.getIdCompra(), compra);
             }
-            
-            for(Integer idCompra : compras.keySet()) {
-                PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM compras_produtos WHERE idcompra = ?;");
-                preparedStatement.setInt(1, idCompra);
-                
-                rs = preparedStatement.executeQuery();
-                while(rs.next()) {
-                    compras.get(idCompra).addProduto(rs.getInt("idproduto"));
+
+            for (Integer idCompra : compras.keySet()) {
+                rs = statement.executeQuery("SELECT * FROM compras_produtos WHERE idcompra = " + idCompra + ";");
+                while (rs.next()) {
+                    Compra compra = compras.get(idCompra);
+                    Integer idProduto = rs.getInt("idproduto");
+                    compra.addProduto(idProduto, lProdutos.get(idProduto));
                 }
             }
-            
-            for(Integer idCompra : compras.keySet()) {
-                PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM compras_servicos WHERE idcompra = ?;");
-                preparedStatement.setInt(1, idCompra);
-                
-                rs = preparedStatement.executeQuery();
-                while(rs.next()) {
-                    compras.get(idCompra).addServico(rs.getInt("idservico"));
+
+            for (Integer idCompra : compras.keySet()) {
+                rs = statement.executeQuery("SELECT * FROM compras_servicos WHERE idcompra = " + idCompra + ";");
+                while (rs.next()) {
+                    Compra compra = compras.get(idCompra);
+                    Integer idServico = rs.getInt("idservico");
+                    compra.addServico(idServico, lServicos.get(idServico));
                 }
             }
-            
+
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
@@ -80,7 +95,7 @@ public class CompraDAOImpl implements DAOInterface<Compra> {
 
     @Override
     public Boolean adicionar(Compra obj) {
-        if (!compras.containsKey(obj.getIdCompra())) {
+            obj.setIdCompra(codUltimaCompra);
             compras.put(obj.getIdCompra(), obj);
 
             Connection connection = null;
@@ -90,6 +105,18 @@ public class CompraDAOImpl implements DAOInterface<Compra> {
                 ps.setDouble(1, obj.getPrecoTotal());
                 ps.setInt(2, obj.getIdCliente());
                 ps.executeUpdate();
+
+                for (Integer idProduto : obj.getKeysProdutos()) {
+                    ps = connection.prepareStatement("INSERT INTO compras_produtos(idcompra, idproduto) VALUES (?, ?);");
+                    ps.setInt(1, obj.getIdCompra());
+                    ps.setInt(2, idProduto);
+                }
+
+                for (Integer idServico : obj.getKeysServicos()) {
+                    ps = connection.prepareStatement("INSERT INTO compras_servicos(idcompra, idservico) VALUES (?, ?);");
+                    ps.setInt(1, obj.getIdCompra());
+                    ps.setInt(2, idServico);
+                }
             } catch (SQLException e) {
                 e.printStackTrace();
             } finally {
@@ -103,10 +130,6 @@ public class CompraDAOImpl implements DAOInterface<Compra> {
             }
 
             return true;
-        }
-
-        System.err.println("ERRO: CADASTRO DE COMPRA");
-        return false;
     }
 
     @Override
@@ -124,26 +147,48 @@ public class CompraDAOImpl implements DAOInterface<Compra> {
         if (!Objects.isNull(id)) {
             if (compras.containsKey(id)) {
                 Compra c = (Compra) compras.get(id);
-                c.setIdCliente((Integer) args[0]);
-                c.setKeysProdutos((ArrayList<Integer>) args[1]);
-                
-                c.setKeysServicos((ArrayList<Integer>) args[2]);
-                        
-                        
+                c.setCliente((Integer) args[0], lClientes.get(c.getIdCliente()));
+
+                c.limparProdutos();
+                for (Integer idProduto : (ArrayList<Integer>) args[1]) {
+                    c.addProduto(idProduto, lProdutos.get(idProduto));
+                }
+
+                c.limparServicos();
+                for (Integer idServico : (ArrayList<Integer>) args[2]) {
+                    c.addServico(idServico, lServicos.get(idServico));
+                }
+
+                c.alteraPreco();
+
                 Connection connection = null;
                 try {
                     connection = DriverManager.getConnection(url, "postgres", "postgres");
-                    PreparedStatement ps = connection.prepareStatement("UPDATE servicos SET nome = ?, preco = ?, idpromocao = ?, "
-                            + "data = ?, hora = ?, idcliente = ?, idanimal = ? WHERE idservico = ?;");
-                    ps.setString(1, s.getNome());
-                    ps.setDouble(2, s.getPreco());
-                    ps.setInt(3, s.getIdPromocao());
-                    ps.setDate(4, Date.valueOf(s.getData()));
-                    ps.setTime(5, Time.valueOf(s.getHora()));
-                    ps.setInt(6, s.getIdCliente());
-                    ps.setInt(7, s.getIdAnimal());
-                    ps.setInt(8, s.getIdServico());
+                    PreparedStatement ps = connection.prepareStatement("UPDATE compras SET precototal = ?, idcliente = ? WHERE idcompra = ?;");
+                    ps.setDouble(1, c.getPrecoTotal());
+                    ps.setInt(2, c.getIdCliente());
+                    ps.setInt(3, c.getIdCompra());
                     ps.executeUpdate();
+
+                    ps = connection.prepareStatement("DELETE FROM compras_produtos WHERE idcompra = ?;");
+                    ps.setInt(1, c.getIdCompra());
+                    ps.executeUpdate();
+                    for (Integer idProduto : c.getKeysProdutos()) {
+                        ps = connection.prepareStatement("INSERT INTO compras_produtos (idcompra, idproduto) VALUES (?, ?);");
+                        ps.setInt(1, c.getIdCompra());
+                        ps.setInt(2, idProduto);
+                        ps.executeUpdate();
+                    }
+
+                    ps = connection.prepareStatement("DELETE FROM compras_servicos WHERE idcompra = ?;");
+                    ps.setInt(1, c.getIdCompra());
+                    ps.executeUpdate();
+                    for (Integer idServico : c.getKeysServicos()) {
+                        ps = connection.prepareStatement("INSERT INTO compras_servicos (idcompra, idservico) VALUES (?, ?);");
+                        ps.setInt(1, c.getIdCompra());
+                        ps.setInt(2, idServico);
+                        ps.executeUpdate();
+                    }
                 } catch (SQLException e) {
                     e.printStackTrace();
                 } finally {
@@ -166,7 +211,35 @@ public class CompraDAOImpl implements DAOInterface<Compra> {
 
     @Override
     public Compra remove(Integer id) {
-        return (Compra) compras.remove(id);
+        Compra c = (Compra) compras.remove(id);
+
+        Connection connection = null;
+        try {
+            connection = DriverManager.getConnection(url, "postgres", "postgres");
+            PreparedStatement ps = connection.prepareStatement("DELETE FROM compras WHERE idcompra = ?;");
+            ps.setInt(1, c.getIdCompra());
+            ps.executeUpdate();
+
+            ps = connection.prepareStatement("DELETE FROM compras_produtos WHERE idcompra = ?;");
+            ps.setInt(1, c.getIdCompra());
+            ps.executeUpdate();
+
+            ps = connection.prepareStatement("DELETE FROM compras_servicos WHERE idcompra = ?;");
+            ps.setInt(1, c.getIdCompra());
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return c;
     }
 
     @Override

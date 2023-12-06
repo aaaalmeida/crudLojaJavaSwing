@@ -27,7 +27,7 @@ public class Compra {
 
         this.keysProdutos = new ArrayList<>();
         this.keysServicos = new ArrayList<>();
-        
+
         alteraPreco();
     }
 
@@ -41,6 +41,10 @@ public class Compra {
         }
     }
 
+    public void setIdCompra(Integer idCompra) {
+        this.idCompra = idCompra;
+    }
+
     public Integer getIdCompra() {
         return idCompra;
     }
@@ -51,6 +55,15 @@ public class Compra {
 
     public Integer getIdCliente() {
         return idCliente;
+    }
+
+    public void setCliente(Integer idCliente, Cliente cliente) {
+        this.idCliente = idCliente;
+        this.cliente = cliente;
+    }
+
+    public Cliente getCliente() {
+        return cliente;
     }
 
     public ArrayList<Integer> getKeysProdutos() {
@@ -69,34 +82,30 @@ public class Compra {
         return lServicos;
     }
 
-    public void setIdCliente(Integer idCliente) {
-        this.idCliente = idCliente;
-    }
-
-    public void setKeysProdutos(ArrayList<Integer> keysProdutos) {
-        this.keysProdutos = keysProdutos;
-    }
-
-    public void setKeysServicos(ArrayList<Integer> keysServicos) {
-        this.keysServicos = keysServicos;
-    }
-
-    public void addProduto(Produto produto) {
+    public void addProduto(Integer idProduto, Produto produto) {
+        keysProdutos.add(idProduto);
         lProdutos.add(produto);
+        alteraPreco();
     }
-    
-    public void addServico(Servico servico) {
+
+    public void addServico(Integer idServico, Servico servico) {
+        keysServicos.add(idServico);
         lServicos.add(servico);
+        alteraPreco();
     }
-    
+
     public void limparProdutos() {
+        keysProdutos = new ArrayList();
         lProdutos = new ArrayList();
+        alteraPreco();
     }
-    
+
     public void limparServicos() {
+        keysServicos = new ArrayList();
         lServicos = new ArrayList();
+        alteraPreco();
     }
-    
+
     public Object[] dadosTabela() {
         String idProdutos, idServicos;
 

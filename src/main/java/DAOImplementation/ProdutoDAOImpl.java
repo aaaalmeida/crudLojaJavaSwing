@@ -6,7 +6,6 @@ package DAOImplementation;
 
 import models.Produto;
 import interfaces.DAOInterface;
-import controllers.PromocaoConnection;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -17,6 +16,7 @@ import java.sql.Statement;
 
 import java.util.HashMap;
 import java.util.Objects;
+import models.Promocao;
 
 /**
  *
@@ -25,10 +25,12 @@ import java.util.Objects;
 public class ProdutoDAOImpl implements DAOInterface<Produto> {
 
     private HashMap<Integer, Produto> produtos;
+    private HashMap<Integer, Promocao> lPromocoes;
     private String url;
 
-    public ProdutoDAOImpl(String url) {
-        this.produtos = new HashMap<>();
+    public ProdutoDAOImpl(String url, HashMap<Integer, Produto> produtos, HashMap<Integer, Promocao> lPromocoes) {
+        this.produtos = produtos;
+        this.lPromocoes = lPromocoes;
         this.url = url;
 
         Connection connection = null;
@@ -45,6 +47,8 @@ public class ProdutoDAOImpl implements DAOInterface<Produto> {
                         rs.getDouble("preco"),
                         rs.getInt("idpromocao"),
                         rs.getString("descricao"));
+                Integer idPromocao = produto.getIdPromocao();
+                produto.setPromocao(idPromocao, lPromocoes.get(idPromocao));
                 produtos.put(produto.getIdProduto(), produto);
             }
         } catch (SQLException e) {
@@ -110,16 +114,13 @@ public class ProdutoDAOImpl implements DAOInterface<Produto> {
                 Produto p = (Produto) produtos.get(id);
                 p.setNome(String.valueOf(args[0]));
                 p.setDescricao(String.valueOf(args[1]));
-                p.setIdPromocao((Integer) args[2]);
+                p.setPromocao((Integer) args[2], lPromocoes.get((Integer) args[2]));
                 p.setPreco(Double.valueOf((String) args[3]));
-
-                
-                
                 
                 Connection connection = null;
                 try {
                     connection = DriverManager.getConnection(url, "postgres", "postgres");
-                    PreparedStatement ps = connection.prepareStatement("UPDATE produtos SET nome = ?, preco = ?, descricao = ?, idpromocao = ? WHERE idproduto= ?;");
+                    PreparedStatement ps = connection.prepareStatement("UPDATE produtos SET nome = ?, preco = ?, descricao = ?, idpromocao = ? WHERE idproduto = ?;");
                     ps.setString(1, p.getNome());
                     ps.setDouble(2, p.getPreco());
                     ps.setString(3, p.getDescricao());

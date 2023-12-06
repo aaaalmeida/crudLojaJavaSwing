@@ -3,6 +3,7 @@ C:\Users\arthu\OneDrive\Documentos\trabalho\trabPV_JavaPostgre\src\main\java\vis
 C:\Users\arthu\OneDrive\Documentos\trabalho\trabPV_JavaPostgre\src\main\java\visual\servico\RemoverServicoJD.java
 C:\Users\arthu\OneDrive\Documentos\trabalho\trabPV_JavaPostgre\src\main\java\interfaces\DAOInterface.java
 C:\Users\arthu\OneDrive\Documentos\trabalho\trabPV_JavaPostgre\src\main\java\visual\servico\RelatorioServicoJD.java
+C:\Users\arthu\OneDrive\Documentos\trabalho\trabPV_JavaPostgre\src\main\java\models\Item.java
 C:\Users\arthu\OneDrive\Documentos\trabalho\trabPV_JavaPostgre\src\main\java\visual\compra\RemoverCompraJD.java
 C:\Users\arthu\OneDrive\Documentos\trabalho\trabPV_JavaPostgre\src\main\java\visual\produto\RemoverProdutoJD.java
 C:\Users\arthu\OneDrive\Documentos\trabalho\trabPV_JavaPostgre\src\main\java\visual\compra\ConsultarCompraJD.java
@@ -18,6 +19,7 @@ C:\Users\arthu\OneDrive\Documentos\trabalho\trabPV_JavaPostgre\src\main\java\mod
 C:\Users\arthu\OneDrive\Documentos\trabalho\trabPV_JavaPostgre\src\main\java\controllers\CompraController.java
 C:\Users\arthu\OneDrive\Documentos\trabalho\trabPV_JavaPostgre\src\main\java\visual\animal\AlterarAnimalJD.java
 C:\Users\arthu\OneDrive\Documentos\trabalho\trabPV_JavaPostgre\src\main\java\visual\animal\RemoverAnimalJD.java
+C:\Users\arthu\OneDrive\Documentos\trabalho\trabPV_JavaPostgre\src\main\java\DAOImplementation\AnimalDAOImpl.java
 C:\Users\arthu\OneDrive\Documentos\trabalho\trabPV_JavaPostgre\src\main\java\visual\produto\AdicionarProdutoJD.java
 C:\Users\arthu\OneDrive\Documentos\trabalho\trabPV_JavaPostgre\src\main\java\controllers\AnimalController.java
 C:\Users\arthu\OneDrive\Documentos\trabalho\trabPV_JavaPostgre\src\main\java\visual\produto\ConsultarProdutoJD.java
@@ -37,6 +39,7 @@ C:\Users\arthu\OneDrive\Documentos\trabalho\trabPV_JavaPostgre\src\main\java\DAO
 C:\Users\arthu\OneDrive\Documentos\trabalho\trabPV_JavaPostgre\src\main\java\visual\animal\AdicionarAnimalJD.java
 C:\Users\arthu\OneDrive\Documentos\trabalho\trabPV_JavaPostgre\src\main\java\visual\funcionario\AlterarFuncionarioJD.java
 C:\Users\arthu\OneDrive\Documentos\trabalho\trabPV_JavaPostgre\src\main\java\controllers\ServicoController.java
+C:\Users\arthu\OneDrive\Documentos\trabalho\trabPV_JavaPostgre\src\main\java\DAOImplementation\CompraDAOImpl.java
 C:\Users\arthu\OneDrive\Documentos\trabalho\trabPV_JavaPostgre\src\main\java\visual\servico\AlterarServicoJD.java
 C:\Users\arthu\OneDrive\Documentos\trabalho\trabPV_JavaPostgre\src\main\java\visual\cliente\AdicionarClienteJD.java
 C:\Users\arthu\OneDrive\Documentos\trabalho\trabPV_JavaPostgre\src\main\java\visual\funcionario\RelatorioFuncionarioJD.java
@@ -49,8 +52,11 @@ C:\Users\arthu\OneDrive\Documentos\trabalho\trabPV_JavaPostgre\src\main\java\vis
 C:\Users\arthu\OneDrive\Documentos\trabalho\trabPV_JavaPostgre\src\main\java\visual\cliente\RemoverClienteJD.java
 C:\Users\arthu\OneDrive\Documentos\trabalho\trabPV_JavaPostgre\src\main\java\controllers\PromocaoController.java
 C:\Users\arthu\OneDrive\Documentos\trabalho\trabPV_JavaPostgre\src\main\java\models\Produto.java
+C:\Users\arthu\OneDrive\Documentos\trabalho\trabPV_JavaPostgre\src\main\java\DAOImplementation\ServicoDAOImpl.java
 C:\Users\arthu\OneDrive\Documentos\trabalho\trabPV_JavaPostgre\src\main\java\models\Pessoa.java
+C:\Users\arthu\OneDrive\Documentos\trabalho\trabPV_JavaPostgre\src\main\java\DAOImplementation\ProdutoDAOImpl.java
 C:\Users\arthu\OneDrive\Documentos\trabalho\trabPV_JavaPostgre\src\main\java\visual\Main.java
+C:\Users\arthu\OneDrive\Documentos\trabalho\trabPV_JavaPostgre\src\main\java\DAOImplementation\PromocaoDAOImpl.java
 C:\Users\arthu\OneDrive\Documentos\trabalho\trabPV_JavaPostgre\src\main\java\teste\NewClass.java
 C:\Users\arthu\OneDrive\Documentos\trabalho\trabPV_JavaPostgre\src\main\java\controllers\FuncionarioController.java
 C:\Users\arthu\OneDrive\Documentos\trabalho\trabPV_JavaPostgre\src\main\java\visual\cliente\AlterarClienteJD.java
