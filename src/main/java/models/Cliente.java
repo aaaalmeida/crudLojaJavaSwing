@@ -29,6 +29,10 @@ public class Cliente extends Pessoa {
         return idCliente;
     }
 
+    public void setIdCliente(Integer idCliente) {
+        this.idCliente = idCliente;
+    }
+
     public String[] infoAnimal() {
         String[] retorno = new String[lAnimais.size()];
         for (int i = 0; i < lAnimais.size(); i++) {

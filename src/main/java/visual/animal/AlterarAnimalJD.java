@@ -4,8 +4,9 @@
  */
 package visual.animal;
 
-import controllers.AnimalController;
-import controllers.ClienteController;
+import DAOImplementation.AnimalDAOImpl;
+import java.util.HashMap;
+
 import java.util.Objects;
 import javax.swing.JOptionPane;
 import models.Animal;
@@ -16,18 +17,18 @@ import models.Cliente;
  * @author arthu
  */
 public class AlterarAnimalJD extends javax.swing.JDialog {
-    
-    private AnimalController ac;
-    private ClienteController cc;
-    
-    public AlterarAnimalJD(java.awt.Frame parent, boolean modal, AnimalController ac, ClienteController cc) {
+
+    private AnimalDAOImpl animalDAOImpl;
+    private HashMap<Integer, Cliente> lDonos;
+
+    public AlterarAnimalJD(java.awt.Frame parent, boolean modal, AnimalDAOImpl animalDAOImpl, HashMap<Integer, Cliente> lDonos) {
         super(parent, modal);
-        this.ac = ac;
-        this.cc = cc;
+        this.animalDAOImpl = animalDAOImpl;
+        this.lDonos = lDonos;
         initComponents();
         setTitle("Alterar Animal");
-        
-        Integer[] donosKeys = cc.relatorio().keySet().toArray(new Integer[0]);
+
+        Integer[] donosKeys = lDonos.keySet().toArray(new Integer[0]);
         String[] listData = new String[donosKeys.length];
         for (int i = 0; i < donosKeys.length; i++) {
             listData[i] = String.valueOf(donosKeys[i]);
@@ -142,30 +143,31 @@ public class AlterarAnimalJD extends javax.swing.JDialog {
 
     private void alterarAnimalBTNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_alterarAnimalBTNActionPerformed
         Cliente dono = null;
-        Animal animal = ac.consulta(Integer.valueOf(idTF.getText()));
-        
+        Animal animal = animalDAOImpl.consultaPorId(Integer.valueOf(idTF.getText()));
+
         if (!Objects.isNull(animal.getDono())) {
             animal.getDono().removeAnimal(animal);
         }
-        
+
         if (!donoJL.isSelectionEmpty()) {
-            dono = cc.consulta(Integer.valueOf(donoJL.getSelectedValue()));
+            dono = lDonos.get(Integer.valueOf(donoJL.getSelectedValue()));
             if (!Objects.isNull(dono)) {
                 dono.addAnimal(animal);
             }
         }
-        
-        Object[] args = new Object[]{nomeTF.getText(), especieTF.getText(), dono};
-        
-        if (!ac.altera(Integer.valueOf(idTF.getText()), args)) {
+
+        Object[] args = new Object[]{nomeTF.getText(), especieTF.getText(), Integer.valueOf(donoJL.getSelectedValue())};
+
+        if (!animalDAOImpl.altera(Integer.valueOf(idTF.getText()), args)) {
             JOptionPane.showMessageDialog(null, "Animal não alterado");
         } else {
-            idTF.setText(null);
-            nomeTF.setText(null);
-            especieTF.setText(null);
-            donoJL.setSelectedIndex(-1);
             JOptionPane.showMessageDialog(null, "Animal alterado");
         }
+
+        idTF.setText(null);
+        nomeTF.setText(null);
+        especieTF.setText(null);
+        donoJL.setSelectedIndex(-1);
     }//GEN-LAST:event_alterarAnimalBTNActionPerformed
 
     private void sairActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sairActionPerformed

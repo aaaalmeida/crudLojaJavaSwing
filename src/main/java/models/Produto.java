@@ -16,14 +16,18 @@ public class Produto extends Item {
     private String descricao;
     private Promocao promocao;
 
-    public Produto(Integer idProduto, String nome, Double preco, Integer idPromocao, String descricao) {
-        super(nome, preco, idPromocao);
+    public Produto(Integer idProduto, String nome, Double preco, Promocao promocao, String descricao) {
+        super(nome, preco, promocao);
         this.idProduto = idProduto;
         this.descricao = descricao;
     }
 
     public Integer getIdProduto() {
         return idProduto;
+    }
+
+    public void setIdProduto(Integer idProduto) {
+        this.idProduto = idProduto;
     }
 
     public String getDescricao() {

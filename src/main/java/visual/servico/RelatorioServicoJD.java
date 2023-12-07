@@ -4,7 +4,7 @@
  */
 package visual.servico;
 
-import controllers.ServicoController;
+import DAOImplementation.ServicoDAOImpl;
 import javax.swing.table.DefaultTableModel;
 import models.Servico;
 
@@ -14,16 +14,16 @@ import models.Servico;
  */
 public class RelatorioServicoJD extends javax.swing.JDialog {
 
-    private ServicoController sc;
+    private ServicoDAOImpl servicoDAOImpl;
 
-    public RelatorioServicoJD(java.awt.Frame parent, boolean modal, ServicoController sc) {
+    public RelatorioServicoJD(java.awt.Frame parent, boolean modal, ServicoDAOImpl servicoDAOImpl) {
         super(parent, modal);
-        this.sc = sc;
+        this.servicoDAOImpl = servicoDAOImpl;
         initComponents();
         setTitle("Relatório Serviço");
 
         DefaultTableModel grid = (DefaultTableModel) tabela.getModel();
-        for (Servico servico : sc.relatorio().values()) {
+        for (Servico servico : servicoDAOImpl.relatorio().values()) {
             grid.addRow(servico.dadosTabela());
         }
     }

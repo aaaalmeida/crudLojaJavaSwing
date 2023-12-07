@@ -4,7 +4,7 @@
  */
 package visual.cliente;
 
-import controllers.ClienteController;
+import DAOImplementation.ClienteDAOImpl;
 import java.util.Objects;
 import javax.swing.JOptionPane;
 import models.Cliente;
@@ -15,11 +15,11 @@ import models.Cliente;
  */
 public class ConsultarClienteJD extends javax.swing.JDialog {
 
-    private ClienteController cc;
+    private ClienteDAOImpl clienteDAOImpl;
 
-    public ConsultarClienteJD(java.awt.Frame parent, boolean modal, ClienteController cc) {
+    public ConsultarClienteJD(java.awt.Frame parent, boolean modal, ClienteDAOImpl clienteDAOImpl) {
         super(parent, modal);
-        this.cc = cc;
+        this.clienteDAOImpl = clienteDAOImpl;
         initComponents();
         setTitle("Consultar Cliente");
     }
@@ -54,8 +54,6 @@ public class ConsultarClienteJD extends javax.swing.JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Consultar Funcionário");
-
-        cpfTF.setEditable(false);
 
         nomeTF.setEditable(false);
 
@@ -170,7 +168,12 @@ public class ConsultarClienteJD extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void consultarClienteBTNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_consultarClienteBTNActionPerformed
-        Cliente c = cc.consulta(Integer.valueOf(idTF.getText()));
+        Cliente c = null;
+        if (!idTF.getText().isBlank()) {
+            c = clienteDAOImpl.consultaPorId(Integer.valueOf(idTF.getText()));
+        } else if (!cpfTF.getText().isBlank()) {
+            c = clienteDAOImpl.consultaPorCpf(cpfTF.getText());
+        }
 
         if (!Objects.isNull(c)) {
             nomeTF.setText(c.getNome());

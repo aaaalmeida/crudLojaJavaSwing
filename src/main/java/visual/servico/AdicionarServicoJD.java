@@ -4,10 +4,8 @@
  */
 package visual.servico;
 
-import controllers.AnimalController;
-import controllers.ClienteController;
-import controllers.PromocaoController;
-import controllers.ServicoController;
+import DAOImplementation.ServicoDAOImpl;
+import java.util.HashMap;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -23,33 +21,35 @@ import models.Servico;
  */
 public class AdicionarServicoJD extends javax.swing.JDialog {
 
-    private ServicoController sc;
-    private AnimalController ac;
-    private PromocaoController promc;
-    private ClienteController clientec;
+    private ServicoDAOImpl servicoDAOImpl;
+    private HashMap<Integer, Cliente> lClientes;
+    private HashMap<Integer, Animal> lAnimais;
+    private HashMap<Integer, Promocao> lPromocoes;
 
-    public AdicionarServicoJD(java.awt.Frame parent, boolean modal, ServicoController sc, AnimalController ac, PromocaoController promc, ClienteController clientec) {
+    public AdicionarServicoJD(java.awt.Frame parent, boolean modal, ServicoDAOImpl servicoDAOImpl, HashMap<Integer, Cliente> lClientes, HashMap<Integer, Animal> lAnimais, HashMap<Integer, Promocao> lPromocoes) {
         super(parent, modal);
-        this.sc = sc;
-        this.ac = ac;
-        this.promc = promc;
-        this.clientec = clientec;
+        this.servicoDAOImpl = servicoDAOImpl;
+        this.lClientes = lClientes;
+        this.lAnimais = lAnimais;
+        this.lPromocoes = lPromocoes;
         initComponents();
         setTitle("Adicionar Serviço");
 
-        Integer[] clientesKeys = clientec.relatorio().keySet().toArray(new Integer[0]);
+        Integer[] clientesKeys = lClientes.keySet().toArray(new Integer[0]);
         String[] clienteList = new String[clientesKeys.length];
         for (int i = 0; i < clientesKeys.length; i++) {
             clienteList[i] = String.valueOf(clientesKeys[i]);
         }
         clienteJL.setListData(clienteList);
+        clienteJL.setSelectedIndex(-1);
 
-        Integer[] promocoesKeys = promc.relatorio().keySet().toArray(new Integer[0]);
+        Integer[] promocoesKeys = lPromocoes.keySet().toArray(new Integer[0]);
         String[] promocaoList = new String[promocoesKeys.length];
         for (int i = 0; i < promocoesKeys.length; i++) {
             promocaoList[i] = String.valueOf(promocoesKeys[i]);
         }
         promocoesJL.setListData(promocaoList);
+        promocoesJL.setSelectedIndex(-1);
     }
 
     /**
@@ -218,22 +218,31 @@ public class AdicionarServicoJD extends javax.swing.JDialog {
 
         LocalTime hora = LocalTime.parse(horaTF.getText());
 
-        Animal animal = ac.consulta(Integer.valueOf(animalJL.getSelectedValue()));
-        Cliente cliente = clientec.consulta(Integer.valueOf(clienteJL.getSelectedValue()));
+        if (clienteJL.getSelectedIndex() == -1) {
+            JOptionPane.showMessageDialog(null, "Cliente não pode ser nulo");
+            return;
+        }
+        Cliente cliente = lClientes.get(Integer.valueOf(clienteJL.getSelectedValue()));
+
+        if (animalJL.getSelectedIndex() == -1) {
+            JOptionPane.showMessageDialog(null, "Animal não pode ser nulo");
+            return;
+        }
+        Animal animal = lAnimais.get(Integer.valueOf(animalJL.getSelectedValue()));
+
         Promocao promocao = null;
         if (!promocoesJL.isSelectionEmpty()) {
-            promocao = promc.consulta(Integer.valueOf(promocoesJL.getSelectedValue()));
+            promocao = lPromocoes.get(Integer.valueOf(promocoesJL.getSelectedValue()));
         }
 
-        Servico s = new Servico(nomeServicoTF.getText(), Double.valueOf(precoTF.getText()), data, hora, animal, cliente, promocao);
+        Servico s = new Servico(null, data, hora, animal, cliente, nomeServicoTF.getText(), Double.valueOf(precoTF.getText()), promocao);
 
-        if (!sc.adicionar(s)) {
-            JOptionPane.showMessageDialog(null, "Serviço não cadastrado");
-            resposta.setText(null);
-        } else {
+        if (servicoDAOImpl.adicionar(s)) {
             JOptionPane.showMessageDialog(null, "Serviço cadastrado");
             resposta.setText(String.format("Serviço cadastrado com ID: %d", s.getIdServico()));
-            cliente.addServico(s);
+        } else {
+            JOptionPane.showMessageDialog(null, "Serviço não cadastrado");
+            resposta.setText(null);
         }
 
         nomeServicoTF.setText(null);
@@ -250,7 +259,7 @@ public class AdicionarServicoJD extends javax.swing.JDialog {
     }//GEN-LAST:event_sairActionPerformed
 
     private void clienteJLValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_clienteJLValueChanged
-        Cliente c = clientec.consulta(Integer.parseInt(clienteJL.getSelectedValue()));
+        Cliente c = lClientes.get(Integer.valueOf(clienteJL.getSelectedValue()));
         animalJL.setListData(c.infoAnimal());
     }//GEN-LAST:event_clienteJLValueChanged
 

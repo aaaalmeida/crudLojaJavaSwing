@@ -4,8 +4,8 @@
  */
 package visual.produto;
 
-import controllers.ProdutoController;
-import controllers.PromocaoController;
+import DAOImplementation.ProdutoDAOImpl;
+import java.util.HashMap;
 import javax.swing.JOptionPane;
 import models.Produto;
 import models.Promocao;
@@ -15,18 +15,18 @@ import models.Promocao;
  * @author arthu
  */
 public class AdicionarProdutoJD extends javax.swing.JDialog {
-    
-    private ProdutoController pc;
-    private PromocaoController prom;
-    
-    public AdicionarProdutoJD(java.awt.Frame parent, boolean modal, ProdutoController pc, PromocaoController prom) {
+
+    private ProdutoDAOImpl produtoDAOImpl;
+    private HashMap<Integer, Promocao> lPromocoes;
+
+    public AdicionarProdutoJD(java.awt.Frame parent, boolean modal, ProdutoDAOImpl produtoDAOImpl, HashMap<Integer, Promocao> lPromocoes) {
         super(parent, modal);
-        this.pc = pc;
-        this.prom = prom;
+        this.produtoDAOImpl = produtoDAOImpl;
+        this.lPromocoes = lPromocoes;
         initComponents();
         setTitle("Adicionar Produto");
-        
-        Integer[] promocoesKeys = prom.relatorio().keySet().toArray(new Integer[0]);
+
+        Integer[] promocoesKeys = lPromocoes.keySet().toArray(new Integer[0]);
         String[] listData = new String[promocoesKeys.length];
         for (int i = 0; i < promocoesKeys.length; i++) {
             listData[i] = String.valueOf(promocoesKeys[i]);
@@ -159,17 +159,18 @@ public class AdicionarProdutoJD extends javax.swing.JDialog {
     private void adicionarProdutoBTNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_adicionarProdutoBTNActionPerformed
         Promocao promocao = null;
         if (!promocoesJL.isSelectionEmpty()) {
-            promocao = prom.consulta(Integer.valueOf(promocoesJL.getSelectedValue()));
+            promocao = lPromocoes.get(Integer.valueOf(promocoesJL.getSelectedValue()));
         }
-        Produto p = new Produto(nomeTF.getText(), descricaoTA.getText(), Double.valueOf(precoTF.getText()), promocao);
-        if (!pc.adicionar(p)) {
-            JOptionPane.showMessageDialog(null, "Produto não cadastrado");
-            resposta.setText(null);
-        } else {
+
+        Produto p = new Produto(null, nomeTF.getText(), Double.valueOf(precoTF.getText()), promocao, descricaoTA.getText());
+        if (produtoDAOImpl.adicionar(p)) {
             resposta.setText(String.format("Produto adicionado com ID: %d", p.getIdProduto()));
             JOptionPane.showMessageDialog(null, "Produtod cadastrado");
+        } else {
+            JOptionPane.showMessageDialog(null, "Produto não cadastrado");
+            resposta.setText(null);
         }
-        
+
         nomeTF.setText(null);
         precoTF.setText(null);
         descricaoTA.setText(null);

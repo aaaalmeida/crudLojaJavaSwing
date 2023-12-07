@@ -4,7 +4,7 @@
  */
 package visual.produto;
 
-import controllers.ProdutoController;
+import DAOImplementation.ProdutoDAOImpl;
 import javax.swing.table.DefaultTableModel;
 import models.Produto;
 
@@ -14,16 +14,16 @@ import models.Produto;
  */
 public class RelatorioProdutoJD extends javax.swing.JDialog {
 
-    private ProdutoController pc;
+    private ProdutoDAOImpl produtoDAOImpl;
 
-    public RelatorioProdutoJD(java.awt.Frame parent, boolean modal, ProdutoController pc) {
+    public RelatorioProdutoJD(java.awt.Frame parent, boolean modal, ProdutoDAOImpl produtoDAOImpl) {
         super(parent, modal);
-        this.pc = pc;
+        this.produtoDAOImpl = produtoDAOImpl;
         initComponents();
         setTitle("Relatório Produto");
 
         DefaultTableModel grid = (DefaultTableModel) tabela.getModel();
-        for (Produto produto : pc.relatorio().values()) {
+        for (Produto produto : produtoDAOImpl.relatorio().values()) {
             grid.addRow(produto.dadosTabela());
         }
     }

@@ -4,7 +4,7 @@
  */
 package visual.promocao;
 
-import controllers.PromocaoController;
+import DAOImplementation.PromocaoDAOImpl;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -16,11 +16,11 @@ import javax.swing.JOptionPane;
  */
 public class AlterarPromocaoJD extends javax.swing.JDialog {
 
-    private PromocaoController pc;
+    private PromocaoDAOImpl promocaoDAOImpl;
 
-    public AlterarPromocaoJD(java.awt.Frame parent, boolean modal, PromocaoController pc) {
+    public AlterarPromocaoJD(java.awt.Frame parent, boolean modal, PromocaoDAOImpl promocaoDAOImpl) {
         super(parent, modal);
-        this.pc = pc;
+        this.promocaoDAOImpl = promocaoDAOImpl;
         initComponents();
         setTitle("Alterar Promoção");
     }
@@ -145,7 +145,7 @@ public class AlterarPromocaoJD extends javax.swing.JDialog {
         LocalTime hora = LocalTime.parse(horaTF.getText());
 
         Object[] args = new Object[]{valFixoTF.getText(), valPercentTF.getText(), data, hora};
-        if (!pc.altera(Integer.valueOf(idTF.getText()), args)) {
+        if (!promocaoDAOImpl.altera(Integer.valueOf(idTF.getText()), args)) {
             JOptionPane.showMessageDialog(null, String.format("Promoção %s não alterada", idTF.getText()));
         } else {
             JOptionPane.showMessageDialog(null, "Promoção alterada");

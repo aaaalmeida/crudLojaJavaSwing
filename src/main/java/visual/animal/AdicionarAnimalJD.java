@@ -4,8 +4,9 @@
  */
 package visual.animal;
 
-import controllers.AnimalController;
-import controllers.ClienteController;
+import DAOImplementation.AnimalDAOImpl;
+import java.util.HashMap;
+
 import java.util.Objects;
 import javax.swing.JOptionPane;
 import models.Animal;
@@ -17,17 +18,17 @@ import models.Cliente;
  */
 public class AdicionarAnimalJD extends javax.swing.JDialog {
 
-    private AnimalController ac;
-    private ClienteController cc;
+    private AnimalDAOImpl animalDAOImpl;
+    private HashMap<Integer, Cliente> lDonos;
 
-    public AdicionarAnimalJD(java.awt.Frame parent, boolean modal, AnimalController ac, ClienteController cc) {
+    public AdicionarAnimalJD(java.awt.Frame parent, boolean modal, AnimalDAOImpl animalDAOImpl, HashMap<Integer, Cliente> lDonos) {
         super(parent, modal);
-        this.ac = ac;
-        this.cc = cc;
+        this.animalDAOImpl = animalDAOImpl;
+        this.lDonos = lDonos;
         initComponents();
         setTitle("Adicionar Animal");
 
-        Integer[] donosKeys = cc.relatorio().keySet().toArray(new Integer[0]);
+        Integer[] donosKeys = lDonos.keySet().toArray(new Integer[0]);
         String[] listData = new String[donosKeys.length];
         for (int i = 0; i < donosKeys.length; i++) {
             listData[i] = String.valueOf(donosKeys[i]);
@@ -141,12 +142,12 @@ public class AdicionarAnimalJD extends javax.swing.JDialog {
     private void adicionarAnimalBTNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_adicionarAnimalBTNActionPerformed
         Cliente dono = null;
         if (!donoJL.isSelectionEmpty()) {
-            dono = cc.consulta(Integer.valueOf(donoJL.getSelectedValue()));
+            dono = lDonos.get(donoJL.getSelectedIndex());
         }
 
-        Animal animal = new Animal(dono, nomeTF.getText(), especieTF.getText());
+        Animal animal = new Animal(null, dono, nomeTF.getText(), especieTF.getText());
 
-        if (ac.adicionar(animal)) {
+        if (animalDAOImpl.adicionar(animal)) {
             donoJL.setSelectedIndex(-1);
             nomeTF.setText(null);
             especieTF.setText(null);

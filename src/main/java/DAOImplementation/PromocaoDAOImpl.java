@@ -30,9 +30,10 @@ public class PromocaoDAOImpl implements DAOInterface<Promocao> {
 
     private HashMap<Integer, Promocao> promocoes;
     private String url;
+    private Integer codUltimaPromocao;
 
-    public PromocaoDAOImpl(String url) {
-        this.promocoes = new HashMap<>();
+    public PromocaoDAOImpl(String url, HashMap<Integer, Promocao> promocoes) {
+        this.promocoes = promocoes;
         this.url = url;
 
         Connection connection = null;
@@ -40,7 +41,13 @@ public class PromocaoDAOImpl implements DAOInterface<Promocao> {
         try {
             connection = DriverManager.getConnection(url, "postgres", "postgres");
             Statement statement = connection.createStatement();
-            ResultSet rs = statement.executeQuery("SELECT * FROM promocoes;");
+
+            ResultSet rs = statement.executeQuery("SELECT nextval('promocoes_idpromocoes_seq'), currval('promocoes_idpromocoes_seq') AS valor;");
+            while (rs.next()) {
+                codUltimaPromocao = rs.getInt("valor");
+            }
+
+            rs = statement.executeQuery("SELECT * FROM promocoes;");
 
             while (rs.next()) {
                 Promocao promocao = new Promocao(
@@ -66,35 +73,33 @@ public class PromocaoDAOImpl implements DAOInterface<Promocao> {
 
     @Override
     public Boolean adicionar(Promocao obj) {
-        if (!promocoes.containsKey(obj.getIdPromocao())) {
-            promocoes.put(obj.getIdPromocao(), obj);
+        obj.setIdPromocao(codUltimaPromocao);
+        codUltimaPromocao++;
+        promocoes.put(obj.getIdPromocao(), obj);
 
-            Connection connection = null;
+        Connection connection = null;
+        try {
+            connection = DriverManager.getConnection(url, "postgres", "postgres");
+            PreparedStatement ps = connection.prepareStatement("INSERT INTO promocoes(idpromocao, data, hora, valorfixo, valorporcentagem) VALUES (?, ?, ?, ?, ?);");
+            ps.setInt(1, obj.getIdPromocao());
+            ps.setDate(2, Date.valueOf(obj.getData()));
+            ps.setTime(3, Time.valueOf(obj.getHora()));
+            ps.setDouble(4, obj.getValorDesconto());
+            ps.setDouble(5, obj.getPorcDesconto());
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
             try {
-                connection = DriverManager.getConnection(url, "postgres", "postgres");
-                PreparedStatement ps = connection.prepareStatement("INSERT INTO promocoes(data, hora, valorfixo, valorporcentagem) VALUES (?, ?, ?, ?);");
-                ps.setDate(1, Date.valueOf(obj.getData()));
-                ps.setTime(2, Time.valueOf(obj.getHora()));
-                ps.setDouble(3, obj.getValorDesconto());
-                ps.setDouble(4, obj.getPorcDesconto());
-                ps.executeUpdate();
+                if (connection != null) {
+                    connection.close();
+                }
             } catch (SQLException e) {
                 e.printStackTrace();
-            } finally {
-                try {
-                    if (connection != null) {
-                        connection.close();
-                    }
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
             }
-
-            return true;
         }
 
-        System.err.println("ERRO: CADASTRO DE PROMOCAO");
-        return false;
+        return true;
     }
 
     @Override

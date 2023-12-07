@@ -17,11 +17,12 @@ public abstract class Item {
     private Integer idPromocao;
     private Promocao promocao;
 
-    public Item(String nome, Double preco, Integer idPromocao) {
+    public Item(String nome, Double preco, Promocao promocao) {
         this.nome = nome;
         this.preco = preco;
-        this.idPromocao = idPromocao;
-
+        this.promocao = promocao;
+        this.idPromocao = promocao.getIdPromocao();
+        
         descontoPreco();
     }
 

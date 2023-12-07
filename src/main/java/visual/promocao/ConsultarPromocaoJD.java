@@ -4,7 +4,7 @@
  */
 package visual.promocao;
 
-import controllers.PromocaoController;
+import DAOImplementation.PromocaoDAOImpl;
 import java.util.Objects;
 import javax.swing.JOptionPane;
 import models.Promocao;
@@ -15,11 +15,11 @@ import models.Promocao;
  */
 public class ConsultarPromocaoJD extends javax.swing.JDialog {
 
-    private PromocaoController pc;
+    private PromocaoDAOImpl promocaoDAOImpl;
 
-    public ConsultarPromocaoJD(java.awt.Frame parent, boolean modal, PromocaoController pc) {
+    public ConsultarPromocaoJD(java.awt.Frame parent, boolean modal, PromocaoDAOImpl promocaoDAOImpl) {
         super(parent, modal);
-        this.pc = pc;
+        this.promocaoDAOImpl = promocaoDAOImpl;
         initComponents();
         setTitle("Consultar Promoção");
     }
@@ -148,7 +148,7 @@ public class ConsultarPromocaoJD extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void consultarPromocaoBTNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_consultarPromocaoBTNActionPerformed
-        Promocao p = pc.consulta(Integer.valueOf(idTF.getText()));
+        Promocao p = promocaoDAOImpl.consultaPorId(Integer.valueOf(idTF.getText()));
 
         if (!Objects.isNull(p)) {
             fixoTF.setText(p.getValorDesconto() + "");

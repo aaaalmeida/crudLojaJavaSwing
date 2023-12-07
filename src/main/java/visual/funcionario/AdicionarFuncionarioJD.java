@@ -5,7 +5,7 @@
 package visual.funcionario;
 
 import DAOImplementation.FuncionarioDAOImpl;
-import controllers.FuncionarioController;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -20,7 +20,6 @@ import models.Funcionario;
  */
 public class AdicionarFuncionarioJD extends javax.swing.JDialog {
 
-    private FuncionarioController fc;
     private FuncionarioDAOImpl funcionarioDao;
 
     public AdicionarFuncionarioJD(java.awt.Frame parent, boolean modal, FuncionarioDAOImpl funcionarioDao) {

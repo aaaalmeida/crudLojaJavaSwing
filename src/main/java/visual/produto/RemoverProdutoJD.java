@@ -4,7 +4,7 @@
  */
 package visual.produto;
 
-import controllers.ProdutoController;
+import DAOImplementation.ProdutoDAOImpl;
 import java.util.Objects;
 import javax.swing.JOptionPane;
 import models.Produto;
@@ -16,11 +16,11 @@ import models.Promocao;
  */
 public class RemoverProdutoJD extends javax.swing.JDialog {
 
-    private ProdutoController pc;
+    private ProdutoDAOImpl produtoDAOImpl;
 
-    public RemoverProdutoJD(java.awt.Frame parent, boolean modal, ProdutoController pc) {
+    public RemoverProdutoJD(java.awt.Frame parent, boolean modal, ProdutoDAOImpl produtoDAOImpl) {
         super(parent, modal);
-        this.pc = pc;
+        this.produtoDAOImpl = produtoDAOImpl;
         initComponents();
         setTitle("Remover Produto");
     }
@@ -162,16 +162,18 @@ public class RemoverProdutoJD extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void removerProdutoBTNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removerProdutoBTNActionPerformed
-        Produto p = pc.remove(Integer.valueOf(idTF.getText()));
+        Produto p = produtoDAOImpl.remove(Integer.valueOf(idTF.getText()));
 
         if (!Objects.isNull(p)) {
-            nomeTF.setText(p.getNomeProduto());
+            nomeTF.setText(p.getNome());
             precoTF.setText(String.valueOf(p.getPreco()));
             descricaoTA.setText(p.getDescricao());
             Promocao promocao = p.getPromocao();
-            String infoPromo = String.format("ID: %s \nDesconto Fixo: R$%.2f\nDesconto Porcentagem: %.2f%%", 
-                    promocao.getIdPromocao(), promocao.getValorDesconto(), promocao.getPorcDesconto());
-            promocaoTA.setText(infoPromo);
+            if (!Objects.isNull(promocao)) {
+                String infoPromo = String.format("ID: %s \nDesconto Fixo: R$%.2f\nDesconto Porcentagem: %.2f%%",
+                        promocao.getIdPromocao(), promocao.getValorDesconto(), promocao.getPorcDesconto());
+                promocaoTA.setText(infoPromo);
+            }
             resposta.setText("Produto removido");
             JOptionPane.showMessageDialog(null, "Produto removido");
 

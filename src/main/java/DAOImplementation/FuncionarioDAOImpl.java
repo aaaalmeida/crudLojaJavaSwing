@@ -68,12 +68,13 @@ public class FuncionarioDAOImpl implements DAOInterface<Funcionario> {
     @Override
     public Boolean adicionar(Funcionario obj) {
             obj.setIdFuncionario(codUltimoFuncionario);
+            codUltimoFuncionario++;
             funcionarios.put(obj.getIdFuncionario(), obj);
 
             Connection connection = null;
             try {
                 connection = DriverManager.getConnection(url, "postgres", "postgres");
-                PreparedStatement ps = connection.prepareStatement("INSERT INTO funcionarios (idfuncionario, nome, cpf, usuario, senha) VALUES (?, ?, ?, ?);");
+                PreparedStatement ps = connection.prepareStatement("INSERT INTO funcionarios (idfuncionario, nome, cpf, usuario, senha) VALUES (?, ?, ?, ?, ?);");
                 ps.setInt(1, obj.getIdFuncionario());
                 ps.setString(2, obj.getNome());
                 ps.setString(3, obj.getCpf());

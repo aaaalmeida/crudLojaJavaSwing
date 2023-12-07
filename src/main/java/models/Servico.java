@@ -19,14 +19,18 @@ public class Servico extends Item {
     private LocalTime hora;
     private Integer idAnimal;
     private Integer idCliente;
+    private Animal animal;
+    private Cliente cliente;
 
-    public Servico(Integer idServico, LocalDate data, LocalTime hora, Integer idAnimal, Integer idCliente, String nome, Double preco, Integer idPromocao) {
-        super(nome, preco, idPromocao);
+    public Servico(Integer idServico, LocalDate data, LocalTime hora, Animal animal, Cliente cliente, String nome, Double preco, Promocao promocao) {
+        super(nome, preco, promocao);
         this.idServico = idServico;
         this.data = data;
         this.hora = hora;
-        this.idAnimal = idAnimal;
-        this.idCliente = idCliente;
+        this.cliente = cliente;
+        this.animal = animal;
+        this.idAnimal = animal.getIdAnimal();
+        this.idCliente = cliente.getIdCliente();
     }
 
     public void setIdServico(Integer idServico) {
@@ -57,18 +61,28 @@ public class Servico extends Item {
         return idAnimal;
     }
 
-    public void setIdAnimal(Integer idAnimal) {
+    public Animal getAnimal() {
+        return animal;
+    }
+
+    public void setAnimal(Integer idAnimal, Animal animal) {
         this.idAnimal = idAnimal;
+        this.animal = animal;
+    }
+
+    public void setCliente(Integer idCliente, Cliente cliente) {
+        this.idCliente = idCliente;
+        this.cliente = cliente;
     }
 
     public Integer getIdCliente() {
         return idCliente;
     }
 
-    public void setIdCliente(Integer idCliente) {
-        this.idCliente = idCliente;
+    public Cliente getCliente() {
+        return cliente;
     }
-    /*
+
     public Object[] dadosTabela() {
         String cId = "", cNome = "";
         if (!Objects.isNull(cliente)) {
@@ -77,8 +91,8 @@ public class Servico extends Item {
         }
 
         String pId = "";
-        if (!Objects.isNull(promocao)) {
-            pId = String.valueOf(promocao.getIdPromocao());
+        if (!Objects.isNull(getPromocao())) {
+            pId = String.valueOf(getPromocao().getIdPromocao());
         }
 
         String aId = "", aNome = "";
@@ -87,8 +101,7 @@ public class Servico extends Item {
             aNome = animal.getNome();
         }
 
-        return new Object[]{idServico, nomeServico, preco, cId, cNome, data.toString(),
+        return new Object[]{idServico, getNome(), getPreco(), cId, cNome, data.toString(),
             hora.toString(), pId, aId, aNome};
     }
-     */
 }

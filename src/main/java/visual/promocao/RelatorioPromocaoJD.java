@@ -4,7 +4,7 @@
  */
 package visual.promocao;
 
-import controllers.PromocaoController;
+import DAOImplementation.PromocaoDAOImpl;
 import javax.swing.table.DefaultTableModel;
 import models.Promocao;
 
@@ -14,16 +14,16 @@ import models.Promocao;
  */
 public class RelatorioPromocaoJD extends javax.swing.JDialog {
 
-    private PromocaoController pc;
+    private PromocaoDAOImpl promocaoDAOImpl;
 
-    public RelatorioPromocaoJD(java.awt.Frame parent, boolean modal, PromocaoController pc) {
+    public RelatorioPromocaoJD(java.awt.Frame parent, boolean modal, PromocaoDAOImpl promocaoDAOImpl) {
         super(parent, modal);
-        this.pc = pc;
+        this.promocaoDAOImpl = promocaoDAOImpl;
         initComponents();
         setTitle("Relatório Promoção");
 
         DefaultTableModel grid = (DefaultTableModel) tabela.getModel();
-        for (Promocao promocao : pc.relatorio().values()) {
+        for (Promocao promocao : promocaoDAOImpl.relatorio().values()) {
             grid.addRow(promocao.dadosTabela());
         }
     }

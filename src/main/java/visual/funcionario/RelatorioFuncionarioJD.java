@@ -4,7 +4,8 @@
  */
 package visual.funcionario;
 
-import controllers.FuncionarioController;
+import DAOImplementation.FuncionarioDAOImpl;
+
 import javax.swing.table.DefaultTableModel;
 import models.Funcionario;
 
@@ -14,16 +15,16 @@ import models.Funcionario;
  */
 public class RelatorioFuncionarioJD extends javax.swing.JDialog {
 
-    private FuncionarioController fc;
-    
-    public RelatorioFuncionarioJD(java.awt.Frame parent, boolean modal, FuncionarioController fc) {
+    private FuncionarioDAOImpl funcionarioDAOImpl;
+
+    public RelatorioFuncionarioJD(java.awt.Frame parent, boolean modal, FuncionarioDAOImpl funcionarioDAOImpl) {
         super(parent, modal);
-        this.fc = fc;
+        this.funcionarioDAOImpl = funcionarioDAOImpl;
         initComponents();
         setTitle("Relatório Funcionários");
-        
+
         DefaultTableModel grid = (DefaultTableModel) tabela.getModel();
-        for (Funcionario funcionario : fc.relatorio().values()) {
+        for (Funcionario funcionario : funcionarioDAOImpl.relatorio().values()) {
             grid.addRow(funcionario.dadosTabela());
         }
     }

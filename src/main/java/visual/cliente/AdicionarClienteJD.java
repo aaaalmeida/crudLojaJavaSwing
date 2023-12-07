@@ -4,7 +4,7 @@
  */
 package visual.cliente;
 
-import controllers.ClienteController;
+import DAOImplementation.ClienteDAOImpl;
 import javax.swing.JOptionPane;
 import models.Cliente;
 
@@ -14,12 +14,12 @@ import models.Cliente;
  */
 public class AdicionarClienteJD extends javax.swing.JDialog {
 
-    private ClienteController cc;
+    private ClienteDAOImpl clienteDAOImpl;
 
-    public AdicionarClienteJD(java.awt.Frame parent, boolean modal, ClienteController cc) {
+    public AdicionarClienteJD(java.awt.Frame parent, boolean modal, ClienteDAOImpl clienteDAOImpl) {
         super(parent, modal);
-        this.cc = cc;
         initComponents();
+        this.clienteDAOImpl = clienteDAOImpl;
         setTitle("Adicionar Cliente");
     }
 
@@ -112,19 +112,16 @@ public class AdicionarClienteJD extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void adicionarClienteBTNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_adicionarClienteBTNActionPerformed
-        /*
-Cliente c = new Cliente(nomeTF.getText(), cpfTF.getText());
-
-        if (!cc.adicionar(c)) {
-            JOptionPane.showMessageDialog(null, "Cliente não cadastrado");
-            resposta.setText(null);
-        } else {
+        Cliente c = new Cliente(null, nomeTF.getText(), cpfTF.getText());
+        if (clienteDAOImpl.adicionar(c)) {
             resposta.setText(String.format("Cliente cadastrado com ID: %d", c.getIdCliente()));
             nomeTF.setText(null);
             cpfTF.setText(null);
             JOptionPane.showMessageDialog(null, "Cliente cadastrado");
+        } else {
+            JOptionPane.showMessageDialog(null, "Cliente não cadastrado");
+            resposta.setText(null);
         }
-*/
     }//GEN-LAST:event_adicionarClienteBTNActionPerformed
 
     private void sairActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sairActionPerformed

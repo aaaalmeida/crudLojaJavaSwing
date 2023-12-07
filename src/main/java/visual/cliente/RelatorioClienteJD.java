@@ -4,7 +4,7 @@
  */
 package visual.cliente;
 
-import controllers.ClienteController;
+import DAOImplementation.ClienteDAOImpl;
 import javax.swing.table.DefaultTableModel;
 import models.Cliente;
 
@@ -14,16 +14,16 @@ import models.Cliente;
  */
 public class RelatorioClienteJD extends javax.swing.JDialog {
 
-    private ClienteController cc;
+    private ClienteDAOImpl clienteDAOImpl;
 
-    public RelatorioClienteJD(java.awt.Frame parent, boolean modal, ClienteController cc) {
+    public RelatorioClienteJD(java.awt.Frame parent, boolean modal, ClienteDAOImpl clienteDAOImpl) {
         super(parent, modal);
-        this.cc = cc;
+        this.clienteDAOImpl = clienteDAOImpl;
         initComponents();
         setTitle("Relatório Cliente");
 
         DefaultTableModel grid = (DefaultTableModel) tabela.getModel();
-        for (Cliente cliente : cc.relatorio().values()) {
+        for (Cliente cliente : clienteDAOImpl.relatorio().values()) {
             grid.addRow(cliente.dadosTabela());
         }
     }

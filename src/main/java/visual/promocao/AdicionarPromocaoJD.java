@@ -4,7 +4,7 @@
  */
 package visual.promocao;
 
-import controllers.PromocaoController;
+import DAOImplementation.PromocaoDAOImpl;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -17,11 +17,11 @@ import models.Promocao;
  */
 public class AdicionarPromocaoJD extends javax.swing.JDialog {
 
-    private PromocaoController pc;
+    private PromocaoDAOImpl promocaoDAOImpl;
 
-    public AdicionarPromocaoJD(java.awt.Frame parent, boolean modal, PromocaoController pc) {
+    public AdicionarPromocaoJD(java.awt.Frame parent, boolean modal, PromocaoDAOImpl promocaoDAOImpl) {
         super(parent, modal);
-        this.pc = pc;
+        this.promocaoDAOImpl = promocaoDAOImpl;
         initComponents();
         setTitle("Adicionar Promoção");
     }
@@ -139,16 +139,15 @@ public class AdicionarPromocaoJD extends javax.swing.JDialog {
         LocalDate data = LocalDate.parse(dataTF.getText(), formatterDT);
         LocalTime hora = LocalTime.parse(horaTF.getText());
 
-        Promocao p = new Promocao(Double.valueOf(valPercentTF.getText()), Double.valueOf(valFixoTF.getText()), data, hora);
+        Promocao p = new Promocao(null, Double.valueOf(valPercentTF.getText()), Double.valueOf(valFixoTF.getText()), data, hora);
 
-        if (!pc.adicionar(p)) {
-            JOptionPane.showMessageDialog(null, "Promoção não cadastrada");
-            resposta.setText(null);
-        } else {
+        if (promocaoDAOImpl.adicionar(p)) {
             JOptionPane.showMessageDialog(null, "Promoção cadastrada");
             resposta.setText(String.format("Promoção criada com ID: %d", p.getIdPromocao()));
+        } else {
+            JOptionPane.showMessageDialog(null, "Promoção não cadastrada");
+            resposta.setText(null);
         }
-
         valFixoTF.setText(null);
         valPercentTF.setText(null);
         dataTF.setText(null);

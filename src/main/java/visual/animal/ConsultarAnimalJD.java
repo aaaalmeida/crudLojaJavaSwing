@@ -4,7 +4,8 @@
  */
 package visual.animal;
 
-import controllers.AnimalController;
+import DAOImplementation.AnimalDAOImpl;
+
 import java.util.Objects;
 import javax.swing.JOptionPane;
 import models.Animal;
@@ -15,11 +16,11 @@ import models.Animal;
  */
 public class ConsultarAnimalJD extends javax.swing.JDialog {
 
-    private AnimalController ac;
+    private AnimalDAOImpl animalDAOImpl;
 
-    public ConsultarAnimalJD(java.awt.Frame parent, boolean modal, AnimalController ac) {
+    public ConsultarAnimalJD(java.awt.Frame parent, boolean modal, AnimalDAOImpl animalDAOImpl) {
         super(parent, modal);
-        this.ac = ac;
+        this.animalDAOImpl = animalDAOImpl;
         initComponents();
         setTitle("Consultar Animal");
     }
@@ -139,7 +140,7 @@ public class ConsultarAnimalJD extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void consultarAnimalBTNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_consultarAnimalBTNActionPerformed
-        Animal a = ac.consulta(Integer.valueOf(idTF.getText()));
+        Animal a = animalDAOImpl.consultaPorId(Integer.valueOf(idTF.getText()));
 
         if (!Objects.isNull(a)) {
             nomeTF.setText(a.getNome());

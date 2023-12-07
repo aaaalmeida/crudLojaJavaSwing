@@ -4,7 +4,7 @@
  */
 package visual.promocao;
 
-import controllers.PromocaoController;
+import DAOImplementation.PromocaoDAOImpl;
 import java.util.Objects;
 import javax.swing.JOptionPane;
 import models.Promocao;
@@ -15,11 +15,11 @@ import models.Promocao;
  */
 public class RemoverPromocaoJD extends javax.swing.JDialog {
 
-    private PromocaoController pc;
+    private PromocaoDAOImpl promocaoDAOImpl;
 
-    public RemoverPromocaoJD(java.awt.Frame parent, boolean modal, PromocaoController pc) {
+    public RemoverPromocaoJD(java.awt.Frame parent, boolean modal, PromocaoDAOImpl promocaoDAOImpl) {
         super(parent, modal);
-        this.pc = pc;
+        this.promocaoDAOImpl = promocaoDAOImpl;
         initComponents();
         setTitle("Remover Promoção");
     }
@@ -152,7 +152,7 @@ public class RemoverPromocaoJD extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void removerPromocaoBTNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removerPromocaoBTNActionPerformed
-        Promocao p = pc.remove(Integer.valueOf(idTF.getText()));
+        Promocao p = promocaoDAOImpl.remove(Integer.valueOf(idTF.getText()));
 
         if (!Objects.isNull(p)) {
             valFixoTF.setText(String.valueOf(p.getValorDesconto()));

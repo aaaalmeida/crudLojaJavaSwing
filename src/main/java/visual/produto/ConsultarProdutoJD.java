@@ -4,7 +4,7 @@
  */
 package visual.produto;
 
-import controllers.ProdutoController;
+import DAOImplementation.ProdutoDAOImpl;
 import java.util.Objects;
 import javax.swing.JOptionPane;
 import models.Produto;
@@ -16,11 +16,11 @@ import models.Promocao;
  */
 public class ConsultarProdutoJD extends javax.swing.JDialog {
 
-    private ProdutoController pc;
+    private ProdutoDAOImpl produtoDAOImpl;
 
-    public ConsultarProdutoJD(java.awt.Frame parent, boolean modal, ProdutoController pc) {
+    public ConsultarProdutoJD(java.awt.Frame parent, boolean modal, ProdutoDAOImpl produtoDAOImpl) {
         super(parent, modal);
-        this.pc = pc;
+        this.produtoDAOImpl = produtoDAOImpl;
         initComponents();
         setTitle("Consultar Produto");
     }
@@ -160,12 +160,10 @@ public class ConsultarProdutoJD extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void consultarProdutoBTNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_consultarProdutoBTNActionPerformed
-        Produto p = pc.consulta(Integer.valueOf(idTF.getText()));
+        Produto p = produtoDAOImpl.consultaPorId(Integer.valueOf(idTF.getText()));
 
         if (!Objects.isNull(p)) {
-            JOptionPane.showMessageDialog(null, "Produto encontrado");
-
-            nomeTF.setText(p.getNomeProduto());
+            nomeTF.setText(p.getNome());
             precoTF.setText(String.valueOf(p.getPreco()));
             descricaoTA.setText(p.getDescricao());
             Promocao promocao = p.getPromocao();
@@ -174,6 +172,7 @@ public class ConsultarProdutoJD extends javax.swing.JDialog {
                         promocao.getIdPromocao(), promocao.getValorDesconto(), promocao.getPorcDesconto());
                 promocaoTA.setText(infoPromo);
             }
+            JOptionPane.showMessageDialog(null, "Produto encontrado");
         } else {
             idTF.setText(null);
             nomeTF.setText(null);

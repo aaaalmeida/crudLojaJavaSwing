@@ -4,7 +4,8 @@
  */
 package visual.funcionario;
 
-import controllers.FuncionarioController;
+import DAOImplementation.FuncionarioDAOImpl;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -18,11 +19,11 @@ import javax.swing.JOptionPane;
  */
 public class AlterarFuncionarioJD extends javax.swing.JDialog {
 
-    private FuncionarioController fc;
+    private FuncionarioDAOImpl funcionarioDAO;
 
-    public AlterarFuncionarioJD(java.awt.Frame parent, boolean modal, FuncionarioController fc) {
+    public AlterarFuncionarioJD(java.awt.Frame parent, boolean modal, FuncionarioDAOImpl funcionarioDAOImpl) {
         super(parent, modal);
-        this.fc = fc;
+        this.funcionarioDAO = funcionarioDAOImpl;
         initComponents();
         setTitle("Alterar Funcionário");
     }
@@ -144,10 +145,10 @@ public class AlterarFuncionarioJD extends javax.swing.JDialog {
     private void alterarFuncionarioBTNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_alterarFuncionarioBTNActionPerformed
         String[] args = new String[]{usuarioTF.getText(), new String(senhaPF.getPassword()), nomeTF.getText(), cpfTF.getText()};
 
-        if (!fc.altera(Integer.valueOf(idTF.getText()), args)) {
+        if (!funcionarioDAO.altera(Integer.valueOf(idTF.getText()), args)) {
             JOptionPane.showMessageDialog(null, "Funcionário não alterado");
         } else {
-            JOptionPane.showMessageDialog(null, "Funcionário não alterado");
+            JOptionPane.showMessageDialog(null, "Funcionário alterado");
 
             String usuarioCriptografado = Base64.getEncoder().encodeToString(args[0].getBytes());
             String senhaCriptografado = Base64.getEncoder().encodeToString(args[1].getBytes());

@@ -12,6 +12,7 @@ import java.sql.Statement;
 
 import java.util.HashMap;
 import java.util.Objects;
+import models.Cliente;
 
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
@@ -24,10 +25,13 @@ import java.util.Objects;
 public class AnimalDAOImpl implements DAOInterface<Animal> {
 
     private HashMap<Integer, Animal> animais;
+    private HashMap<Integer, Cliente> lClientes;
     private String url;
+    private Integer codUltimoAnimal;
 
-    public AnimalDAOImpl(String url) {
-        this.animais = new HashMap<>();
+    public AnimalDAOImpl(String url, HashMap<Integer, Animal> animais, HashMap<Integer, Cliente> lClientes) {
+        this.animais = animais;
+        this.lClientes = lClientes;
         this.url = url;
 
         Connection connection = null;
@@ -35,12 +39,18 @@ public class AnimalDAOImpl implements DAOInterface<Animal> {
         try {
             connection = DriverManager.getConnection(url, "postgres", "postgres");
             Statement statement = connection.createStatement();
-            ResultSet rs = statement.executeQuery("SELECT * FROM animais;");
+
+            ResultSet rs = statement.executeQuery("SELECT nextval('animais_idanimal_seq'), currval('animais_idanimal_seq') AS valor;");
+            while (rs.next()) {
+                codUltimoAnimal = rs.getInt("valor");
+            }
+
+            rs = statement.executeQuery("SELECT * FROM animais;");
 
             while (rs.next()) {
                 Animal animal = new Animal(
                         rs.getInt("idanimal"),
-                        rs.getInt("idcliente"),
+                        lClientes.get(rs.getInt("idcliente")),
                         rs.getString("nome"),
                         rs.getString("especie"));
                 animais.put(animal.getIdAnimal(), animal);
@@ -60,34 +70,32 @@ public class AnimalDAOImpl implements DAOInterface<Animal> {
 
     @Override
     public Boolean adicionar(Animal obj) {
-        if (!animais.containsKey(obj.getIdAnimal())) {
-            animais.put(obj.getIdAnimal(), obj);
+        obj.setIdAnimal(codUltimoAnimal);
+        codUltimoAnimal++;
+        animais.put(obj.getIdAnimal(), obj);
 
-            Connection connection = null;
+        Connection connection = null;
+        try {
+            connection = DriverManager.getConnection(url, "postgres", "postgres");
+            PreparedStatement ps = connection.prepareStatement("INSERT INTO animais (idanimal, nome, especie, idcliente) VALUES (?, ?, ?, ?);");
+            ps.setInt(1, obj.getIdAnimal());
+            ps.setString(2, obj.getNome());
+            ps.setString(3, obj.getEspecie());
+            ps.setInt(4, obj.getIdAnimal());
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
             try {
-                connection = DriverManager.getConnection(url, "postgres", "postgres");
-                PreparedStatement ps = connection.prepareStatement("INSERT INTO animais (nome, especie, idcliente) VALUES (?, ?, ?);");
-                ps.setString(1, obj.getNome());
-                ps.setString(2, obj.getEspecie());
-                ps.setInt(3, obj.getIdAnimal());
-                ps.executeUpdate();
+                if (connection != null) {
+                    connection.close();
+                }
             } catch (SQLException e) {
                 e.printStackTrace();
-            } finally {
-                try {
-                    if (connection != null) {
-                        connection.close();
-                    }
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
             }
-
-            return true;
         }
 
-        System.err.println("ERRO: CADASTRO DE ANIMAL");
-        return false;
+        return true;
     }
 
     @Override
@@ -107,12 +115,12 @@ public class AnimalDAOImpl implements DAOInterface<Animal> {
                 Animal a = (Animal) animais.get(id);
                 a.setNome(String.valueOf(args[0]));
                 a.setEspecie(String.valueOf(args[1]));
-                a.setIdDono((Integer) args[2]);
+                a.setDono((Integer) args[2], lClientes.get((Integer) args[2]));
 
                 Connection connection = null;
                 try {
                     connection = DriverManager.getConnection(url, "postgres", "postgres");
-                    PreparedStatement ps = connection.prepareStatement("UPDATE animais SET nome = ?, especie = ?, idcliente WHERE idanimal = ?;");
+                    PreparedStatement ps = connection.prepareStatement("UPDATE animais SET nome = ?, especie = ?, idcliente = ? WHERE idanimal = ?;");
                     ps.setString(1, a.getNome());
                     ps.setString(2, a.getEspecie());
                     ps.setInt(3, a.getIdDono());

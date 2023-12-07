@@ -4,7 +4,7 @@
  */
 package visual.servico;
 
-import controllers.ServicoController;
+import DAOImplementation.ServicoDAOImpl;
 import java.util.Objects;
 import javax.swing.JOptionPane;
 import models.Servico;
@@ -15,11 +15,11 @@ import models.Servico;
  */
 public class ConsultarServicoJD extends javax.swing.JDialog {
 
-    private ServicoController sc;
+    private ServicoDAOImpl servicoDAOImpl;
 
-    public ConsultarServicoJD(java.awt.Frame parent, boolean modal, ServicoController sc) {
+    public ConsultarServicoJD(java.awt.Frame parent, boolean modal, ServicoDAOImpl servicoDAOImpl) {
         super(parent, modal);
-        this.sc = sc;
+        this.servicoDAOImpl = servicoDAOImpl;
         initComponents();
         setTitle("Consultar Serviço");
     }
@@ -204,7 +204,7 @@ public class ConsultarServicoJD extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void consultarServicoBTNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_consultarServicoBTNActionPerformed
-        Servico s = sc.consulta(Integer.valueOf(idTF.getText()));
+        Servico s = servicoDAOImpl.consultaPorId(Integer.valueOf(idTF.getText()));
 
         if (Objects.isNull(s)) {
             idTF.setText(null);
@@ -217,15 +217,17 @@ public class ConsultarServicoJD extends javax.swing.JDialog {
             animalTA.setText(null);
             JOptionPane.showMessageDialog(null, "Serviço não encontrado");
         } else {
-            JOptionPane.showMessageDialog(null, "Serviço encontrado");
-            nomeServicoTF.setText(s.getNomeServico());
+            nomeServicoTF.setText(s.getNome());
             precoTF.setText(String.valueOf(s.getPreco()));
             dataTF.setText(s.getData().toString());
             horaTF.setText(s.getHora().toString());
             clienteTA.setText(String.format("%d %s", s.getCliente().getIdCliente(), s.getCliente().getNome()));
             animalTA.setText(String.format("%d %s", s.getAnimal().getIdAnimal(), s.getAnimal().getNome()));
-            promocaoTA.setText(String.format("%d\nDesconto Fixo: R$.2%f\nDesconto Porcentagem: %.2f%%",
-                    s.getPromocao().getIdPromocao(), s.getPromocao().getValorDesconto(), s.getPromocao().getPorcDesconto()));
+            if (!Objects.isNull(s.getPromocao())) {
+                promocaoTA.setText(String.format("%d\nDesconto Fixo: R$.2%f\nDesconto Porcentagem: %.2f%%",
+                        s.getPromocao().getIdPromocao(), s.getPromocao().getValorDesconto(), s.getPromocao().getPorcDesconto()));
+            }
+            JOptionPane.showMessageDialog(null, "Serviço encontrado");
         }
     }//GEN-LAST:event_consultarServicoBTNActionPerformed
 

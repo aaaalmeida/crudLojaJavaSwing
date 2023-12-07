@@ -46,9 +46,21 @@ public class Main extends javax.swing.JFrame {
     private PromocaoController promCont;
     private ServicoController servCont;
 
-    private FuncionarioDAOImpl funcionarioDao;
+    private FuncionarioDAOImpl funcionarioDAO;
+    private ClienteDAOImpl clienteDAO;
+    private AnimalDAOImpl animalDAO;
+    private PromocaoDAOImpl promocaoDAO;
+    private ProdutoDAOImpl produtoDAO;
+    private ServicoDAOImpl servicoDAO;
+    private CompraDAOImpl compraDAO;
 
     private HashMap<Integer, Funcionario> lFuncionarios;
+    private HashMap<Integer, Cliente> lClientes;
+    private HashMap<Integer, Animal> lAnimais;
+    private HashMap<Integer, Promocao> lPromocoes;
+    private HashMap<Integer, Produto> lProdutos;
+    private HashMap<Integer, Servico> lServicos;
+    private HashMap<Integer, Compra> lCompras;
 
     private Connection connection;
 
@@ -62,9 +74,21 @@ public class Main extends javax.swing.JFrame {
         url = "jdbc:postgresql://localhost:5432/";
 
         lFuncionarios = new HashMap();
+        lClientes = new HashMap();
+        lAnimais = new HashMap();
+        lPromocoes = new HashMap();
+        lProdutos = new HashMap();
+        lServicos = new HashMap();
+        lCompras = new HashMap();
 
-        funcionarioDao = new FuncionarioDAOImpl(url, lFuncionarios);
-
+        funcionarioDAO = new FuncionarioDAOImpl(url, lFuncionarios);
+        clienteDAO = new ClienteDAOImpl(url);
+        animalDAO = new AnimalDAOImpl(url);
+        promocaoDAO = new PromocaoDAOImpl(url);
+        produtoDAO = new ProdutoDAOImpl(url, lProdutos, lPromocoes);
+        servicoDAO = new ServicoDAOImpl(url, lServicos, lPromocoes);
+        compraDAO = new CompraDAOImpl(url, lCompras, lProdutos, lServicos, lClientes);
+        
         try {
             connection = DriverManager.getConnection(url, "postgres", "postgres");
 
@@ -604,7 +628,7 @@ public class Main extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void adicionarFuncionarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_adicionarFuncionarioActionPerformed
-        AdicionarFuncionarioJD dialog = new AdicionarFuncionarioJD(this, true, funcionarioDao);
+        AdicionarFuncionarioJD dialog = new AdicionarFuncionarioJD(this, true, funcionarioDAO);
         dialog.setVisible(true);
     }//GEN-LAST:event_adicionarFuncionarioActionPerformed
 
@@ -804,7 +828,7 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_acessarBTNActionPerformed
 
     private void cadastrarFuncionarioBTNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cadastrarFuncionarioBTNActionPerformed
-        AdicionarFuncionarioJD dialog = new AdicionarFuncionarioJD(this, true, funcionarioDao);
+        AdicionarFuncionarioJD dialog = new AdicionarFuncionarioJD(this, true, funcionarioDAO);
         dialog.setVisible(true);
     }//GEN-LAST:event_cadastrarFuncionarioBTNActionPerformed
 

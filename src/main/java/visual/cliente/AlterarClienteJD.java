@@ -4,7 +4,7 @@
  */
 package visual.cliente;
 
-import controllers.ClienteController;
+import DAOImplementation.ClienteDAOImpl;
 import javax.swing.JOptionPane;
 
 /**
@@ -13,11 +13,11 @@ import javax.swing.JOptionPane;
  */
 public class AlterarClienteJD extends javax.swing.JDialog {
 
-    private ClienteController cc;
+    private ClienteDAOImpl clienteDAOImpl;
 
-    public AlterarClienteJD(java.awt.Frame parent, boolean modal, ClienteController cc) {
+    public AlterarClienteJD(java.awt.Frame parent, boolean modal, ClienteDAOImpl clienteDAOImpl) {
         super(parent, modal);
-        this.cc = cc;
+        this.clienteDAOImpl = clienteDAOImpl;
         initComponents();
         setTitle("Alterar Cliente");
     }
@@ -120,14 +120,14 @@ public class AlterarClienteJD extends javax.swing.JDialog {
     private void alterarClienteBTNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_alterarClienteBTNActionPerformed
         Object[] args = new Object[]{nomeTF.getText(), cpfTF.getText()};
 
-        if (!cc.altera(Integer.valueOf(idTF.getText()), args)) {
+        if (!clienteDAOImpl.altera(Integer.valueOf(idTF.getText()), args)) {
             JOptionPane.showMessageDialog(null, "Cliente não alterado");
         } else {
             JOptionPane.showMessageDialog(null, "Cliente alterado");
-            nomeTF.setText(null);
-            idTF.setText(null);
-            cpfTF.setText(null);
         }
+        nomeTF.setText(null);
+        idTF.setText(null);
+        cpfTF.setText(null);
     }//GEN-LAST:event_alterarClienteBTNActionPerformed
 
     private void sairActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sairActionPerformed

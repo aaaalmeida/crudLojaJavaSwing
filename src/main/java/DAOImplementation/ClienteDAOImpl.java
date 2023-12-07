@@ -25,9 +25,10 @@ public class ClienteDAOImpl implements DAOInterface<Cliente> {
 
     private HashMap<Integer, Cliente> clientes;
     private String url;
+    private Integer codUltimoCliente;
 
-    public ClienteDAOImpl(String url) {
-        this.clientes = new HashMap<>();
+    public ClienteDAOImpl(String url, HashMap<Integer, Cliente> clientes) {
+        this.clientes = clientes;
         this.url = url;
 
         Connection connection = null;
@@ -35,7 +36,13 @@ public class ClienteDAOImpl implements DAOInterface<Cliente> {
         try {
             connection = DriverManager.getConnection(url, "postgres", "postgres");
             Statement statement = connection.createStatement();
-            ResultSet rs = statement.executeQuery("SELECT * FROM clientes;");
+
+            ResultSet rs = statement.executeQuery("SELECT nextval('clientes_idcliente_seq'), currval('clientes_idcliente_seq') AS valor;");
+            while (rs.next()) {
+                codUltimoCliente = rs.getInt("valor");
+            }
+
+            rs = statement.executeQuery("SELECT * FROM clientes;");
 
             while (rs.next()) {
                 Cliente cliente = new Cliente(
@@ -59,33 +66,31 @@ public class ClienteDAOImpl implements DAOInterface<Cliente> {
 
     @Override
     public Boolean adicionar(Cliente obj) {
-        if (!clientes.containsKey(obj.getIdCliente())) {
-            clientes.put(obj.getIdCliente(), obj);
+        obj.setIdCliente(codUltimoCliente);
+        codUltimoCliente++;
+        clientes.put(obj.getIdCliente(), obj);
 
-            Connection connection = null;
+        Connection connection = null;
+        try {
+            connection = DriverManager.getConnection(url, "postgres", "postgres");
+            PreparedStatement ps = connection.prepareStatement("INSERT INTO clientes (idcliente, nome, cpf) VALUES (?, ?, ?);");
+            ps.setInt(1, obj.getIdCliente());
+            ps.setString(2, obj.getNome());
+            ps.setString(3, obj.getCpf());
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
             try {
-                connection = DriverManager.getConnection(url, "postgres", "postgres");
-                PreparedStatement ps = connection.prepareStatement("INSERT INTO clientes (nome, cpf) VALUES (?, ?);");
-                ps.setString(1, obj.getNome());
-                ps.setString(2, obj.getCpf());
-                ps.executeUpdate();
+                if (connection != null) {
+                    connection.close();
+                }
             } catch (SQLException e) {
                 e.printStackTrace();
-            } finally {
-                try {
-                    if (connection != null) {
-                        connection.close();
-                    }
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
             }
-
-            return true;
         }
 
-        System.err.println("ERRO: CADASTRO DE CLIENTE");
-        return false;
+        return true;
     }
 
     @Override
@@ -139,7 +144,7 @@ public class ClienteDAOImpl implements DAOInterface<Cliente> {
             }
         }
 
-        System.err.println("ERRO: ALTERAÇÃO DE CLIENTE");
+        System.err.println("ERRO: ALTERACAO DE CLIENTE");
         return false;
     }
 

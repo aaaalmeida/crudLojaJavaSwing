@@ -18,15 +18,20 @@ public class Animal {
     private String nome;
     private String especie;
 
-    public Animal(Integer idAnimal, Integer idDono, String nome, String especie) {
+    public Animal(Integer idAnimal, Cliente dono, String nome, String especie) {
         this.idAnimal = idAnimal;
-        this.idDono = idDono;
+        this.dono = dono;
         this.nome = nome;
         this.especie = especie;
+        this.idDono = dono.getIdCliente();
     }
 
     public Integer getIdAnimal() {
         return idAnimal;
+    }
+
+    public void setIdAnimal(Integer idAnimal) {
+        this.idAnimal = idAnimal;
     }
 
     public Cliente getDono() {
@@ -37,11 +42,8 @@ public class Animal {
         return idDono;
     }
 
-    public void setIdDono(Integer idDono) {
+    public void setDono(Integer idDono, Cliente dono) {
         this.idDono = idDono;
-    }
-
-    public void setDono(Cliente dono) {
         this.dono = dono;
     }
 

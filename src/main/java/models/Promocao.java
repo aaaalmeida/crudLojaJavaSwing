@@ -31,6 +31,10 @@ public class Promocao {
         return idPromocao;
     }
 
+    public void setIdPromocao(Integer idPromocao) {
+        this.idPromocao = idPromocao;
+    }
+
     public Double getPorcDesconto() {
         return porcDesconto;
     }

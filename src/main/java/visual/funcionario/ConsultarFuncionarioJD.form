@@ -92,9 +92,6 @@
   </Layout>
   <SubComponents>
     <Component class="javax.swing.JTextField" name="cpfTF">
-      <Properties>
-        <Property name="editable" type="boolean" value="false"/>
-      </Properties>
     </Component>
     <Component class="javax.swing.JTextField" name="nomeTF">
       <Properties>
@@ -156,7 +153,7 @@
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel6">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Digite o ID do funcion&#xe1;rio e aperte Consultar"/>
+        <Property name="text" type="java.lang.String" value="Digite o ID ou CPF do funcion&#xe1;rio e aperte Consultar"/>
       </Properties>
     </Component>
   </SubComponents>

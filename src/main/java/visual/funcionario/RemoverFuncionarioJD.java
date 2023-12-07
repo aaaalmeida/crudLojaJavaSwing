@@ -4,7 +4,8 @@
  */
 package visual.funcionario;
 
-import controllers.FuncionarioController;
+import DAOImplementation.FuncionarioDAOImpl;
+
 import java.util.Objects;
 import javax.swing.JOptionPane;
 import models.Funcionario;
@@ -15,11 +16,11 @@ import models.Funcionario;
  */
 public class RemoverFuncionarioJD extends javax.swing.JDialog {
 
-    private FuncionarioController fc;
-
-    public RemoverFuncionarioJD(java.awt.Frame parent, boolean modal, FuncionarioController fc) {
+    private FuncionarioDAOImpl funcionarioDAOImpl;
+    
+    public RemoverFuncionarioJD(java.awt.Frame parent, boolean modal, FuncionarioDAOImpl funcionarioDAOImpl) {
         super(parent, modal);
-        this.fc = fc;
+        this.funcionarioDAOImpl = funcionarioDAOImpl;
         initComponents();
         setTitle("Remover Funcionário");
     }
@@ -151,7 +152,7 @@ public class RemoverFuncionarioJD extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void removerFuncionarioBTNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removerFuncionarioBTNActionPerformed
-        Funcionario f = fc.remove(Integer.valueOf(idTF.getText()));
+        Funcionario f = funcionarioDAOImpl.remove(Integer.valueOf(idTF.getText()));
 
         if (!Objects.isNull(f)) {
             nomeTF.setText(f.getNome());
@@ -159,7 +160,7 @@ public class RemoverFuncionarioJD extends javax.swing.JDialog {
             usuarioTF.setText(f.getUsuario());
             senhaPF.setText(f.getSenha());
             resposta.setText("Funcionário removido");
-            JOptionPane.showMessageDialog(null, "Funcionário não removido");
+            JOptionPane.showMessageDialog(null, "Funcionário removido");
         } else {
             idTF.setText(null);
             nomeTF.setText(null);

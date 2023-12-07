@@ -4,10 +4,8 @@
  */
 package visual.servico;
 
-import controllers.AnimalController;
-import controllers.ClienteController;
-import controllers.PromocaoController;
-import controllers.ServicoController;
+import DAOImplementation.ServicoDAOImpl;
+import java.util.HashMap;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -24,33 +22,35 @@ import models.Servico;
  */
 public class AlterarServicoJD extends javax.swing.JDialog {
 
-    private ServicoController sc;
-    private ClienteController cc;
-    private PromocaoController pc;
-    private AnimalController ac;
+    private ServicoDAOImpl servicoDAOImpl;
+    private HashMap<Integer, Cliente> lClientes;
+    private HashMap<Integer, Promocao> lPromocoes;
+    private HashMap<Integer, Animal> lAnimais;
 
-    public AlterarServicoJD(java.awt.Frame parent, boolean modal, ServicoController sc, ClienteController cc, PromocaoController pc, AnimalController ac) {
+    public AlterarServicoJD(java.awt.Frame parent, boolean modal, ServicoDAOImpl servicoDAOImpl, HashMap<Integer, Cliente> lClientes, HashMap<Integer, Promocao> lPromocoes, HashMap<Integer, Animal> lAnimais) {
         super(parent, modal);
-        this.sc = sc;
-        this.cc = cc;
-        this.pc = pc;
-        this.ac = ac;
+        this.servicoDAOImpl = servicoDAOImpl;
+        this.lClientes = lClientes;
+        this.lPromocoes = lPromocoes;
+        this.lAnimais = lAnimais;
         initComponents();
         setTitle("Alterar Serviço");
 
-        Integer[] clientesKeys = cc.relatorio().keySet().toArray(new Integer[0]);
+        Integer[] clientesKeys = lClientes.keySet().toArray(new Integer[0]);
         String[] clienteList = new String[clientesKeys.length];
         for (int i = 0; i < clientesKeys.length; i++) {
             clienteList[i] = String.valueOf(clientesKeys[i]);
         }
         clientesJL.setListData(clienteList);
+        clientesJL.setSelectedIndex(-1);
 
-        Integer[] promocoesKeys = pc.relatorio().keySet().toArray(new Integer[0]);
+        Integer[] promocoesKeys = lPromocoes.keySet().toArray(new Integer[0]);
         String[] promocaoList = new String[promocoesKeys.length];
         for (int i = 0; i < promocoesKeys.length; i++) {
             promocaoList[i] = String.valueOf(promocoesKeys[i]);
         }
         promocoesJL.setListData(promocaoList);
+        promocoesJL.setSelectedIndex(-1);
     }
 
     /**
@@ -232,32 +232,33 @@ public class AlterarServicoJD extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void alterarServicoBTNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_alterarServicoBTNActionPerformed
-        Animal animal = ac.consulta(Integer.valueOf(animaisJL.getSelectedValue()));
-        Cliente cliente = cc.consulta(Integer.valueOf(clientesJL.getSelectedValue()));
-        if(!Objects.isNull(cliente)) {
+        if (clientesJL.getSelectedIndex() == -1) {
             JOptionPane.showMessageDialog(null, "Cliente não pode ser nulo");
             return;
         }
-        
-        Promocao promocao = null;
-        if (!promocoesJL.isSelectionEmpty()) {
-            promocao = pc.consulta(Integer.valueOf(promocoesJL.getSelectedValue()));
+        Integer idCliente = Integer.valueOf(clientesJL.getSelectedValue());
+
+        if (animaisJL.getSelectedIndex() == -1) {
+            JOptionPane.showMessageDialog(null, "Animal não pode ser nulo");
+            return;
+        }
+        Integer idAnimal = Integer.valueOf(animaisJL.getSelectedValue());
+
+        Integer idPromocao = null;
+        if (promocoesJL.getSelectedIndex() == -1) {
+            idPromocao = Integer.valueOf(promocoesJL.getSelectedValue());
         }
 
-        DateTimeFormatter formatterDT = DateTimeFormatter.ofPattern("d/MM/yyyy");
+        DateTimeFormatter formatterDT = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         LocalDate data = LocalDate.parse(dataTF.getText(), formatterDT);
         LocalTime hora = LocalTime.parse(horaTF.getText());
 
-        Servico servico = sc.consulta(Integer.valueOf(idTF.getText()));
-
-        servico.getCliente().removeServico(servico);
-        cliente.addServico(servico);
-
-        Object[] args = new Object[]{nomeServicoTF.getText(), precoTF.getText(), data, hora, animal, cliente, promocao};
-        if (!sc.altera(Integer.valueOf(idTF.getText()), args)) {
+        Object[] args = new Object[]{nomeServicoTF.getText(), Double.valueOf(precoTF.getText()), idPromocao, data, hora, idAnimal, idCliente};
+        if (!servicoDAOImpl.altera(Integer.valueOf(idTF.getText()), args)) {
             JOptionPane.showMessageDialog(null, String.format("Serviço %s não alterado", idTF.getText()));
+        } else {
+            JOptionPane.showMessageDialog(null, "Serviço alterado");
         }
-        else JOptionPane.showMessageDialog(null, "Serviço alterado");
 
         nomeServicoTF.setText(null);
         precoTF.setText(null);
@@ -273,7 +274,7 @@ public class AlterarServicoJD extends javax.swing.JDialog {
     }//GEN-LAST:event_sairActionPerformed
 
     private void clientesJLValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_clientesJLValueChanged
-        Cliente c = cc.consulta(Integer.valueOf(clientesJL.getSelectedValue()));
+        Cliente c = lClientes.get(Integer.valueOf(clientesJL.getSelectedValue()));
         animaisJL.setListData(c.infoAnimal());
     }//GEN-LAST:event_clientesJLValueChanged
 

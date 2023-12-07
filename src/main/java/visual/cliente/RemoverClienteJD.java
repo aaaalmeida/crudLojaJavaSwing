@@ -4,7 +4,7 @@
  */
 package visual.cliente;
 
-import controllers.ClienteController;
+import DAOImplementation.ClienteDAOImpl;
 import java.util.Objects;
 import javax.swing.JOptionPane;
 import models.Cliente;
@@ -15,11 +15,11 @@ import models.Cliente;
  */
 public class RemoverClienteJD extends javax.swing.JDialog {
 
-    private ClienteController cc;
+    private ClienteDAOImpl clienteDAOImpl;
 
-    public RemoverClienteJD(java.awt.Frame parent, boolean modal, ClienteController cc) {
+    public RemoverClienteJD(java.awt.Frame parent, boolean modal, ClienteDAOImpl clienteDAOImpl) {
         super(parent, modal);
-        this.cc = cc;
+        this.clienteDAOImpl = clienteDAOImpl;
         initComponents();
         setTitle("Remover Cliente");
     }
@@ -128,7 +128,7 @@ public class RemoverClienteJD extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void removerClienteBTNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removerClienteBTNActionPerformed
-        Cliente c = cc.remove(Integer.valueOf(idTF.getText()));
+        Cliente c = clienteDAOImpl.remove(Integer.valueOf(idTF.getText()));
 
         if (!Objects.isNull(c)) {
             nomeTF.setText(c.getNome());

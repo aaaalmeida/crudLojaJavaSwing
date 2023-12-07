@@ -4,7 +4,8 @@
  */
 package visual.animal;
 
-import controllers.AnimalController;
+import DAOImplementation.AnimalDAOImpl;
+
 import java.util.Objects;
 import javax.swing.JOptionPane;
 import models.Animal;
@@ -15,13 +16,13 @@ import models.Animal;
  */
 public class RemoverAnimalJD extends javax.swing.JDialog {
 
-    private AnimalController ac;
+    private AnimalDAOImpl animalDAOImpl;
 
-    public RemoverAnimalJD(java.awt.Frame parent, boolean modal, AnimalController ac) {
+    public RemoverAnimalJD(java.awt.Frame parent, boolean modal, AnimalDAOImpl animalDAOImpl) {
         super(parent, modal);
-        this.ac = ac;
         initComponents();
         setTitle("Remover Animal");
+        this.animalDAOImpl = animalDAOImpl;
     }
 
     /**
@@ -139,14 +140,14 @@ public class RemoverAnimalJD extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void removerAnimalBTNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removerAnimalBTNActionPerformed
-        Animal a = ac.remove(Integer.valueOf(idTF.getText()));
+        Animal a = animalDAOImpl.remove(Integer.valueOf(idTF.getText()));
 
         if (!Objects.isNull(a)) {
             nomeTF.setText(a.getNome());
             especieTF.setText(a.getEspecie());
             donoTF.setText(a.getDono().getNome());
             resposta.setText(String.format("Animal %s removido", a.getIdAnimal()));
-            
+
             a.getDono().removeAnimal(a);
             JOptionPane.showMessageDialog(null, "Animal removido");
         } else {

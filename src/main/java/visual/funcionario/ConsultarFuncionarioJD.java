@@ -4,7 +4,8 @@
  */
 package visual.funcionario;
 
-import controllers.FuncionarioController;
+import DAOImplementation.FuncionarioDAOImpl;
+
 import java.util.Objects;
 import javax.swing.JOptionPane;
 import models.Funcionario;
@@ -15,11 +16,11 @@ import models.Funcionario;
  */
 public class ConsultarFuncionarioJD extends javax.swing.JDialog {
 
-    private FuncionarioController fc;
+    private FuncionarioDAOImpl funcionarioDAOImpl;
 
-    public ConsultarFuncionarioJD(java.awt.Frame parent, boolean modal, FuncionarioController fc) {
+    public ConsultarFuncionarioJD(java.awt.Frame parent, boolean modal, FuncionarioDAOImpl funcionarioDAOImpl) {
         super(parent, modal);
-        this.fc = fc;
+        this.funcionarioDAOImpl = funcionarioDAOImpl;
         initComponents();
         setTitle("Consultar Funcionário");
     }
@@ -49,8 +50,6 @@ public class ConsultarFuncionarioJD extends javax.swing.JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Consultar Funcionário");
-
-        cpfTF.setEditable(false);
 
         nomeTF.setEditable(false);
 
@@ -82,7 +81,7 @@ public class ConsultarFuncionarioJD extends javax.swing.JDialog {
             }
         });
 
-        jLabel6.setText("Digite o ID do funcionário e aperte Consultar");
+        jLabel6.setText("Digite o ID ou CPF do funcionário e aperte Consultar");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -148,14 +147,19 @@ public class ConsultarFuncionarioJD extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void consultarFuncionarioBTNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_consultarFuncionarioBTNActionPerformed
-        Funcionario f = fc.consulta(Integer.valueOf(idTF.getText()));
+        Funcionario f = null;
+        if (!idTF.getText().isBlank()) {
+            f = funcionarioDAOImpl.consultaPorId(Integer.valueOf(idTF.getText()));
+        } else if (!cpfTF.getText().isBlank()) {
+            f = funcionarioDAOImpl.consultaPorCpf(cpfTF.getText());
+        }
 
         if (!Objects.isNull(f)) {
             nomeTF.setText(f.getNome());
             cpfTF.setText(f.getCpf());
             usuarioTF.setText(f.getUsuario());
             senhaTF.setText(f.getSenha());
-            JOptionPane.showMessageDialog(null, "Funcionário não encontrado");
+            JOptionPane.showMessageDialog(null, "Funcionário encontrado");
         } else {
             nomeTF.setText(null);
             cpfTF.setText(null);

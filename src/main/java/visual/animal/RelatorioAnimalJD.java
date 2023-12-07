@@ -4,7 +4,7 @@
  */
 package visual.animal;
 
-import controllers.AnimalController;
+import DAOImplementation.AnimalDAOImpl;
 import javax.swing.table.DefaultTableModel;
 import models.Animal;
 
@@ -14,16 +14,16 @@ import models.Animal;
  */
 public class RelatorioAnimalJD extends javax.swing.JDialog {
 
-    private AnimalController ac;
-    
-    public RelatorioAnimalJD(java.awt.Frame parent, boolean modal, AnimalController ac) {
+    private AnimalDAOImpl animalDAOImpl;
+
+    public RelatorioAnimalJD(java.awt.Frame parent, boolean modal, AnimalDAOImpl animalDAOImpl) {
         super(parent, modal);
-        this.ac = ac;
+        this.animalDAOImpl = animalDAOImpl;
         initComponents();
         setTitle("Relatório Animal");
-        
+
         DefaultTableModel grid = (DefaultTableModel) tabela.getModel();
-        for (Animal animal : ac.relatorio().values()) {
+        for (Animal animal : animalDAOImpl.relatorio().values()) {
             grid.addRow(animal.dadosTabela());
         }
     }
