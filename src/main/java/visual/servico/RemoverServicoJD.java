@@ -4,7 +4,7 @@
  */
 package visual.servico;
 
-import controllers.ServicoController;
+import DAOImplementation.ServicoDAOImpl;
 import java.util.Objects;
 import javax.swing.JOptionPane;
 import models.Animal;
@@ -17,12 +17,12 @@ import models.Servico;
  * @author arthu
  */
 public class RemoverServicoJD extends javax.swing.JDialog {
-    
-    private ServicoController sc;
-    
-    public RemoverServicoJD(java.awt.Frame parent, boolean modal, ServicoController sc) {
+
+    private ServicoDAOImpl servicoDAOImpl;
+
+    public RemoverServicoJD(java.awt.Frame parent, boolean modal, ServicoDAOImpl servicoDAOImpl) {
         super(parent, modal);
-        this.sc = sc;
+        this.servicoDAOImpl = servicoDAOImpl;
         initComponents();
         setTitle("Remover Serviço");
     }
@@ -217,24 +217,23 @@ public class RemoverServicoJD extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void removerServicoBTNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removerServicoBTNActionPerformed
-        Servico s = sc.remove(Integer.valueOf(idTF.getText()));
-        
+        Servico s = servicoDAOImpl.remove(Integer.valueOf(idTF.getText()));
+
         if (!Objects.isNull(s)) {
             nomeServicoTF.setText(s.getNome());
             precoTF.setText(String.valueOf(s.getPreco()));
             dataTF.setText(s.getData().toString());
             horaTF.setText(s.getHora().toString());
-            
+
             Cliente c = s.getCliente();
             clienteTA.setText(String.format("ID: %d \nNome: %s \nCPF: %s", c.getIdCliente(), c.getNome(), c.getCpf()));
-            c.removeServico(s);
-            
+
             Promocao p = s.getPromocao();
             promocaoTA.setText(String.format("ID: %d \nDesconto Fixo: R$%.2f \nDesconto Porcentagem: %.2f", p.getIdPromocao(), p.getValorDesconto(), p.getPorcDesconto()));
-            
+
             Animal a = s.getAnimal();
             animalTA.setText(String.format("ID: %d \nNome: %s \nEspécie: %s", a.getIdAnimal(), a.getNome(), a.getEspecie()));
-            
+
             resposta.setText(String.format("Serviço %d removido", s.getIdServico()));
             JOptionPane.showMessageDialog(null, "Serviço removido");
         } else {

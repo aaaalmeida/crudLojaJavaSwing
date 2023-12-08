@@ -4,8 +4,6 @@
  */
 package visual;
 
-import controllers.*;
-
 import DAOImplementation.*;
 import models.*;
 
@@ -38,14 +36,6 @@ import visual.produto.*;
  */
 public class Main extends javax.swing.JFrame {
 
-    private FuncionarioController funcCont;
-    private ClienteController clieCont;
-    private AnimalController animCont;
-    private CompraController compCont;
-    private ProdutoController prodCont;
-    private PromocaoController promCont;
-    private ServicoController servCont;
-
     private FuncionarioDAOImpl funcionarioDAO;
     private ClienteDAOImpl clienteDAO;
     private AnimalDAOImpl animalDAO;
@@ -54,9 +44,9 @@ public class Main extends javax.swing.JFrame {
     private ServicoDAOImpl servicoDAO;
     private CompraDAOImpl compraDAO;
 
-    private HashMap<Integer, Funcionario> lFuncionarios;
-    private HashMap<Integer, Cliente> lClientes;
     private HashMap<Integer, Animal> lAnimais;
+    private HashMap<Integer, Cliente> lClientes;
+    private HashMap<Integer, Funcionario> lFuncionarios;
     private HashMap<Integer, Promocao> lPromocoes;
     private HashMap<Integer, Produto> lProdutos;
     private HashMap<Integer, Servico> lServicos;
@@ -73,22 +63,14 @@ public class Main extends javax.swing.JFrame {
         nomeBanco = "teste1";
         url = "jdbc:postgresql://localhost:5432/";
 
-        lFuncionarios = new HashMap();
-        lClientes = new HashMap();
         lAnimais = new HashMap();
+        lClientes = new HashMap();
+        lFuncionarios = new HashMap();
         lPromocoes = new HashMap();
         lProdutos = new HashMap();
         lServicos = new HashMap();
         lCompras = new HashMap();
 
-        funcionarioDAO = new FuncionarioDAOImpl(url, lFuncionarios);
-        clienteDAO = new ClienteDAOImpl(url);
-        animalDAO = new AnimalDAOImpl(url);
-        promocaoDAO = new PromocaoDAOImpl(url);
-        produtoDAO = new ProdutoDAOImpl(url, lProdutos, lPromocoes);
-        servicoDAO = new ServicoDAOImpl(url, lServicos, lPromocoes);
-        compraDAO = new CompraDAOImpl(url, lCompras, lProdutos, lServicos, lClientes);
-        
         try {
             connection = DriverManager.getConnection(url, "postgres", "postgres");
 
@@ -97,9 +79,9 @@ public class Main extends javax.swing.JFrame {
                 url += nomeBanco;
                 connection = DriverManager.getConnection(url, "postgres", "postgres");
                 createTables(connection);
+                System.out.println("BANCO CRIADO");
             } else {
                 url += nomeBanco;
-                connection = DriverManager.getConnection(url, "postgres", "postgres");
             }
 
         } catch (SQLException e) {
@@ -114,13 +96,13 @@ public class Main extends javax.swing.JFrame {
             }
         }
 
-        this.funcCont = new FuncionarioController();
-        this.clieCont = new ClienteController();
-        this.animCont = new AnimalController();
-        this.compCont = new CompraController();
-        this.prodCont = new ProdutoController();
-        this.promCont = new PromocaoController();
-        this.servCont = new ServicoController();
+        animalDAO = new AnimalDAOImpl(url, lAnimais, lClientes);
+        clienteDAO = new ClienteDAOImpl(url, lClientes);
+        funcionarioDAO = new FuncionarioDAOImpl(url, lFuncionarios);
+        promocaoDAO = new PromocaoDAOImpl(url, lPromocoes);
+        produtoDAO = new ProdutoDAOImpl(url, lProdutos, lPromocoes);
+        servicoDAO = new ServicoDAOImpl(url, lServicos, lPromocoes, lClientes, lAnimais);
+        compraDAO = new CompraDAOImpl(url, lCompras, lProdutos, lServicos, lClientes);
     }
 
     private boolean checkDatabase(Connection conection) throws SQLException {
@@ -633,172 +615,172 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_adicionarFuncionarioActionPerformed
 
     private void consultarFuncionarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_consultarFuncionarioActionPerformed
-        ConsultarFuncionarioJD dialog = new ConsultarFuncionarioJD(this, true, funcCont);
+        ConsultarFuncionarioJD dialog = new ConsultarFuncionarioJD(this, true, funcionarioDAO);
         dialog.setVisible(true);
     }//GEN-LAST:event_consultarFuncionarioActionPerformed
 
     private void alterarFuncionarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_alterarFuncionarioActionPerformed
-        AlterarFuncionarioJD dialog = new AlterarFuncionarioJD(this, true, funcCont);
+        AlterarFuncionarioJD dialog = new AlterarFuncionarioJD(this, true, funcionarioDAO);
         dialog.setVisible(true);
     }//GEN-LAST:event_alterarFuncionarioActionPerformed
 
     private void removerFuncionarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removerFuncionarioActionPerformed
-        RemoverFuncionarioJD dialog = new RemoverFuncionarioJD(this, true, funcCont);
+        RemoverFuncionarioJD dialog = new RemoverFuncionarioJD(this, true, funcionarioDAO);
         dialog.setVisible(true);
     }//GEN-LAST:event_removerFuncionarioActionPerformed
 
     private void adicionarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_adicionarClienteActionPerformed
-        AdicionarClienteJD dialog = new AdicionarClienteJD(this, true, clieCont);
+        AdicionarClienteJD dialog = new AdicionarClienteJD(this, true, clienteDAO);
         dialog.setVisible(true);
     }//GEN-LAST:event_adicionarClienteActionPerformed
 
     private void consultarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_consultarClienteActionPerformed
-        ConsultarClienteJD dialog = new ConsultarClienteJD(this, true, clieCont);
+        ConsultarClienteJD dialog = new ConsultarClienteJD(this, true, clienteDAO);
         dialog.setVisible(true);
     }//GEN-LAST:event_consultarClienteActionPerformed
 
     private void alterarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_alterarClienteActionPerformed
-        AlterarClienteJD dialog = new AlterarClienteJD(this, true, clieCont);
+        AlterarClienteJD dialog = new AlterarClienteJD(this, true, clienteDAO);
         dialog.setVisible(true);
     }//GEN-LAST:event_alterarClienteActionPerformed
 
     private void removerClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removerClienteActionPerformed
-        RemoverClienteJD dialog = new RemoverClienteJD(this, true, clieCont);
+        RemoverClienteJD dialog = new RemoverClienteJD(this, true, clienteDAO);
         dialog.setVisible(true);
     }//GEN-LAST:event_removerClienteActionPerformed
 
     private void adicionarAnimalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_adicionarAnimalActionPerformed
-        AdicionarAnimalJD dialog = new AdicionarAnimalJD(this, true, animCont, clieCont);
+        AdicionarAnimalJD dialog = new AdicionarAnimalJD(this, true, animalDAO, lClientes);
         dialog.setVisible(true);
     }//GEN-LAST:event_adicionarAnimalActionPerformed
 
     private void consultarAnimalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_consultarAnimalActionPerformed
-        ConsultarAnimalJD dialog = new ConsultarAnimalJD(this, true, animCont);
+        ConsultarAnimalJD dialog = new ConsultarAnimalJD(this, true, animalDAO);
         dialog.setVisible(true);
     }//GEN-LAST:event_consultarAnimalActionPerformed
 
     private void alterarAnimalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_alterarAnimalActionPerformed
-        AlterarAnimalJD dialog = new AlterarAnimalJD(this, true, animCont, clieCont);
+        AlterarAnimalJD dialog = new AlterarAnimalJD(this, true, animalDAO, lClientes);
         dialog.setVisible(true);
     }//GEN-LAST:event_alterarAnimalActionPerformed
 
     private void removerAnimalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removerAnimalActionPerformed
-        RemoverAnimalJD dialog = new RemoverAnimalJD(this, true, animCont);
+        RemoverAnimalJD dialog = new RemoverAnimalJD(this, true, animalDAO);
         dialog.setVisible(true);
     }//GEN-LAST:event_removerAnimalActionPerformed
 
     private void adicionarProdutoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_adicionarProdutoActionPerformed
-        AdicionarProdutoJD dialog = new AdicionarProdutoJD(this, true, prodCont, promCont);
+        AdicionarProdutoJD dialog = new AdicionarProdutoJD(this, true, produtoDAO, lPromocoes);
         dialog.setVisible(true);
     }//GEN-LAST:event_adicionarProdutoActionPerformed
 
     private void consultarProdutoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_consultarProdutoActionPerformed
-        ConsultarProdutoJD dialog = new ConsultarProdutoJD(this, true, prodCont);
+        ConsultarProdutoJD dialog = new ConsultarProdutoJD(this, true, produtoDAO);
         dialog.setVisible(true);
     }//GEN-LAST:event_consultarProdutoActionPerformed
 
     private void alterarProdutoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_alterarProdutoActionPerformed
-        AlterarProdutoJD dialog = new AlterarProdutoJD(this, true, prodCont, promCont);
+        AlterarProdutoJD dialog = new AlterarProdutoJD(this, true, produtoDAO, lPromocoes);
         dialog.setVisible(true);
     }//GEN-LAST:event_alterarProdutoActionPerformed
 
     private void removerProdutoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removerProdutoActionPerformed
-        RemoverProdutoJD dialog = new RemoverProdutoJD(this, true, prodCont);
+        RemoverProdutoJD dialog = new RemoverProdutoJD(this, true, produtoDAO);
         dialog.setVisible(true);
     }//GEN-LAST:event_removerProdutoActionPerformed
 
     private void adicionarCompraActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_adicionarCompraActionPerformed
-        AdicionarCompraJD dialog = new AdicionarCompraJD(this, true, compCont, servCont, clieCont, prodCont);
+        AdicionarCompraJD dialog = new AdicionarCompraJD(this, true, compraDAO, lServicos, lClientes, lProdutos);
         dialog.setVisible(true);
     }//GEN-LAST:event_adicionarCompraActionPerformed
 
     private void consultarCompraActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_consultarCompraActionPerformed
-        ConsultarCompraJD dialog = new ConsultarCompraJD(this, true, compCont);
+        ConsultarCompraJD dialog = new ConsultarCompraJD(this, true, compraDAO);
         dialog.setVisible(true);
     }//GEN-LAST:event_consultarCompraActionPerformed
 
     private void alterarCompraActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_alterarCompraActionPerformed
-        AlterarCompraJD dialog = new AlterarCompraJD(this, true, compCont, servCont, clieCont, prodCont);
+        AlterarCompraJD dialog = new AlterarCompraJD(this, true, compraDAO, lClientes, lProdutos, lServicos);
         dialog.setVisible(true);
     }//GEN-LAST:event_alterarCompraActionPerformed
 
     private void removerCompraActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removerCompraActionPerformed
-        RemoverCompraJD dialog = new RemoverCompraJD(this, true, compCont);
+        RemoverCompraJD dialog = new RemoverCompraJD(this, true, compraDAO);
         dialog.setVisible(true);
     }//GEN-LAST:event_removerCompraActionPerformed
 
     private void adicionarServicoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_adicionarServicoActionPerformed
-        AdicionarServicoJD dialog = new AdicionarServicoJD(this, rootPaneCheckingEnabled, servCont, animCont, promCont, clieCont);
+        AdicionarServicoJD dialog = new AdicionarServicoJD(this, true, servicoDAO, lClientes, lAnimais, lPromocoes);
         dialog.setVisible(true);
     }//GEN-LAST:event_adicionarServicoActionPerformed
 
     private void consultarServicoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_consultarServicoActionPerformed
-        ConsultarServicoJD dialog = new ConsultarServicoJD(this, true, servCont);
+        ConsultarServicoJD dialog = new ConsultarServicoJD(this, true, servicoDAO);
         dialog.setVisible(true);
     }//GEN-LAST:event_consultarServicoActionPerformed
 
     private void alterarServicoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_alterarServicoActionPerformed
-        AlterarServicoJD dialog = new AlterarServicoJD(this, true, servCont, clieCont, promCont, animCont);
+        AlterarServicoJD dialog = new AlterarServicoJD(this, true, servicoDAO, lClientes, lPromocoes, lAnimais);
         dialog.setVisible(true);
     }//GEN-LAST:event_alterarServicoActionPerformed
 
     private void removerServicoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removerServicoActionPerformed
-        RemoverServicoJD dialog = new RemoverServicoJD(this, true, servCont);
+        RemoverServicoJD dialog = new RemoverServicoJD(this, true, servicoDAO);
         dialog.setVisible(true);
     }//GEN-LAST:event_removerServicoActionPerformed
 
     private void adicionarPromocaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_adicionarPromocaoActionPerformed
-        AdicionarPromocaoJD dialog = new AdicionarPromocaoJD(this, true, promCont);
+        AdicionarPromocaoJD dialog = new AdicionarPromocaoJD(this, true, promocaoDAO);
         dialog.setVisible(true);
     }//GEN-LAST:event_adicionarPromocaoActionPerformed
 
     private void consultarPromocaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_consultarPromocaoActionPerformed
-        ConsultarPromocaoJD dialog = new ConsultarPromocaoJD(this, true, promCont);
+        ConsultarPromocaoJD dialog = new ConsultarPromocaoJD(this, true, promocaoDAO);
         dialog.setVisible(true);
     }//GEN-LAST:event_consultarPromocaoActionPerformed
 
     private void alterarPromocaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_alterarPromocaoActionPerformed
-        AlterarPromocaoJD dialog = new AlterarPromocaoJD(this, true, promCont);
+        AlterarPromocaoJD dialog = new AlterarPromocaoJD(this, true, promocaoDAO);
         dialog.setVisible(true);
     }//GEN-LAST:event_alterarPromocaoActionPerformed
 
     private void removerPromocaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removerPromocaoActionPerformed
-        RemoverPromocaoJD dialog = new RemoverPromocaoJD(this, true, promCont);
+        RemoverPromocaoJD dialog = new RemoverPromocaoJD(this, true, promocaoDAO);
         dialog.setVisible(true);
     }//GEN-LAST:event_removerPromocaoActionPerformed
 
     private void relatorioFuncionarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_relatorioFuncionarioActionPerformed
-        RelatorioFuncionarioJD dialog = new RelatorioFuncionarioJD(this, true, funcCont);
+        RelatorioFuncionarioJD dialog = new RelatorioFuncionarioJD(this, true, funcionarioDAO);
         dialog.setVisible(true);
     }//GEN-LAST:event_relatorioFuncionarioActionPerformed
 
     private void relatorioClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_relatorioClienteActionPerformed
-        RelatorioClienteJD dialog = new RelatorioClienteJD(this, true, clieCont);
+        RelatorioClienteJD dialog = new RelatorioClienteJD(this, true, clienteDAO);
         dialog.setVisible(true);
     }//GEN-LAST:event_relatorioClienteActionPerformed
 
     private void relatorioAnimalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_relatorioAnimalActionPerformed
-        RelatorioAnimalJD dialog = new RelatorioAnimalJD(this, true, animCont);
+        RelatorioAnimalJD dialog = new RelatorioAnimalJD(this, true, animalDAO);
         dialog.setVisible(true);
     }//GEN-LAST:event_relatorioAnimalActionPerformed
 
     private void relatorioProdutoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_relatorioProdutoActionPerformed
-        RelatorioProdutoJD dialog = new RelatorioProdutoJD(this, true, prodCont);
+        RelatorioProdutoJD dialog = new RelatorioProdutoJD(this, true, produtoDAO);
         dialog.setVisible(true);
     }//GEN-LAST:event_relatorioProdutoActionPerformed
 
     private void relatorioCompraActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_relatorioCompraActionPerformed
-        RelatorioCompraJD dialog = new RelatorioCompraJD(this, true, compCont);
+        RelatorioCompraJD dialog = new RelatorioCompraJD(this, true, compraDAO);
         dialog.setVisible(true);
     }//GEN-LAST:event_relatorioCompraActionPerformed
 
     private void relatorioServicoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_relatorioServicoActionPerformed
-        RelatorioServicoJD dialog = new RelatorioServicoJD(this, true, servCont);
+        RelatorioServicoJD dialog = new RelatorioServicoJD(this, true, servicoDAO);
         dialog.setVisible(true);
     }//GEN-LAST:event_relatorioServicoActionPerformed
 
     private void relatorioPromocaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_relatorioPromocaoActionPerformed
-        RelatorioPromocaoJD dialog = new RelatorioPromocaoJD(this, true, promCont);
+        RelatorioPromocaoJD dialog = new RelatorioPromocaoJD(this, true, promocaoDAO);
         dialog.setVisible(true);
     }//GEN-LAST:event_relatorioPromocaoActionPerformed
 

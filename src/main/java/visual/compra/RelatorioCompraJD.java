@@ -4,7 +4,7 @@
  */
 package visual.compra;
 
-import controllers.CompraController;
+import DAOImplementation.CompraDAOImpl;
 import javax.swing.table.DefaultTableModel;
 import models.Compra;
 
@@ -14,16 +14,16 @@ import models.Compra;
  */
 public class RelatorioCompraJD extends javax.swing.JDialog {
 
-    private CompraController cc;
+    private CompraDAOImpl compraDAOImpl;
 
-    public RelatorioCompraJD(java.awt.Frame parent, boolean modal, CompraController cc) {
+    public RelatorioCompraJD(java.awt.Frame parent, boolean modal, CompraDAOImpl compraDAOImpl) {
         super(parent, modal);
-        this.cc = cc;
+        this.compraDAOImpl = compraDAOImpl;
         initComponents();
         setTitle("Relatório Compra");
 
         DefaultTableModel grid = (DefaultTableModel) tabela.getModel();
-        for (Compra compra : cc.relatorio().values()) {
+        for (Compra compra : compraDAOImpl.relatorio().values()) {
             grid.addRow(compra.dadosTabela());
         }
     }

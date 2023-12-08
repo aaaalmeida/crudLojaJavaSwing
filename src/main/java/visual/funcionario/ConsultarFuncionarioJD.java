@@ -155,6 +155,7 @@ public class ConsultarFuncionarioJD extends javax.swing.JDialog {
         }
 
         if (!Objects.isNull(f)) {
+            idTF.setText(String.valueOf(f.getIdFuncionario()));
             nomeTF.setText(f.getNome());
             cpfTF.setText(f.getCpf());
             usuarioTF.setText(f.getUsuario());

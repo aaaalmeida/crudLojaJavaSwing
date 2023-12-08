@@ -176,6 +176,7 @@ public class ConsultarClienteJD extends javax.swing.JDialog {
         }
 
         if (!Objects.isNull(c)) {
+            idTF.setText(String.valueOf(c.getIdCliente()));
             nomeTF.setText(c.getNome());
             cpfTF.setText(c.getCpf());
 

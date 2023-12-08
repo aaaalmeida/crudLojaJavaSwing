@@ -46,19 +46,22 @@ public class CompraDAOImpl implements DAOInterface<Compra> {
         try {
             connection = DriverManager.getConnection(url, "postgres", "postgres");
             Statement statement = connection.createStatement();
-            
-            ResultSet rs = statement.executeQuery("SELECT nextval('compras_idcompras_seq'), currval('compras_idcompras_seq') AS valor;");
+
+            ResultSet rs = statement.executeQuery("SELECT nextval('compras_idcompra_seq'), currval('compras_idcompra_seq') AS valor;");
             while (rs.next()) {
                 codUltimaCompra = rs.getInt("valor");
             }
+            
             rs = statement.executeQuery("SELECT * FROM compras;");
 
             while (rs.next()) {
                 Compra compra = new Compra(
-                        rs.getInt("idCompra"),
-                        rs.getInt("idCliente"));
-                Integer idCliente = compra.getIdCliente();
-                compra.setCliente(idCliente, lClientes.get(idCliente));
+                        rs.getInt("idcompra"),
+                        lClientes.get(rs.getInt("idCliente")),
+                        new ArrayList<>(),
+                        new ArrayList<>());
+
+                compra.getCliente().addCompra(compra);
                 compras.put(compra.getIdCompra(), compra);
             }
 
@@ -66,8 +69,7 @@ public class CompraDAOImpl implements DAOInterface<Compra> {
                 rs = statement.executeQuery("SELECT * FROM compras_produtos WHERE idcompra = " + idCompra + ";");
                 while (rs.next()) {
                     Compra compra = compras.get(idCompra);
-                    Integer idProduto = rs.getInt("idproduto");
-                    compra.addProduto(idProduto, lProdutos.get(idProduto));
+                    compra.addProduto(lProdutos.get(rs.getInt("idproduto")));
                 }
             }
 
@@ -75,8 +77,7 @@ public class CompraDAOImpl implements DAOInterface<Compra> {
                 rs = statement.executeQuery("SELECT * FROM compras_servicos WHERE idcompra = " + idCompra + ";");
                 while (rs.next()) {
                     Compra compra = compras.get(idCompra);
-                    Integer idServico = rs.getInt("idservico");
-                    compra.addServico(idServico, lServicos.get(idServico));
+                    compra.addServico(lServicos.get(rs.getInt("idservico")));
                 }
             }
 
@@ -95,41 +96,44 @@ public class CompraDAOImpl implements DAOInterface<Compra> {
 
     @Override
     public Boolean adicionar(Compra obj) {
-            obj.setIdCompra(codUltimaCompra);
-            compras.put(obj.getIdCompra(), obj);
+        obj.setIdCompra(codUltimaCompra);
+        codUltimaCompra++;
+        compras.put(obj.getIdCompra(), obj);
+        obj.getCliente().addCompra(obj);
 
-            Connection connection = null;
+        Connection connection = null;
+        try {
+            connection = DriverManager.getConnection(url, "postgres", "postgres");
+            PreparedStatement ps = connection.prepareStatement("INSERT INTO compra(idcompra, precototal, idcliente) VALUES (?, ?, ?);");
+            ps.setInt(1, obj.getIdCompra());
+            ps.setDouble(2, obj.getPrecoTotal());
+            ps.setInt(3, obj.getIdCliente());
+            ps.executeUpdate();
+
+            for (Produto produto : obj.getlProdutos()) {
+                ps = connection.prepareStatement("INSERT INTO compras_produtos(idcompra, idproduto) VALUES (?, ?);");
+                ps.setInt(1, obj.getIdCompra());
+                ps.setInt(2, produto.getIdProduto());
+            }
+
+            for (Servico servico : obj.getlServicos()) {
+                ps = connection.prepareStatement("INSERT INTO compras_servicos(idcompra, idservico) VALUES (?, ?);");
+                ps.setInt(1, obj.getIdCompra());
+                ps.setInt(2, servico.getIdServico());
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
             try {
-                connection = DriverManager.getConnection(url, "postgres", "postgres");
-                PreparedStatement ps = connection.prepareStatement("INSERT INTO compra(precototal, idcliente) VALUES (?, ?);");
-                ps.setDouble(1, obj.getPrecoTotal());
-                ps.setInt(2, obj.getIdCliente());
-                ps.executeUpdate();
-
-                for (Integer idProduto : obj.getKeysProdutos()) {
-                    ps = connection.prepareStatement("INSERT INTO compras_produtos(idcompra, idproduto) VALUES (?, ?);");
-                    ps.setInt(1, obj.getIdCompra());
-                    ps.setInt(2, idProduto);
-                }
-
-                for (Integer idServico : obj.getKeysServicos()) {
-                    ps = connection.prepareStatement("INSERT INTO compras_servicos(idcompra, idservico) VALUES (?, ?);");
-                    ps.setInt(1, obj.getIdCompra());
-                    ps.setInt(2, idServico);
+                if (connection != null) {
+                    connection.close();
                 }
             } catch (SQLException e) {
                 e.printStackTrace();
-            } finally {
-                try {
-                    if (connection != null) {
-                        connection.close();
-                    }
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
             }
+        }
 
-            return true;
+        return true;
     }
 
     @Override
@@ -147,16 +151,18 @@ public class CompraDAOImpl implements DAOInterface<Compra> {
         if (!Objects.isNull(id)) {
             if (compras.containsKey(id)) {
                 Compra c = (Compra) compras.get(id);
-                c.setCliente((Integer) args[0], lClientes.get(c.getIdCliente()));
+                c.getCliente().removeCompra(c);
+                c.setCliente((Integer) args[0], lClientes.get((Integer) args[0]));
+                c.getCliente().addCompra(c);
 
                 c.limparProdutos();
-                for (Integer idProduto : (ArrayList<Integer>) args[1]) {
-                    c.addProduto(idProduto, lProdutos.get(idProduto));
+                for (Produto produto : (ArrayList<Produto>) args[1]) {
+                    c.addProduto(produto);
                 }
 
                 c.limparServicos();
-                for (Integer idServico : (ArrayList<Integer>) args[2]) {
-                    c.addServico(idServico, lServicos.get(idServico));
+                for (Servico servico : (ArrayList<Servico>) args[2]) {
+                    c.addServico(servico);
                 }
 
                 c.alteraPreco();
@@ -173,20 +179,20 @@ public class CompraDAOImpl implements DAOInterface<Compra> {
                     ps = connection.prepareStatement("DELETE FROM compras_produtos WHERE idcompra = ?;");
                     ps.setInt(1, c.getIdCompra());
                     ps.executeUpdate();
-                    for (Integer idProduto : c.getKeysProdutos()) {
+                    for (Produto produto : c.getlProdutos()) {
                         ps = connection.prepareStatement("INSERT INTO compras_produtos (idcompra, idproduto) VALUES (?, ?);");
                         ps.setInt(1, c.getIdCompra());
-                        ps.setInt(2, idProduto);
+                        ps.setInt(2, produto.getIdProduto());
                         ps.executeUpdate();
                     }
 
                     ps = connection.prepareStatement("DELETE FROM compras_servicos WHERE idcompra = ?;");
                     ps.setInt(1, c.getIdCompra());
                     ps.executeUpdate();
-                    for (Integer idServico : c.getKeysServicos()) {
+                    for (Servico servico : c.getlServicos()) {
                         ps = connection.prepareStatement("INSERT INTO compras_servicos (idcompra, idservico) VALUES (?, ?);");
                         ps.setInt(1, c.getIdCompra());
-                        ps.setInt(2, idServico);
+                        ps.setInt(2, servico.getIdServico());
                         ps.executeUpdate();
                     }
                 } catch (SQLException e) {

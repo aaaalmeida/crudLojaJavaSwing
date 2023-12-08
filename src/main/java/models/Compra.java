@@ -16,17 +16,15 @@ public class Compra {
     private Double precoTotal;
     private Integer idCliente;
     private Cliente cliente;
-    private ArrayList<Integer> keysProdutos;
-    private ArrayList<Integer> keysServicos;
     private ArrayList<Produto> lProdutos;
     private ArrayList<Servico> lServicos;
 
-    public Compra(Integer idCompra, Integer idCliente) {
+    public Compra(Integer idCompra, Cliente cliente, ArrayList<Produto> lProdutos, ArrayList<Servico> lServicos) {
         this.idCompra = idCompra;
-        this.idCliente = idCliente;
-
-        this.keysProdutos = new ArrayList<>();
-        this.keysServicos = new ArrayList<>();
+        this.cliente = cliente;
+        this.idCliente = cliente.getIdCliente();
+        this.lProdutos = lProdutos;
+        this.lServicos = lServicos;
 
         alteraPreco();
     }
@@ -66,14 +64,6 @@ public class Compra {
         return cliente;
     }
 
-    public ArrayList<Integer> getKeysProdutos() {
-        return keysProdutos;
-    }
-
-    public ArrayList<Integer> getKeysServicos() {
-        return keysServicos;
-    }
-
     public ArrayList<Produto> getlProdutos() {
         return lProdutos;
     }
@@ -82,26 +72,22 @@ public class Compra {
         return lServicos;
     }
 
-    public void addProduto(Integer idProduto, Produto produto) {
-        keysProdutos.add(idProduto);
+    public void addProduto(Produto produto) {
         lProdutos.add(produto);
         alteraPreco();
     }
 
-    public void addServico(Integer idServico, Servico servico) {
-        keysServicos.add(idServico);
+    public void addServico(Servico servico) {
         lServicos.add(servico);
         alteraPreco();
     }
 
     public void limparProdutos() {
-        keysProdutos = new ArrayList();
         lProdutos = new ArrayList();
         alteraPreco();
     }
 
     public void limparServicos() {
-        keysServicos = new ArrayList();
         lServicos = new ArrayList();
         alteraPreco();
     }

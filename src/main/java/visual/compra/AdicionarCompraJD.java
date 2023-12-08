@@ -4,11 +4,10 @@
  */
 package visual.compra;
 
-import controllers.ClienteController;
-import controllers.CompraController;
-import controllers.ProdutoController;
-import controllers.ServicoController;
+import DAOImplementation.CompraDAOImpl;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 import javax.swing.JOptionPane;
 import models.Cliente;
 import models.Compra;
@@ -21,40 +20,33 @@ import models.Servico;
  */
 public class AdicionarCompraJD extends javax.swing.JDialog {
 
-    private CompraController cc;
-    private ServicoController sc;
-    private ProdutoController pc;
-    private ClienteController clientec;
+    private CompraDAOImpl compraDAOImpl;
+    private HashMap<Integer, Servico> lServicos;
+    private HashMap<Integer, Cliente> lClientes;
+    private HashMap<Integer, Produto> lProdutos;
 
-    public AdicionarCompraJD(java.awt.Frame parent, boolean modal, CompraController cc, ServicoController sc, ClienteController clientec, ProdutoController pc) {
+    public AdicionarCompraJD(java.awt.Frame parent, boolean modal, CompraDAOImpl compraDAOImpl, HashMap<Integer, Servico> lServicos, HashMap<Integer, Cliente> lClientes, HashMap<Integer, Produto> lProdutos) {
         super(parent, modal);
-        this.cc = cc;
-        this.sc = sc;
-        this.clientec = clientec;
-        this.pc = pc;
+        this.compraDAOImpl = compraDAOImpl;
+        this.lServicos = lServicos;
+        this.lClientes = lClientes;
+        this.lProdutos = lProdutos;
         initComponents();
         setTitle("Adicionar Compra");
 
-        Integer[] clientesKeys = clientec.relatorio().keySet().toArray(new Integer[0]);
+        Integer[] clientesKeys = lClientes.keySet().toArray(new Integer[0]);
         String[] clienteList = new String[clientesKeys.length];
         for (int i = 0; i < clientesKeys.length; i++) {
             clienteList[i] = String.valueOf(clientesKeys[i]);
         }
         clienteJL.setListData(clienteList);
 
-        Integer[] produtosKeys = pc.relatorio().keySet().toArray(new Integer[0]);
+        Integer[] produtosKeys = lProdutos.keySet().toArray(new Integer[0]);
         String[] produtosList = new String[produtosKeys.length];
         for (int i = 0; i < produtosKeys.length; i++) {
             produtosList[i] = String.valueOf(produtosKeys[i]);
         }
         produtosJL.setListData(produtosList);
-
-        Integer[] servicosKeys = sc.relatorio().keySet().toArray(new Integer[0]);
-        String[] servicosList = new String[servicosKeys.length];
-        for (int i = 0; i < servicosKeys.length; i++) {
-            servicosList[i] = String.valueOf(servicosKeys[i]);
-        }
-        servicosJL.setListData(servicosList);
     }
 
     /**
@@ -95,6 +87,11 @@ public class AdicionarCompraJD extends javax.swing.JDialog {
         jLabel2.setText("Cliente");
 
         clienteJL.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        clienteJL.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                clienteJLValueChanged(evt);
+            }
+        });
         jScrollPane1.setViewportView(clienteJL);
 
         sair.setText("Sair");
@@ -168,36 +165,45 @@ public class AdicionarCompraJD extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void adicionarCompraBTNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_adicionarCompraBTNActionPerformed
-        Cliente cliente = clientec.consulta(Integer.valueOf(clienteJL.getSelectedValue()));
+        if (clienteJL.getSelectedIndex() == -1) {
+            JOptionPane.showMessageDialog(null, "Cliente não pode ser nulo");
+            return;
+        }
+        Cliente cliente = lClientes.get(Integer.valueOf(clienteJL.getSelectedValue()));
 
         ArrayList<Produto> produtos = new ArrayList();
         for (String id : produtosJL.getSelectedValuesList()) {
-            produtos.add(pc.consulta(Integer.valueOf(id)));
+            produtos.add(lProdutos.get(Integer.valueOf(id)));
         }
 
         ArrayList<Servico> servicos = new ArrayList();
         for (String id : servicosJL.getSelectedValuesList()) {
-            servicos.add(sc.consulta(Integer.valueOf(id)));
+            servicos.add(lServicos.get(Integer.valueOf(id)));
         }
 
-        Compra compra = new Compra(cliente, produtos, servicos);
+        Compra compra = new Compra(null, cliente, produtos, servicos);
 
-        if (!cc.adicionar(compra)) {
+        if (compraDAOImpl.adicionar(compra)) {
+            resposta.setText(String.format("Compra cadastrada com ID: %d", compra.getIdCompra()));
+            JOptionPane.showMessageDialog(null, "Compra cadastrado");
+        } else {
             resposta.setText(null);
             JOptionPane.showMessageDialog(null, "Compra não cadastrado");
-        } else {
-            JOptionPane.showMessageDialog(null, "Compra cadastrado");
-            clienteJL.setSelectedIndex(-1);
-            produtosJL.setSelectedIndex(-1);
-            servicosJL.setSelectedIndex(-1);
-            
-            resposta.setText(String.format("Compra cadastrada com ID: %d", compra.getIdCompra()));
         }
+
+        clienteJL.setSelectedIndex(-1);
+        produtosJL.setSelectedIndex(-1);
+        servicosJL.setSelectedIndex(-1);
     }//GEN-LAST:event_adicionarCompraBTNActionPerformed
 
     private void sairActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sairActionPerformed
         dispose();
     }//GEN-LAST:event_sairActionPerformed
+
+    private void clienteJLValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_clienteJLValueChanged
+        Cliente c = lClientes.get(Integer.valueOf(clienteJL.getSelectedValue()));
+        servicosJL.setListData(c.infoServicos());
+    }//GEN-LAST:event_clienteJLValueChanged
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton adicionarCompraBTN;

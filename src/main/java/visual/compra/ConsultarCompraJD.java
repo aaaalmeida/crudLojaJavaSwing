@@ -4,7 +4,7 @@
  */
 package visual.compra;
 
-import controllers.CompraController;
+import DAOImplementation.CompraDAOImpl;
 import java.util.Objects;
 import javax.swing.JOptionPane;
 import models.Compra;
@@ -15,11 +15,11 @@ import models.Compra;
  */
 public class ConsultarCompraJD extends javax.swing.JDialog {
 
-    private CompraController cc;
+    private CompraDAOImpl compraDAOImpl;
 
-    public ConsultarCompraJD(java.awt.Frame parent, boolean modal, CompraController cc) {
+    public ConsultarCompraJD(java.awt.Frame parent, boolean modal, CompraDAOImpl compraDAOImpl) {
         super(parent, modal);
-        this.cc = cc;
+        this.compraDAOImpl = compraDAOImpl;
         initComponents();
         setTitle("Consultar Compra");
     }
@@ -164,31 +164,31 @@ public class ConsultarCompraJD extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void consultarCompraBTNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_consultarCompraBTNActionPerformed
-        Compra compra = cc.consulta(Integer.valueOf(idTF.getText()));
+        Compra compra = compraDAOImpl.consultaPorId(Integer.valueOf(idTF.getText()));
 
         if (Objects.isNull(compra)) {
-            JOptionPane.showMessageDialog(null, "Compra não encontrada");
+            idTF.setText(null);
             clienteTF.setText(null);
             precoTF.setText(null);
             produtosJL.setListData(new String[]{});
             servicosJL.setListData(new String[]{});
+            JOptionPane.showMessageDialog(null, "Compra não encontrada");
         } else {
-            JOptionPane.showMessageDialog(null, "Compra encontrada");
-
             clienteTF.setText(String.format("%d %s", compra.getCliente().getIdCliente(), compra.getCliente().getNome()));
             precoTF.setText(String.valueOf(compra.getPrecoTotal()));
 
             String[] produtosList = new String[compra.getlProdutos().size()];
             for (int i = 0; i < produtosList.length; i++) {
-                produtosList[i] = String.format("%d %s", compra.getlProdutos().get(i).getIdProduto(), compra.getlProdutos().get(i).getNomeProduto());
+                produtosList[i] = String.format("%d %s", compra.getlProdutos().get(i).getIdProduto(), compra.getlProdutos().get(i).getNome());
             }
             produtosJL.setListData(produtosList);
 
             String[] servicosList = new String[compra.getlServicos().size()];
             for (int i = 0; i < servicosList.length; i++) {
-                servicosList[i] = String.format("%d %s", compra.getlServicos().get(i).getIdServico(), compra.getlServicos().get(i).getIdServico());
+                servicosList[i] = String.format("%d %s", compra.getlServicos().get(i).getIdServico(), compra.getlServicos().get(i).getNome());
             }
             servicosJL.setListData(servicosList);
+            JOptionPane.showMessageDialog(null, "Compra encontrada");
         }
     }//GEN-LAST:event_consultarCompraBTNActionPerformed
 

@@ -4,7 +4,7 @@
  */
 package visual.compra;
 
-import controllers.CompraController;
+import DAOImplementation.CompraDAOImpl;
 import java.util.Objects;
 import javax.swing.JOptionPane;
 import models.Compra;
@@ -15,11 +15,11 @@ import models.Compra;
  */
 public class RemoverCompraJD extends javax.swing.JDialog {
 
-    private CompraController cc;
+    private CompraDAOImpl compraDAOImpl;
 
-    public RemoverCompraJD(java.awt.Frame parent, boolean modal, CompraController cc) {
+    public RemoverCompraJD(java.awt.Frame parent, boolean modal, CompraDAOImpl compraDAOImpl) {
         super(parent, modal);
-        this.cc = cc;
+        this.compraDAOImpl = compraDAOImpl;
         initComponents();
         setTitle("Remover Compra");
     }
@@ -169,25 +169,24 @@ public class RemoverCompraJD extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void removerCompraBTNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removerCompraBTNActionPerformed
-        Compra compra = cc.remove(Integer.valueOf(idTF.getText()));
+        Compra compra = compraDAOImpl.remove(Integer.valueOf(idTF.getText()));
 
         if (Objects.isNull(compra)) {
-            JOptionPane.showMessageDialog(null, "Compra não removida");
+            idTF.setText(null);
             clienteTF.setText(null);
             produtosJL.setListData(new String[]{});
             servicosJL.setListData(new String[]{});
             resposta.setText(null);
             precoTF.setText(null);
-        } else {
             JOptionPane.showMessageDialog(null, "Compra não removida");
-
+        } else {
             resposta.setText("Compra removida");
             clienteTF.setText(String.format("%d %s", compra.getCliente().getIdCliente(), compra.getCliente().getNome()));
             precoTF.setText(String.valueOf(compra.getPrecoTotal()));
 
             String[] produtosList = new String[compra.getlProdutos().size()];
             for (int i = 0; i < produtosList.length; i++) {
-                produtosList[i] = String.format("%d %s", compra.getlProdutos().get(i).getIdProduto(), compra.getlProdutos().get(i).getNomeProduto());
+                produtosList[i] = String.format("%d %s", compra.getlProdutos().get(i).getIdProduto(), compra.getlProdutos().get(i).getNome());
             }
             produtosJL.setListData(produtosList);
 
@@ -196,6 +195,7 @@ public class RemoverCompraJD extends javax.swing.JDialog {
                 servicosList[i] = String.format("%d %s", compra.getlServicos().get(i).getIdServico(), compra.getlServicos().get(i).getIdServico());
             }
             servicosJL.setListData(servicosList);
+            JOptionPane.showMessageDialog(null, "Compra não removida");
         }
     }//GEN-LAST:event_removerCompraBTNActionPerformed
 

@@ -42,7 +42,7 @@ public class PromocaoDAOImpl implements DAOInterface<Promocao> {
             connection = DriverManager.getConnection(url, "postgres", "postgres");
             Statement statement = connection.createStatement();
 
-            ResultSet rs = statement.executeQuery("SELECT nextval('promocoes_idpromocoes_seq'), currval('promocoes_idpromocoes_seq') AS valor;");
+            ResultSet rs = statement.executeQuery("SELECT nextval('promocoes_idpromocao_seq'), currval('promocoes_idpromocao_seq') AS valor;");
             while (rs.next()) {
                 codUltimaPromocao = rs.getInt("valor");
             }
