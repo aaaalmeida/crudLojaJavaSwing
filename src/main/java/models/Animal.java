@@ -18,12 +18,12 @@ public class Animal {
     private String nome;
     private String especie;
 
-    public Animal(Integer idAnimal, Cliente dono, String nome, String especie) {
+    public Animal(Integer idAnimal, Integer idDono, Cliente dono, String nome, String especie) {
         this.idAnimal = idAnimal;
         this.dono = dono;
         this.nome = nome;
         this.especie = especie;
-        this.idDono = dono.getIdCliente();
+        this.idDono = idDono;
     }
 
     public Integer getIdAnimal() {

@@ -22,15 +22,15 @@ public class Servico extends Item {
     private Animal animal;
     private Cliente cliente;
 
-    public Servico(Integer idServico, LocalDate data, LocalTime hora, Animal animal, Cliente cliente, String nome, Double preco, Promocao promocao) {
-        super(nome, preco, promocao);
+    public Servico(Integer idServico, LocalDate data, LocalTime hora, Integer idAnimal, Animal animal, Integer idCliente, Cliente cliente, String nome, Double preco, Integer idPromocao, Promocao promocao) {
+        super(nome, preco, idPromocao, promocao);
         this.idServico = idServico;
         this.data = data;
         this.hora = hora;
         this.cliente = cliente;
         this.animal = animal;
-        this.idAnimal = animal.getIdAnimal();
-        this.idCliente = cliente.getIdCliente();
+        this.idAnimal = idAnimal;
+        this.idCliente = idCliente;
     }
 
     public void setIdServico(Integer idServico) {

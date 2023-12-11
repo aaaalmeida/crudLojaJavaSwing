@@ -156,6 +156,11 @@ public class AlterarProdutoJD extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void alterarProdutoBTNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_alterarProdutoBTNActionPerformed
+        if (nomeTF.getText().trim().equals("") || Double.valueOf(precoTF.getText()).isNaN()) {
+            JOptionPane.showMessageDialog(null, "Digite todos os campos");
+            return;
+        }
+
         Integer idPromocao = null;
         if (!promocoesJL.isSelectionEmpty()) {
             idPromocao = Integer.valueOf(promocoesJL.getSelectedValue());

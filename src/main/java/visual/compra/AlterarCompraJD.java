@@ -38,6 +38,7 @@ public class AlterarCompraJD extends javax.swing.JDialog {
             clienteList[i] = String.valueOf(clientesKeys[i]);
         }
         clienteJL.setListData(clienteList);
+        clienteJL.setSelectedIndex(-1);
 
         Integer[] produtosKeys = lProdutos.keySet().toArray(new Integer[0]);
         String[] produtosList = new String[produtosKeys.length];
@@ -45,6 +46,7 @@ public class AlterarCompraJD extends javax.swing.JDialog {
             produtosList[i] = String.valueOf(produtosKeys[i]);
         }
         produtosJL.setListData(produtosList);
+        produtosJL.setSelectedIndex(-1);
     }
 
     /**
@@ -208,6 +210,7 @@ public class AlterarCompraJD extends javax.swing.JDialog {
     private void clienteJLValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_clienteJLValueChanged
         Cliente c = lClientes.get(Integer.valueOf(clienteJL.getSelectedValue()));
         servicosJL.setListData(c.infoServicos());
+        servicosJL.setSelectedIndex(-1);
     }//GEN-LAST:event_clienteJLValueChanged
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

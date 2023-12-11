@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.20.6.final using JasperReports Library version 6.20.6-5c96b6aa8a39ac1dc6b6bea4b81168e16dd39231  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="relatorioServico" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="31d93fca-50b4-4809-b821-c70d681d864d">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="New Data Adapter"/>
+	<queryString language="SQL">
+		<![CDATA[select * from servicos]]>
+	</queryString>
+	<field name="idservico" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="idservico"/>
+		<property name="com.jaspersoft.studio.field.label" value="idservico"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="servicos"/>
+	</field>
+	<field name="nome" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="nome"/>
+		<property name="com.jaspersoft.studio.field.label" value="nome"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="servicos"/>
+	</field>
+	<field name="data" class="java.sql.Date">
+		<property name="com.jaspersoft.studio.field.name" value="data"/>
+		<property name="com.jaspersoft.studio.field.label" value="data"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="servicos"/>
+	</field>
+	<field name="hora" class="java.sql.Time">
+		<property name="com.jaspersoft.studio.field.name" value="hora"/>
+		<property name="com.jaspersoft.studio.field.label" value="hora"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="servicos"/>
+	</field>
+	<field name="preco" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="preco"/>
+		<property name="com.jaspersoft.studio.field.label" value="preco"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="servicos"/>
+	</field>
+	<field name="idcliente" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="idcliente"/>
+		<property name="com.jaspersoft.studio.field.label" value="idcliente"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="servicos"/>
+	</field>
+	<field name="idanimal" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="idanimal"/>
+		<property name="com.jaspersoft.studio.field.label" value="idanimal"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="servicos"/>
+	</field>
+	<field name="idpromocao" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="idpromocao"/>
+		<property name="com.jaspersoft.studio.field.label" value="idpromocao"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="servicos"/>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="30" splitType="Stretch">
+			<staticText>
+				<reportElement x="172" y="0" width="210" height="30" uuid="162e5d6e-29b8-45d7-803a-6cba2bec2521"/>
+				<textElement textAlignment="Center">
+					<font size="16" isBold="true"/>
+				</textElement>
+				<text><![CDATA[RELATÓRIO DE SERVIÇOS]]></text>
+			</staticText>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="20" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="70" height="20" uuid="c0b77543-221e-482e-b023-638a5bea99a2"/>
+				<text><![CDATA[ID SERVIÇO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="70" y="0" width="110" height="20" uuid="9276db43-4513-4ed8-a6c6-8ce647993cc6"/>
+				<text><![CDATA[NOME]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="190" y="0" width="40" height="20" uuid="0ebefc0f-594c-43e0-a137-7085c5b4d3bb"/>
+				<text><![CDATA[DATA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="240" y="0" width="40" height="20" uuid="1311e061-a47c-43f1-b8d1-a141aca153a5"/>
+				<text><![CDATA[HORA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="290" y="0" width="50" height="20" uuid="2145b14f-9783-491f-a5d8-d581d15c8d1e"/>
+				<text><![CDATA[PREÇO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="340" y="0" width="60" height="20" uuid="c277366d-d72a-41c6-8a2d-4eb3766b8320"/>
+				<text><![CDATA[ID CLIENTE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="400" y="0" width="80" height="20" uuid="bfe30586-a5b5-4124-b601-660c3d7811a3"/>
+				<text><![CDATA[ID PROMOÇÃO]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="21">
+			<textField>
+				<reportElement x="0" y="0" width="70" height="20" uuid="77b4b2b4-80bc-4f71-8e02-b0b046835888"/>
+				<textFieldExpression><![CDATA[$F{idservico}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="70" y="0" width="110" height="20" uuid="d5dae716-30c0-4608-b449-dfe159381322"/>
+				<textFieldExpression><![CDATA[$F{nome}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="190" y="0" width="40" height="20" uuid="8e8e12d2-067d-4117-bcfa-70176d2698e9"/>
+				<textFieldExpression><![CDATA[$F{data}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="240" y="0" width="40" height="20" uuid="5bd9bc62-ac41-4802-8950-e263cdf9dc25"/>
+				<textFieldExpression><![CDATA[$F{hora}.toLocalTime()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="290" y="0" width="50" height="20" uuid="83a38e34-7429-419e-9131-40288caa714f"/>
+				<textFieldExpression><![CDATA["R$ "+$F{preco}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="340" y="0" width="60" height="20" uuid="5628f17e-244c-485b-b881-b1614e8292d0"/>
+				<textFieldExpression><![CDATA[$F{idcliente}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="400" y="0" width="80" height="20" uuid="ed4f12a4-a2e6-4e3f-b253-bec8f3a2bfef"/>
+				<textFieldExpression><![CDATA[$F{idpromocao}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="54" splitType="Stretch">
+			<textField>
+				<reportElement x="180" y="0" width="100" height="30" uuid="438bbb3a-a821-4d1f-9e5c-60f7a283f524"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Pag. " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="280" y="0" width="100" height="30" uuid="a43bb755-3243-46ad-bf61-a398eb355432"/>
+				<textElement textAlignment="Left"/>
+				<textFieldExpression><![CDATA[" de " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+</jasperReport>

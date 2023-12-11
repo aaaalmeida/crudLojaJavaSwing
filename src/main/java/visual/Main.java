@@ -7,11 +7,6 @@ package visual;
 import DAOImplementation.*;
 import models.*;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-
 import java.util.Base64;
 import java.util.HashMap;
 
@@ -60,7 +55,7 @@ public class Main extends javax.swing.JFrame {
     public Main() {
         initComponents();
 
-        nomeBanco = "teste1";
+        nomeBanco = "trabalho";
         url = "jdbc:postgresql://localhost:5432/";
 
         lAnimais = new HashMap();
@@ -79,7 +74,6 @@ public class Main extends javax.swing.JFrame {
                 url += nomeBanco;
                 connection = DriverManager.getConnection(url, "postgres", "postgres");
                 createTables(connection);
-                System.out.println("BANCO CRIADO");
             } else {
                 url += nomeBanco;
             }
@@ -96,9 +90,9 @@ public class Main extends javax.swing.JFrame {
             }
         }
 
-        animalDAO = new AnimalDAOImpl(url, lAnimais, lClientes);
-        clienteDAO = new ClienteDAOImpl(url, lClientes);
         funcionarioDAO = new FuncionarioDAOImpl(url, lFuncionarios);
+        clienteDAO = new ClienteDAOImpl(url, lClientes);
+        animalDAO = new AnimalDAOImpl(url, lAnimais, lClientes);
         promocaoDAO = new PromocaoDAOImpl(url, lPromocoes);
         produtoDAO = new ProdutoDAOImpl(url, lProdutos, lPromocoes);
         servicoDAO = new ServicoDAOImpl(url, lServicos, lPromocoes, lClientes, lAnimais);
@@ -132,7 +126,7 @@ public class Main extends javax.swing.JFrame {
                 + "(idCliente SERIAL PRIMARY KEY, nome VARCHAR(50) NOT NULL, cpf VARCHAR(11) NOT NULL);";
         String animalQuery = "CREATE TABLE IF NOT EXISTS animais "
                 + "(idAnimal SERIAL PRIMARY KEY, nome VARCHAR(50) NOT NULL, especie VARCHAR(50), "
-                + "idCliente INT NOT NULL, FOREIGN KEY (idCliente) REFERENCES clientes (idCliente));";
+                + "idCliente INT NOT NULL, FOREIGN KEY (idCliente) REFERENCES clientes (idCliente) ON DELETE CASCADE);";
         String promocaoQuery = "CREATE TABLE IF NOT EXISTS promocoes "
                 + "(idPromocao SERIAL PRIMARY KEY, data DATE, hora TIME, "
                 + "valorFixo NUMERIC(10,2) NOT NULL, valorPorcentagem NUMERIC(10,2) NOT NULL);";
@@ -140,8 +134,8 @@ public class Main extends javax.swing.JFrame {
                 + "(idServico SERIAL PRIMARY KEY, nome VARCHAR(50), "
                 + "data DATE, hora TIME, preco NUMERIC(10,2) NOT NULL,"
                 + "idCliente INT NOT NULL, idAnimal INT NOT NULL, idPromocao INT, "
-                + "FOREIGN KEY (idCliente) REFERENCES clientes (idCliente), "
-                + "FOREIGN KEY (idAnimal) REFERENCES animais (idAnimal), "
+                + "FOREIGN KEY (idCliente) REFERENCES clientes (idCliente) ON DELETE CASCADE, "
+                + "FOREIGN KEY (idAnimal) REFERENCES animais (idAnimal) ON DELETE CASCADE, "
                 + "FOREIGN KEY (idPromocao) REFERENCES promocoes (idPromocao));";
         String produtoQuery = "CREATE TABLE IF NOT EXISTS produtos "
                 + "(idProduto SERIAL PRIMARY KEY, nome VARCHAR(50) NOT NULL, "
@@ -149,15 +143,15 @@ public class Main extends javax.swing.JFrame {
                 + "FOREIGN KEY (idPromocao) REFERENCES promocoes (idPromocao));";
         String compraQuery = "CREATE TABLE IF NOT EXISTS compras "
                 + "(idCompra SERIAL PRIMARY KEY, precoTotal NUMERIC(10,2) NOT NULL, idCliente INT NOT NULL, "
-                + "FOREIGN KEY (idCliente) REFERENCES clientes (idCliente));";
+                + "FOREIGN KEY (idCliente) REFERENCES clientes (idCliente) ON DELETE CASCADE);";
         String comprasProdutosQuery = "CREATE TABLE IF NOT EXISTS compras_produtos "
                 + "(idCompraProduto SERIAL PRIMARY KEY, idCompra INT NOT NULL, idProduto INT NOT NULL, "
-                + "FOREIGN KEY (idCompra) REFERENCES compras (idCompra), "
-                + "FOREIGN KEY (idProduto) REFERENCES produtos (idProduto));";
+                + "FOREIGN KEY (idCompra) REFERENCES compras (idCompra) ON DELETE CASCADE, "
+                + "FOREIGN KEY (idProduto) REFERENCES produtos (idProduto) ON DELETE CASCADE);";
         String comprasServicosQuery = "CREATE TABLE IF NOT EXISTS compras_servicos "
                 + "(idCompraServico SERIAL PRIMARY KEY, idCompra INT NOT NULL, idServico INT NOT NULL, "
-                + "FOREIGN KEY (idCompra) REFERENCES compras (idCompra), "
-                + "FOREIGN KEY (idServico) REFERENCES servicos (idServico));";
+                + "FOREIGN KEY (idCompra) REFERENCES compras (idCompra) ON DELETE CASCADE, "
+                + "FOREIGN KEY (idServico) REFERENCES servicos (idServico) ON DELETE CASCADE);";
 
         statement.executeUpdate(funcionarioQuery);
         statement.executeUpdate(clienteQuery);
@@ -750,63 +744,52 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_removerPromocaoActionPerformed
 
     private void relatorioFuncionarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_relatorioFuncionarioActionPerformed
-        RelatorioFuncionarioJD dialog = new RelatorioFuncionarioJD(this, true, funcionarioDAO);
+        RelatorioFuncionarioJD dialog = new RelatorioFuncionarioJD(this, true, funcionarioDAO, url);
         dialog.setVisible(true);
     }//GEN-LAST:event_relatorioFuncionarioActionPerformed
 
     private void relatorioClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_relatorioClienteActionPerformed
-        RelatorioClienteJD dialog = new RelatorioClienteJD(this, true, clienteDAO);
+        RelatorioClienteJD dialog = new RelatorioClienteJD(this, true, clienteDAO, url);
         dialog.setVisible(true);
     }//GEN-LAST:event_relatorioClienteActionPerformed
 
     private void relatorioAnimalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_relatorioAnimalActionPerformed
-        RelatorioAnimalJD dialog = new RelatorioAnimalJD(this, true, animalDAO);
+        RelatorioAnimalJD dialog = new RelatorioAnimalJD(this, true, animalDAO, url);
         dialog.setVisible(true);
     }//GEN-LAST:event_relatorioAnimalActionPerformed
 
     private void relatorioProdutoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_relatorioProdutoActionPerformed
-        RelatorioProdutoJD dialog = new RelatorioProdutoJD(this, true, produtoDAO);
+        RelatorioProdutoJD dialog = new RelatorioProdutoJD(this, true, produtoDAO, url);
         dialog.setVisible(true);
     }//GEN-LAST:event_relatorioProdutoActionPerformed
 
     private void relatorioCompraActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_relatorioCompraActionPerformed
-        RelatorioCompraJD dialog = new RelatorioCompraJD(this, true, compraDAO);
+        RelatorioCompraJD dialog = new RelatorioCompraJD(this, true, compraDAO, url);
         dialog.setVisible(true);
     }//GEN-LAST:event_relatorioCompraActionPerformed
 
     private void relatorioServicoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_relatorioServicoActionPerformed
-        RelatorioServicoJD dialog = new RelatorioServicoJD(this, true, servicoDAO);
+        RelatorioServicoJD dialog = new RelatorioServicoJD(this, true, servicoDAO, url);
         dialog.setVisible(true);
     }//GEN-LAST:event_relatorioServicoActionPerformed
 
     private void relatorioPromocaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_relatorioPromocaoActionPerformed
-        RelatorioPromocaoJD dialog = new RelatorioPromocaoJD(this, true, promocaoDAO);
+        RelatorioPromocaoJD dialog = new RelatorioPromocaoJD(this, true, promocaoDAO, url);
         dialog.setVisible(true);
     }//GEN-LAST:event_relatorioPromocaoActionPerformed
 
     private void acessarBTNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_acessarBTNActionPerformed
-        File arquivo = new File("src/main/java/cadastros/cadastros.txt");
-        try {
-            if (!arquivo.exists()) {
-                arquivo.createNewFile();
+        for (Funcionario funcionario : lFuncionarios.values()) {
+            if (funcionario.getUsuario().equals(Base64.getEncoder().encodeToString(usuarioTF.getText().getBytes()))
+                    && funcionario.getSenha().equals(Base64.getEncoder().encodeToString(new String(senhaPF.getPassword()).getBytes()))) {
+                liberaMenu();
+                usuarioTF.setEnabled(false);
+                senhaPF.setEnabled(false);
+                acessarBTN.setEnabled(false);
+                cadastrarFuncionarioBTN.setEnabled(false);
             }
-            BufferedReader leitura = new BufferedReader(new FileReader(arquivo));
-            String linha;
-            while ((linha = leitura.readLine()) != null) {
-                String[] partes = linha.split(" ");
-
-                if (partes[0].equals(Base64.getEncoder().encodeToString(usuarioTF.getText().getBytes()))
-                        && partes[1].equals(Base64.getEncoder().encodeToString(new String(senhaPF.getPassword()).getBytes()))) {
-                    liberaMenu();
-                    usuarioTF.setEnabled(false);
-                    senhaPF.setEnabled(false);
-                    acessarBTN.setEnabled(false);
-                    cadastrarFuncionarioBTN.setEnabled(false);
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
         }
+
     }//GEN-LAST:event_acessarBTNActionPerformed
 
     private void cadastrarFuncionarioBTNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cadastrarFuncionarioBTNActionPerformed

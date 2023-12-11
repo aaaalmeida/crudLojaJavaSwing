@@ -17,16 +17,21 @@ public abstract class Item {
     private Integer idPromocao;
     private Promocao promocao;
 
-    public Item(String nome, Double preco, Promocao promocao) {
+    public Item(String nome, Double preco, Integer idPromocao, Promocao promocao) {
         this.nome = nome;
         this.preco = preco;
         this.promocao = promocao;
-        this.idPromocao = promocao.getIdPromocao();
-        
+
+        if (!Objects.isNull(promocao)) {
+            this.idPromocao = idPromocao;
+        } else {
+            this.idPromocao = null;
+        }
+
         descontoPreco();
     }
 
-    public void descontoPreco() {
+    private void descontoPreco() {
         if (!Objects.isNull(promocao)) {
             if (!Objects.isNull(promocao.getValorDesconto())) {
                 if (promocao.getValorDesconto() > preco) {

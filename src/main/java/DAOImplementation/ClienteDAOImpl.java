@@ -37,9 +37,14 @@ public class ClienteDAOImpl implements DAOInterface<Cliente> {
             connection = DriverManager.getConnection(url, "postgres", "postgres");
             Statement statement = connection.createStatement();
 
-            ResultSet rs = statement.executeQuery("SELECT nextval('clientes_idcliente_seq'), currval('clientes_idcliente_seq') AS valor;");
-            while (rs.next()) {
-                codUltimoCliente = rs.getInt("valor");
+            ResultSet rs = statement.executeQuery("SELECT MAX(idcliente) from clientes;");
+            if (rs.next()) {
+                if (!rs.wasNull()) {
+                    codUltimoCliente = rs.getInt("MAX") + 1;
+                } else {
+                    rs = statement.executeQuery("SELECT nextval('clientes_idcliente_seq'), currval('clientes_idcliente_seq') AS valor;");
+                    codUltimoCliente = rs.getInt("valor");
+                }
             }
 
             rs = statement.executeQuery("SELECT * FROM clientes;");
@@ -150,7 +155,10 @@ public class ClienteDAOImpl implements DAOInterface<Cliente> {
 
     @Override
     public Cliente remove(Integer id) {
-        Cliente c = (Cliente) clientes.remove(id);
+        Cliente c = clientes.get(id);
+        if(c.getlAnimais().isEmpty() || c.getlCompra().isEmpty() || c.getlServico().isEmpty())
+            
+        c = (Cliente) clientes.remove(id);
 
         Connection connection = null;
         try {

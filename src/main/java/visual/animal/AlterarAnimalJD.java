@@ -34,6 +34,7 @@ public class AlterarAnimalJD extends javax.swing.JDialog {
             listData[i] = String.valueOf(donosKeys[i]);
         }
         donoJL.setListData(listData);
+        donoJL.setSelectedIndex(-1);
     }
 
     /**
@@ -142,18 +143,11 @@ public class AlterarAnimalJD extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void alterarAnimalBTNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_alterarAnimalBTNActionPerformed
-        Cliente dono = null;
-        Animal animal = animalDAOImpl.consultaPorId(Integer.valueOf(idTF.getText()));
+        Cliente dono = lDonos.get(Integer.valueOf(donoJL.getSelectedValue()));
 
-        if (!Objects.isNull(animal.getDono())) {
-            animal.getDono().removeAnimal(animal);
-        }
-
-        if (!donoJL.isSelectionEmpty()) {
-            dono = lDonos.get(Integer.valueOf(donoJL.getSelectedValue()));
-            if (!Objects.isNull(dono)) {
-                dono.addAnimal(animal);
-            }
+        if (dono == null || nomeTF.getText().equals("") || idTF.getText().trim().equals("") || donoJL.getSelectedIndex() == -1) {
+            JOptionPane.showMessageDialog(rootPane, "Digite todos os campos");
+            return;
         }
 
         Object[] args = new Object[]{nomeTF.getText(), especieTF.getText(), Integer.valueOf(donoJL.getSelectedValue())};

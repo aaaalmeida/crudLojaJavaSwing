@@ -5,11 +5,8 @@
 package visual.funcionario;
 
 import DAOImplementation.FuncionarioDAOImpl;
+import java.util.Arrays;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.Base64;
 import javax.swing.JOptionPane;
 import models.Funcionario;
@@ -138,34 +135,22 @@ public class AdicionarFuncionarioJD extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void adicionarFuncionarioBTNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_adicionarFuncionarioBTNActionPerformed
-        Funcionario f = new Funcionario(null, usuarioTF.getText(), new String(senhaPF.getPassword()), nomeTF.getText(), cpfTF.getText());
+        if (usuarioTF.getText().trim().equals("") || new String(senhaPF.getPassword()).trim().equals("") || cpfTF.getText().equals("") || nomeTF.getText().equals("")) {
+            JOptionPane.showMessageDialog(rootPane, "Digite todos os campos");
+            return;
+        }
+
+        String usuarioCriptografado = Base64.getEncoder().encodeToString(usuarioTF.getText().getBytes());
+        String senhaCriptografado = Base64.getEncoder().encodeToString(new String(senhaPF.getPassword()).getBytes());
+
+        Funcionario f = new Funcionario(null, usuarioCriptografado, senhaCriptografado, nomeTF.getText(), cpfTF.getText());
 
         if (funcionarioDao.adicionar(f)) {
-            JOptionPane.showMessageDialog(null, "Funcionário cadastrado");
-
-            String usuarioCriptografado = Base64.getEncoder().encodeToString(f.getUsuario().getBytes());
-            String senhaCriptografado = Base64.getEncoder().encodeToString(f.getSenha().getBytes());
-
-            File pasta = new File("src/main/java/cadastros");
-            if (!pasta.exists()) {
-                pasta.mkdirs();
-            }
-
-            File arquivo = new File(pasta, "cadastros.txt");
-
-            try (BufferedWriter escrita = new BufferedWriter(new FileWriter(arquivo, true))) {
-                escrita.write(usuarioCriptografado + " ");
-                escrita.write(senhaCriptografado + "\n");
-                escrita.close();
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
             resposta.setText(String.format("Funcionário cadastrado com ID: %d", f.getIdFuncionario()));
+            JOptionPane.showMessageDialog(null, "Funcionário cadastrado");
         } else {
-            JOptionPane.showMessageDialog(null, "Funcionário não cadastrado");
             resposta.setText(null);
+            JOptionPane.showMessageDialog(null, "Funcionário não cadastrado");
         }
 
         nomeTF.setText(null);

@@ -71,6 +71,14 @@ public class Cliente extends Pessoa {
         return lAnimais;
     }
 
+    public ArrayList<Compra> getlCompra() {
+        return lCompra;
+    }
+
+    public ArrayList<Servico> getlServico() {
+        return lServico;
+    }
+
     public void addCompra(Compra compra) {
         if (!lCompra.contains(compra)) {
             lCompra.add(compra);

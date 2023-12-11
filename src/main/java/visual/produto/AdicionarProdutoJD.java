@@ -6,6 +6,7 @@ package visual.produto;
 
 import DAOImplementation.ProdutoDAOImpl;
 import java.util.HashMap;
+import java.util.Objects;
 import javax.swing.JOptionPane;
 import models.Produto;
 import models.Promocao;
@@ -158,11 +159,23 @@ public class AdicionarProdutoJD extends javax.swing.JDialog {
 
     private void adicionarProdutoBTNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_adicionarProdutoBTNActionPerformed
         Promocao promocao = null;
+
+        if (nomeTF.getText().trim().equals("") || Double.valueOf(precoTF.getText()).isNaN()) {
+            JOptionPane.showMessageDialog(null, "Digite todos os campos");
+            return;
+        }
+
         if (!promocoesJL.isSelectionEmpty()) {
             promocao = lPromocoes.get(Integer.valueOf(promocoesJL.getSelectedValue()));
         }
 
-        Produto p = new Produto(null, nomeTF.getText(), Double.valueOf(precoTF.getText()), promocao, descricaoTA.getText());
+        Produto p = new Produto(null,
+                nomeTF.getText(),
+                Double.valueOf(precoTF.getText()),
+                Objects.isNull(promocao) ? null : promocao.getIdPromocao(),
+                promocao,
+                descricaoTA.getText());
+
         if (produtoDAOImpl.adicionar(p)) {
             resposta.setText(String.format("Produto adicionado com ID: %d", p.getIdProduto()));
             JOptionPane.showMessageDialog(null, "Produtod cadastrado");

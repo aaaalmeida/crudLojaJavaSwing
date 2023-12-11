@@ -19,10 +19,10 @@ public class Compra {
     private ArrayList<Produto> lProdutos;
     private ArrayList<Servico> lServicos;
 
-    public Compra(Integer idCompra, Cliente cliente, ArrayList<Produto> lProdutos, ArrayList<Servico> lServicos) {
+    public Compra(Integer idCompra, Integer idCliente, Cliente cliente, ArrayList<Produto> lProdutos, ArrayList<Servico> lServicos) {
         this.idCompra = idCompra;
         this.cliente = cliente;
-        this.idCliente = cliente.getIdCliente();
+        this.idCliente = idCliente;
         this.lProdutos = lProdutos;
         this.lServicos = lServicos;
 
@@ -95,12 +95,12 @@ public class Compra {
     public Object[] dadosTabela() {
         String idProdutos, idServicos;
 
-        idProdutos = new String("");
+        idProdutos = "";
         for (Produto p : lProdutos) {
             idProdutos += String.format("%d ", p.getIdProduto());
         }
 
-        idServicos = new String("");
+        idServicos = "";
         for (Servico s : lServicos) {
             idServicos += String.format("%d ", s.getIdServico());
         }

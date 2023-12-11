@@ -276,6 +276,7 @@ public class AlterarServicoJD extends javax.swing.JDialog {
     private void clientesJLValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_clientesJLValueChanged
         Cliente c = lClientes.get(Integer.valueOf(clientesJL.getSelectedValue()));
         animaisJL.setListData(c.infoAnimal());
+        animaisJL.setSelectedIndex(-1);
     }//GEN-LAST:event_clientesJLValueChanged
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -8,6 +8,7 @@ import DAOImplementation.PromocaoDAOImpl;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Objects;
 import javax.swing.JOptionPane;
 import models.Promocao;
 
@@ -135,9 +136,14 @@ public class AdicionarPromocaoJD extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void adicionarPromocaoBTNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_adicionarPromocaoBTNActionPerformed
-        DateTimeFormatter formatterDT = DateTimeFormatter.ofPattern("d/MM/yyyy");
+        DateTimeFormatter formatterDT = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         LocalDate data = LocalDate.parse(dataTF.getText(), formatterDT);
         LocalTime hora = LocalTime.parse(horaTF.getText());
+
+        if (Objects.isNull(data) || Objects.isNull(hora) || Double.valueOf(valPercentTF.getText()).isNaN() || Double.valueOf(valFixoTF.getText()).isNaN()) {
+            JOptionPane.showMessageDialog(null, "Digite todos os campos");
+            return;
+        }
 
         Promocao p = new Promocao(null, Double.valueOf(valPercentTF.getText()), Double.valueOf(valFixoTF.getText()), data, hora);
 

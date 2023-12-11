@@ -5,8 +5,21 @@
 package visual.servico;
 
 import DAOImplementation.ServicoDAOImpl;
-import javax.swing.table.DefaultTableModel;
 import models.Servico;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.swing.table.DefaultTableModel;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.view.JasperViewer;
 
 /**
  *
@@ -15,10 +28,12 @@ import models.Servico;
 public class RelatorioServicoJD extends javax.swing.JDialog {
 
     private ServicoDAOImpl servicoDAOImpl;
+    private String url;
 
-    public RelatorioServicoJD(java.awt.Frame parent, boolean modal, ServicoDAOImpl servicoDAOImpl) {
+    public RelatorioServicoJD(java.awt.Frame parent, boolean modal, ServicoDAOImpl servicoDAOImpl, String url) {
         super(parent, modal);
         this.servicoDAOImpl = servicoDAOImpl;
+        this.url = url;
         initComponents();
         setTitle("Relatório Serviço");
 
@@ -39,6 +54,7 @@ public class RelatorioServicoJD extends javax.swing.JDialog {
 
         jScrollPane1 = new javax.swing.JScrollPane();
         tabela = new javax.swing.JTable();
+        jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -60,6 +76,13 @@ public class RelatorioServicoJD extends javax.swing.JDialog {
         });
         jScrollPane1.setViewportView(tabela);
 
+        jButton1.setText("Relatório");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -68,19 +91,63 @@ public class RelatorioServicoJD extends javax.swing.JDialog {
                 .addContainerGap()
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 888, Short.MAX_VALUE)
                 .addContainerGap())
+            .addGroup(layout.createSequentialGroup()
+                .addGap(394, 394, 394)
+                .addComponent(jButton1)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 488, Short.MAX_VALUE)
-                .addContainerGap())
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 500, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jButton1)
+                .addContainerGap(14, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        Connection connection = null;
+
+        try {
+            connection = DriverManager.getConnection(url, "postgres", "postgres");
+
+            Map<String, Object> parameters = converterHashMap(servicoDAOImpl.relatorio());
+
+            JasperReport jr = JasperCompileManager.compileReport("src/main/java/report/relatorioServico.jrxml");
+            JasperPrint jp = JasperFillManager.fillReport(jr, parameters, connection);
+            JasperViewer.viewReport(jp);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (JRException ex) {
+            ex.printStackTrace();
+        } finally {
+            if (connection != null) {
+                try {
+                    connection.close();
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        }
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private Map<String, Object> converterHashMap(Map<Integer, Servico> mapaOriginal) {
+        Map<String, Object> novoMapa = new HashMap<>();
+
+        for (Map.Entry<Integer, Servico> entry : mapaOriginal.entrySet()) {
+            novoMapa.put(entry.getKey().toString(), entry.getValue());
+        }
+
+        return novoMapa;
+    }
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButton1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable tabela;
     // End of variables declaration//GEN-END:variables

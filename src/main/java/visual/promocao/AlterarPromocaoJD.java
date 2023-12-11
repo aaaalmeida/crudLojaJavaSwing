@@ -8,6 +8,7 @@ import DAOImplementation.PromocaoDAOImpl;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Objects;
 import javax.swing.JOptionPane;
 
 /**
@@ -143,6 +144,11 @@ public class AlterarPromocaoJD extends javax.swing.JDialog {
         DateTimeFormatter formatterDT = DateTimeFormatter.ofPattern("d/MM/yyyy");
         LocalDate data = LocalDate.parse(dataTF.getText(), formatterDT);
         LocalTime hora = LocalTime.parse(horaTF.getText());
+        
+        if (Objects.isNull(data) || Objects.isNull(hora) || Double.valueOf(valPercentTF.getText()).isNaN() || Double.valueOf(valFixoTF.getText()).isNaN()) {
+            JOptionPane.showMessageDialog(null, "Digite todos os campos");
+            return;
+        }
 
         Object[] args = new Object[]{valFixoTF.getText(), valPercentTF.getText(), data, hora};
         if (!promocaoDAOImpl.altera(Integer.valueOf(idTF.getText()), args)) {

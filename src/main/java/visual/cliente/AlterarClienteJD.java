@@ -120,6 +120,11 @@ public class AlterarClienteJD extends javax.swing.JDialog {
     private void alterarClienteBTNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_alterarClienteBTNActionPerformed
         Object[] args = new Object[]{nomeTF.getText(), cpfTF.getText()};
 
+        if (nomeTF.getText().trim().equals("") || cpfTF.getText().trim().equals("")) {
+            JOptionPane.showMessageDialog(rootPane, "Digite todos os campos");
+            return;
+        }
+
         if (!clienteDAOImpl.altera(Integer.valueOf(idTF.getText()), args)) {
             JOptionPane.showMessageDialog(null, "Cliente não alterado");
         } else {

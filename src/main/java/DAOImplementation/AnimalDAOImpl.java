@@ -23,36 +23,45 @@ import models.Cliente;
  * @author arthu
  */
 public class AnimalDAOImpl implements DAOInterface<Animal> {
-
+    
     private HashMap<Integer, Animal> animais;
     private HashMap<Integer, Cliente> lClientes;
     private String url;
     private Integer codUltimoAnimal;
-
+    
     public AnimalDAOImpl(String url, HashMap<Integer, Animal> animais, HashMap<Integer, Cliente> lClientes) {
         this.animais = animais;
         this.lClientes = lClientes;
         this.url = url;
-
+        
         Connection connection = null;
-
+        
         try {
             connection = DriverManager.getConnection(url, "postgres", "postgres");
             Statement statement = connection.createStatement();
-
-            ResultSet rs = statement.executeQuery("SELECT nextval('animais_idanimal_seq'), currval('animais_idanimal_seq') AS valor;");
-            while (rs.next()) {
-                codUltimoAnimal = rs.getInt("valor");
+            
+            ResultSet rs = statement.executeQuery("SELECT MAX(idanimal) from animais;");
+            if (rs.next()) {
+                if (!rs.wasNull()) {
+                    codUltimoAnimal = rs.getInt("MAX") + 1;
+                } else {
+                    rs = statement.executeQuery("SELECT nextval('animais_idanimal_seq'), currval('animais_idanimal_seq') AS valor;");
+                    codUltimoAnimal = rs.getInt("valor");
+                }
             }
-
+            
             rs = statement.executeQuery("SELECT * FROM animais;");
-
+            
             while (rs.next()) {
                 Animal animal = new Animal(
                         rs.getInt("idanimal"),
+                        rs.getInt("idcliente"),
                         lClientes.get(rs.getInt("idcliente")),
                         rs.getString("nome"),
                         rs.getString("especie"));
+                if (lClientes.containsKey(animal.getIdDono())) {
+                    lClientes.get(animal.getDono().getIdCliente()).addAnimal(animal);
+                }
                 animais.put(animal.getIdAnimal(), animal);
             }
         } catch (SQLException e) {
@@ -67,13 +76,15 @@ public class AnimalDAOImpl implements DAOInterface<Animal> {
             }
         }
     }
-
+    
     @Override
     public Boolean adicionar(Animal obj) {
         obj.setIdAnimal(codUltimoAnimal);
         codUltimoAnimal++;
+        
+        obj.getDono().addAnimal(obj);
         animais.put(obj.getIdAnimal(), obj);
-
+        
         Connection connection = null;
         try {
             connection = DriverManager.getConnection(url, "postgres", "postgres");
@@ -81,7 +92,7 @@ public class AnimalDAOImpl implements DAOInterface<Animal> {
             ps.setInt(1, obj.getIdAnimal());
             ps.setString(2, obj.getNome());
             ps.setString(3, obj.getEspecie());
-            ps.setInt(4, obj.getIdAnimal());
+            ps.setInt(4, obj.getIdDono());
             ps.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -94,20 +105,20 @@ public class AnimalDAOImpl implements DAOInterface<Animal> {
                 e.printStackTrace();
             }
         }
-
+        
         return true;
     }
-
+    
     @Override
     public Animal consultaPorId(Integer id) {
         if (animais.containsKey(id)) {
             return (Animal) animais.get(id);
         }
-
+        
         System.err.println("ERRO: CONSULTA DE ANIMAL");
         return null;
     }
-
+    
     @Override
     public Boolean altera(Integer id, Object[] args) {
         if (!Objects.isNull(id)) {
@@ -115,8 +126,11 @@ public class AnimalDAOImpl implements DAOInterface<Animal> {
                 Animal a = (Animal) animais.get(id);
                 a.setNome(String.valueOf(args[0]));
                 a.setEspecie(String.valueOf(args[1]));
+                
+                a.getDono().removeAnimal(a);
                 a.setDono((Integer) args[2], lClientes.get((Integer) args[2]));
-
+                a.getDono().addAnimal(a);
+                
                 Connection connection = null;
                 try {
                     connection = DriverManager.getConnection(url, "postgres", "postgres");
@@ -140,15 +154,16 @@ public class AnimalDAOImpl implements DAOInterface<Animal> {
                 return true;
             }
         }
-
+        
         System.err.println("ERRO: ALTERACAO DE ANIMAL");
         return false;
     }
-
+    
     @Override
     public Animal remove(Integer id) {
         Animal a = (Animal) animais.remove(id);
-
+        a.getDono().removeAnimal(a);
+        
         Connection connection = null;
         try {
             connection = DriverManager.getConnection(url, "postgres", "postgres");
@@ -166,10 +181,10 @@ public class AnimalDAOImpl implements DAOInterface<Animal> {
                 e.printStackTrace();
             }
         }
-
+        
         return a;
     }
-
+    
     @Override
     public HashMap<Integer, Animal> relatorio() {
         return this.animais;

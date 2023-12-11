@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.20.6.final using JasperReports Library version 6.20.6-5c96b6aa8a39ac1dc6b6bea4b81168e16dd39231  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="relatorioPromocao" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="75680201-82d4-440c-bdca-2dd20ab0864d">
+	<property name="com.jaspersoft.studio.data.sql.tables" value="cHJvbW9jb2VzICwxNSwxNSwzYWRkNjQwOC0wOGNiLTRhOGUtOTRlMy1mMzljNDZjZTViMTM7"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="New Data Adapter"/>
+	<queryString language="SQL">
+		<![CDATA[SELECT *
+FROM promocoes]]>
+	</queryString>
+	<field name="idpromocao" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="idpromocao"/>
+		<property name="com.jaspersoft.studio.field.label" value="idpromocao"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="promocoes"/>
+	</field>
+	<field name="data" class="java.sql.Date">
+		<property name="com.jaspersoft.studio.field.name" value="data"/>
+		<property name="com.jaspersoft.studio.field.label" value="data"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="promocoes"/>
+	</field>
+	<field name="hora" class="java.sql.Time">
+		<property name="com.jaspersoft.studio.field.name" value="hora"/>
+		<property name="com.jaspersoft.studio.field.label" value="hora"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="promocoes"/>
+	</field>
+	<field name="valorfixo" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="valorfixo"/>
+		<property name="com.jaspersoft.studio.field.label" value="valorfixo"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="promocoes"/>
+	</field>
+	<field name="valorporcentagem" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="valorporcentagem"/>
+		<property name="com.jaspersoft.studio.field.label" value="valorporcentagem"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="promocoes"/>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="23" splitType="Stretch">
+			<staticText>
+				<reportElement x="155" y="0" width="244" height="22" uuid="95c32b98-5bec-4707-a1cb-5cca2545b5e3"/>
+				<textElement textAlignment="Center">
+					<font size="16" isBold="true"/>
+				</textElement>
+				<text><![CDATA[RELATÓRIO DE PROMOÇÃO]]></text>
+			</staticText>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="21" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="80" height="20" uuid="f80d266c-7068-4133-b3d2-d1f2363ff9a6"/>
+				<text><![CDATA[ID PROMOÇÃO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="90" y="0" width="100" height="20" uuid="0e662fed-db99-4a47-b173-4a70d6f272f4"/>
+				<text><![CDATA[DESCONTO FIXO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="200" y="0" width="140" height="20" uuid="24ee2aac-dc34-4534-bb7d-739f8749c105"/>
+				<text><![CDATA[DESCONTO PORCENTAGEM]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="350" y="0" width="60" height="20" uuid="991015c0-4fe5-4159-a155-0de3015cd5ad"/>
+				<text><![CDATA[DATA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="420" y="0" width="60" height="20" uuid="e39ae27b-037c-4309-9c71-d61df63fd09b"/>
+				<text><![CDATA[HORA]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="18">
+			<textField>
+				<reportElement x="0" y="0" width="80" height="16" uuid="8190ec2b-c44d-49d5-a6cb-cdb83c46afeb"/>
+				<textFieldExpression><![CDATA[$F{idpromocao}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="90" y="0" width="100" height="16" uuid="bf6525ba-a6f3-4901-91da-417abdc13ff4"/>
+				<textFieldExpression><![CDATA["R$ " + $F{valorfixo}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="200" y="0" width="140" height="16" uuid="a3e880ad-5004-4600-b537-535db707ae04"/>
+				<textFieldExpression><![CDATA[$F{valorporcentagem} + "%"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="350" y="0" width="60" height="16" uuid="a5614327-2779-4eed-aa31-fc1f315de898"/>
+				<textFieldExpression><![CDATA[$F{data}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="420" y="0" width="60" height="16" uuid="fe901999-6dd3-4cc1-b955-f4bd46c493de">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="53dcab66-d1d3-471b-a62a-6770f568cbfe"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{hora}.toLocalTime()]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="30" splitType="Stretch">
+			<textField>
+				<reportElement x="180" y="0" width="100" height="30" uuid="78754e92-0cbf-41ee-a332-4481f0674af2"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Pag. " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="280" y="0" width="100" height="30" uuid="dbfdd4ab-92ff-446f-866b-b1b81b54e254"/>
+				<textElement textAlignment="Left"/>
+				<textFieldExpression><![CDATA[" de " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+</jasperReport>

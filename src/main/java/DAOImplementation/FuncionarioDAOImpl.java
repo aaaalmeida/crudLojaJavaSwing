@@ -36,9 +36,14 @@ public class FuncionarioDAOImpl implements DAOInterface<Funcionario> {
             connection = DriverManager.getConnection(url, "postgres", "postgres");
             Statement statement = connection.createStatement();
             
-            ResultSet rs = statement.executeQuery("SELECT nextval('funcionarios_idfuncionario_seq'), currval('funcionarios_idfuncionario_seq') AS valor;");
-            while(rs.next()) {
-                codUltimoFuncionario = rs.getInt("valor");
+            ResultSet rs = statement.executeQuery("SELECT MAX(idfuncionario) from funcionarios;");
+            if (rs.next()) {
+                if(!rs.wasNull()) {
+                    codUltimoFuncionario = rs.getInt("MAX") + 1;
+                } else {
+                    rs = statement.executeQuery("SELECT nextval('funcionarios_idfuncionario_seq'), currval('funcionarios_idfuncionario_seq') AS valor;");
+                    codUltimoFuncionario = rs.getInt("valor");
+                }
             }
             
             rs = statement.executeQuery("SELECT * FROM funcionarios;");

@@ -7,7 +7,6 @@ package visual.animal;
 import DAOImplementation.AnimalDAOImpl;
 import java.util.HashMap;
 
-import java.util.Objects;
 import javax.swing.JOptionPane;
 import models.Animal;
 import models.Cliente;
@@ -34,6 +33,7 @@ public class AdicionarAnimalJD extends javax.swing.JDialog {
             listData[i] = String.valueOf(donosKeys[i]);
         }
         donoJL.setListData(listData);
+        donoJL.setSelectedIndex(-1);
     }
 
     /**
@@ -140,28 +140,26 @@ public class AdicionarAnimalJD extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void adicionarAnimalBTNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_adicionarAnimalBTNActionPerformed
-        Cliente dono = null;
-        if (!donoJL.isSelectionEmpty()) {
-            dono = lDonos.get(donoJL.getSelectedIndex());
+        Cliente dono = lDonos.get(Integer.valueOf(donoJL.getSelectedValue()));
+
+        if (dono == null || nomeTF.getText().trim().equals("") || donoJL.getSelectedIndex() == -1) {
+            JOptionPane.showMessageDialog(rootPane, "Digite todos os campos");
+            return;
         }
 
-        Animal animal = new Animal(null, dono, nomeTF.getText(), especieTF.getText());
+        Animal animal = new Animal(null, dono.getIdCliente(), dono, nomeTF.getText(), especieTF.getText());
 
         if (animalDAOImpl.adicionar(animal)) {
-            donoJL.setSelectedIndex(-1);
-            nomeTF.setText(null);
-            especieTF.setText(null);
             resposta.setText(String.format("Animal adicionado com ID: %d", animal.getIdAnimal()));
             JOptionPane.showMessageDialog(null, "Animal cadastrado");
         } else {
-            donoJL.setSelectedIndex(-1);
             resposta.setText(null);
             JOptionPane.showMessageDialog(null, "Animal não cadastrado");
         }
 
-        if (!Objects.isNull(dono)) {
-            dono.addAnimal(animal);
-        }
+        nomeTF.setText(null);
+        especieTF.setText(null);
+        donoJL.setSelectedIndex(-1);
     }//GEN-LAST:event_adicionarAnimalBTNActionPerformed
 
     private void sairActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sairActionPerformed

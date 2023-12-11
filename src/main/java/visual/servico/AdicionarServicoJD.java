@@ -213,7 +213,7 @@ public class AdicionarServicoJD extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void adicionarServicoBTNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_adicionarServicoBTNActionPerformed
-        DateTimeFormatter formatterDT = DateTimeFormatter.ofPattern("d/MM/yyyy");
+        DateTimeFormatter formatterDT = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         LocalDate data = LocalDate.parse(dataTF.getText(), formatterDT);
 
         LocalTime hora = LocalTime.parse(horaTF.getText());
@@ -231,11 +231,11 @@ public class AdicionarServicoJD extends javax.swing.JDialog {
         Animal animal = lAnimais.get(Integer.valueOf(animalJL.getSelectedValue()));
 
         Promocao promocao = null;
-        if (!promocoesJL.isSelectionEmpty()) {
+        if (promocoesJL.getSelectedIndex() != -1) {
             promocao = lPromocoes.get(Integer.valueOf(promocoesJL.getSelectedValue()));
         }
 
-        Servico s = new Servico(null, data, hora, animal, cliente, nomeServicoTF.getText(), Double.valueOf(precoTF.getText()), promocao);
+        Servico s = new Servico(null, data, hora, animal.getIdAnimal(), animal, cliente.getIdCliente(), cliente, nomeServicoTF.getText(), Double.valueOf(precoTF.getText()), promocao.getIdPromocao(), promocao);
 
         if (servicoDAOImpl.adicionar(s)) {
             JOptionPane.showMessageDialog(null, "Serviço cadastrado");
@@ -261,6 +261,7 @@ public class AdicionarServicoJD extends javax.swing.JDialog {
     private void clienteJLValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_clienteJLValueChanged
         Cliente c = lClientes.get(Integer.valueOf(clienteJL.getSelectedValue()));
         animalJL.setListData(c.infoAnimal());
+        animalJL.setSelectedIndex(-1);
     }//GEN-LAST:event_clienteJLValueChanged
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

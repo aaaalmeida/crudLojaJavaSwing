@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.20.6.final using JasperReports Library version 6.20.6-5c96b6aa8a39ac1dc6b6bea4b81168e16dd39231  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="relatorioAnimal" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="c4cdc052-4605-4241-8f27-3b40ddcb1880">
+	<property name="com.jaspersoft.studio.data.sql.tables" value="YW5pbWFpcyAsMTUsMTUsYWRkOTAxMDEtYWNjMC00Njg2LTgyNjEtYzBlZmEwZWU3NDg2Ow=="/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="New Data Adapter"/>
+	<queryString language="SQL">
+		<![CDATA[SELECT *
+FROM animais]]>
+	</queryString>
+	<field name="idanimal" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="idanimal"/>
+		<property name="com.jaspersoft.studio.field.label" value="idanimal"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="animais"/>
+	</field>
+	<field name="nome" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="nome"/>
+		<property name="com.jaspersoft.studio.field.label" value="nome"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="animais"/>
+	</field>
+	<field name="especie" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="especie"/>
+		<property name="com.jaspersoft.studio.field.label" value="especie"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="animais"/>
+	</field>
+	<field name="idcliente" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="idcliente"/>
+		<property name="com.jaspersoft.studio.field.label" value="idcliente"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="animais"/>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="33" splitType="Stretch">
+			<staticText>
+				<reportElement x="160" y="0" width="240" height="30" uuid="c0a2c451-e7e4-440f-b30b-e68928bc5d43"/>
+				<textElement textAlignment="Center">
+					<font size="16" isBold="true"/>
+				</textElement>
+				<text><![CDATA[RELATÓRIO DE ANIMAIS]]></text>
+			</staticText>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="21" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="100" height="20" uuid="9e9757fa-176c-4cc7-9888-b1aa3ec9a7c3"/>
+				<text><![CDATA[ID ANIMAL]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="110" y="0" width="160" height="20" uuid="4161cac4-80c7-4305-895e-2a8f3ed3cf39"/>
+				<text><![CDATA[NOME]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="280" y="0" width="120" height="20" uuid="100bc771-9554-4a15-9c32-22bc1c071e16"/>
+				<text><![CDATA[ESPÉCIE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="410" y="0" width="140" height="20" uuid="97936fa7-442f-473f-8f3f-d9ad6a1575af"/>
+				<text><![CDATA[ID CLIENTE]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="15">
+			<textField>
+				<reportElement x="0" y="0" width="100" height="15" uuid="f1ecaab2-5494-436b-8559-a0d591ee0da9"/>
+				<textFieldExpression><![CDATA[$F{idanimal}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="110" y="0" width="160" height="15" uuid="ce56e39c-16dc-45ca-895c-6c79204986ff"/>
+				<textFieldExpression><![CDATA[$F{nome}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="410" y="0" width="140" height="15" uuid="8e04476d-68f7-4ca3-9303-9b5d0808a876"/>
+				<textFieldExpression><![CDATA[$F{idcliente}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="280" y="0" width="120" height="15" uuid="6bc5db13-16fa-4dcd-b7e7-ad1545bc448b"/>
+				<textFieldExpression><![CDATA[$F{especie}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="30" splitType="Stretch">
+			<textField>
+				<reportElement x="180" y="0" width="100" height="30" uuid="78c4eab9-1179-4854-bbe5-3cb825f4bd39"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Pag.  " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="280" y="0" width="100" height="30" uuid="6c152b79-cc19-4cef-9f7f-d38937f011bd"/>
+				<textElement textAlignment="Left"/>
+				<textFieldExpression><![CDATA[" de " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+</jasperReport>

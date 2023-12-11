@@ -14,10 +14,9 @@ public class Produto extends Item {
 
     private Integer idProduto;
     private String descricao;
-    private Promocao promocao;
 
-    public Produto(Integer idProduto, String nome, Double preco, Promocao promocao, String descricao) {
-        super(nome, preco, promocao);
+    public Produto(Integer idProduto, String nome, Double preco, Integer idPromocao, Promocao promocao, String descricao) {
+        super(nome, preco, idPromocao, promocao);
         this.idProduto = idProduto;
         this.descricao = descricao;
     }
@@ -39,10 +38,9 @@ public class Produto extends Item {
     }
 
     public Object[] dadosTabela() {
-        if (Objects.isNull(promocao)) {
+        if (Objects.isNull(getPromocao())) {
             return new Object[]{idProduto, getNome(), getPreco(), descricao, ""};
         }
-
-        return new Object[]{idProduto, getNome(), getPreco(), descricao, promocao.getIdPromocao()};
+        return new Object[]{idProduto, getNome(), getPreco(), descricao, getIdPromocao()};
     }
 }

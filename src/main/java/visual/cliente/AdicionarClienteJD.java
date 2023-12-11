@@ -113,14 +113,20 @@ public class AdicionarClienteJD extends javax.swing.JDialog {
 
     private void adicionarClienteBTNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_adicionarClienteBTNActionPerformed
         Cliente c = new Cliente(null, nomeTF.getText(), cpfTF.getText());
+
+        if (c.getCpf().trim().equals("") || c.getNome().trim().equals("")) {
+            JOptionPane.showMessageDialog(rootPane, "Digite todos os campos");
+            return;
+        }
+
         if (clienteDAOImpl.adicionar(c)) {
             resposta.setText(String.format("Cliente cadastrado com ID: %d", c.getIdCliente()));
             nomeTF.setText(null);
             cpfTF.setText(null);
             JOptionPane.showMessageDialog(null, "Cliente cadastrado");
         } else {
-            JOptionPane.showMessageDialog(null, "Cliente não cadastrado");
             resposta.setText(null);
+            JOptionPane.showMessageDialog(null, "Cliente não cadastrado");
         }
     }//GEN-LAST:event_adicionarClienteBTNActionPerformed
 

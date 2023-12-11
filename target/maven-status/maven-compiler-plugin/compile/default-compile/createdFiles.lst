@@ -47,12 +47,14 @@ visual\produto\AdicionarProdutoJD$2.class
 visual\compra\AlterarCompraJD$3.class
 visual\promocao\RemoverPromocaoJD.class
 visual\produto\RemoverProdutoJD.class
+visual\compra\RelatorioCompraJD$2.class
 visual\servico\ConsultarServicoJD.class
 visual\cliente\AlterarClienteJD$1.class
 visual\animal\AdicionarAnimalJD$1.class
 visual\Main$7.class
 visual\compra\RemoverCompraJD$2.class
 visual\Main$14.class
+visual\produto\RelatorioProdutoJD$2.class
 visual\Main$24.class
 visual\produto\AlterarProdutoJD$1.class
 visual\compra\RelatorioCompraJD$1.class
@@ -65,6 +67,7 @@ visual\Main$1.class
 models\Animal.class
 visual\cliente\AdicionarClienteJD.class
 visual\Main$25.class
+visual\funcionario\RelatorioFuncionarioJD$2.class
 visual\funcionario\RelatorioFuncionarioJD.class
 models\Cliente.class
 visual\Main.class
@@ -75,6 +78,7 @@ visual\servico\AdicionarServicoJD.class
 visual\Main$8.class
 visual\cliente\AdicionarClienteJD$2.class
 visual\compra\RelatorioCompraJD.class
+visual\cliente\RelatorioClienteJD$2.class
 visual\funcionario\RemoverFuncionarioJD$2.class
 visual\cliente\RemoverClienteJD$2.class
 visual\Main$26.class
@@ -112,12 +116,15 @@ visual\compra\AlterarCompraJD$2.class
 models\Pessoa.class
 visual\Main$20.class
 visual\Main$23.class
+visual\animal\RelatorioAnimalJD$2.class
 visual\animal\RemoverAnimalJD$1.class
 visual\cliente\AlterarClienteJD.class
 visual\promocao\AlterarPromocaoJD$1.class
 visual\Main$18.class
 visual\produto\ConsultarProdutoJD.class
+visual\promocao\RelatorioPromocaoJD$2.class
 visual\servico\AdicionarServicoJD$2.class
+visual\servico\RelatorioServicoJD$2.class
 visual\servico\AlterarServicoJD$2.class
 visual\animal\ConsultarAnimalJD$2.class
 visual\Main$11.class

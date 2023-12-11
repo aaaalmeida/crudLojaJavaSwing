@@ -5,11 +5,8 @@
 package visual.funcionario;
 
 import DAOImplementation.FuncionarioDAOImpl;
+import java.util.Arrays;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.Base64;
 import javax.swing.JOptionPane;
 
@@ -143,30 +140,20 @@ public class AlterarFuncionarioJD extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void alterarFuncionarioBTNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_alterarFuncionarioBTNActionPerformed
-        String[] args = new String[]{usuarioTF.getText(), new String(senhaPF.getPassword()), nomeTF.getText(), cpfTF.getText()};
+        if (usuarioTF.getText().trim().equals("") || Arrays.toString(senhaPF.getPassword()).trim().equals("") || cpfTF.getText().trim().equals("") || nomeTF.getText().trim().equals("")) {
+            JOptionPane.showMessageDialog(rootPane, "Digite todos os campos");
+            return;
+        }
+        
+        String usuarioCriptografado = Base64.getEncoder().encodeToString(usuarioTF.getText().getBytes());
+        String senhaCriptografado = Base64.getEncoder().encodeToString(new String(senhaPF.getPassword()).getBytes());
+ 
+        String[] args = new String[]{usuarioCriptografado, senhaCriptografado, nomeTF.getText(), cpfTF.getText()};
 
         if (!funcionarioDAO.altera(Integer.valueOf(idTF.getText()), args)) {
             JOptionPane.showMessageDialog(null, "Funcionário não alterado");
         } else {
             JOptionPane.showMessageDialog(null, "Funcionário alterado");
-
-            String usuarioCriptografado = Base64.getEncoder().encodeToString(args[0].getBytes());
-            String senhaCriptografado = Base64.getEncoder().encodeToString(args[1].getBytes());
-
-            File pasta = new File("src/main/java/cadastros");
-            if (!pasta.exists()) {
-                pasta.mkdirs();
-            }
-
-            File arquivo = new File(pasta, "cadastros.txt");
-
-            try (BufferedWriter escrita = new BufferedWriter(new FileWriter(arquivo, true))) {
-                escrita.write(usuarioCriptografado + " ");
-                escrita.write(senhaCriptografado + "\n");
-                escrita.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
         }
 
         idTF.setText(null);
